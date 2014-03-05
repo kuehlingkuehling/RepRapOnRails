@@ -6,7 +6,7 @@
 
 # personal RepRapOnRails specific ignores
 /lib/dev-experiments
-
+/_dev
 
 # bundler state
 /.bundle

@@ -3,6 +3,10 @@
 echo "PREPARING CLEAN REPRAPONRAILS INSTALL"
 read -p "Press [Enter] key to start..."
 
+# install all gems
+echo "bundle install"
+bundle install
+
 #/public/uploads säubern  
 echo "rm -r public/uploads/*"
 rm -r public/uploads/*
