@@ -1,23 +1,25 @@
 Tools used in this project:
 
 RubyOnRails - of course! :-)
+ - http://rubyonrails.org/
 
-jQuery Keyboard:
-  - https://github.com/Mottie/Keyboard
-  
 Twitter Bootstrap 3.0
+ - http://getbootstrap.com/
 
 Font Awsome Icons
+ - http://fortawesome.github.io/Font-Awesome/
 
 websocket-rails
+ - https://github.com/websocket-rails/websocket-rails
 
 rails-settings-cached
+ - https://github.com/huacnlee/rails-settings-cached
 
 jQuery
+ - http://jquery.com/
 
-Angular
+AngularJS
+ - http://angularjs.org/
 
 Angular UI Bootstrap
-
-GCODE Keyboard von
-http://www.808.dk/?code-javascriptkeyboard
+ - http://angular-ui.github.io/bootstrap/
