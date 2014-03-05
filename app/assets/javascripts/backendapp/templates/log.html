@@ -1,0 +1,17 @@
+<h3 ng-show="log.length == 0">No messages recorded yet.</h3>
+<p ng-show="log.length">
+<p class="pull-right">
+  <a href="/logfile" target="_blank" class="btn btn-primary">Download log file</a>
+</p>
+<small>
+  <span ng-repeat="message in log">
+  <span class="log-timestamp">
+    [{{ message.created_at | date:'yyyy-MM-dd HH:mm:ss' }} UTC]               
+  </span> 
+  <span ng-class="{1: 'text-success', 2: 'text-warning', 3: 'text-danger'}[message.level]">
+    {{ message.line }}
+  </span>
+  <br/></span>
+</small>
+
+</p>

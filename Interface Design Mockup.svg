@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1280"
+   height="800"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="Interface Design Mockup.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="688.53045"
+     inkscape:cy="406.57215"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1215"
+     inkscape:window-height="776"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-252.36217)">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect2985"
+       width="1280"
+       height="800"
+       x="0"
+       y="252.36217" />
+    <text
+       xml:space="preserve"
+       style="font-size:27.42803573999999855px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Merriweather;-inkscape-font-specification:Merriweather Light"
+       x="86.056412"
+       y="366.62332"
+       id="text2987"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2989"
+         x="86.056412"
+         y="366.62332"
+         style="font-size:27.27000045999999855px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue Light">Status</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text2991"
+       y="421.5676"
+       x="86.126457"
+       style="font-size:54.26144408999999769px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+       xml:space="preserve"><tspan
+         style="font-size:50px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ff0000;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+         y="421.5676"
+         x="86.126457"
+         id="tspan2993"
+         sodipodi:role="line">Printing</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text2995"
+       y="370.62332"
+       x="866.30585"
+       style="font-size:38.96427916999999752px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Merriweather;-inkscape-font-specification:Merriweather Light"
+       xml:space="preserve"><tspan
+         style="font-size:27px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue Light"
+         y="370.62332"
+         x="866.30585"
+         id="tspan2997"
+         sodipodi:role="line">Time left</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3007"
+       y="547.43604"
+       x="84.986938"
+       style="font-size:38.96427916999999752px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Merriweather;-inkscape-font-specification:Merriweather Light"
+       xml:space="preserve"><tspan
+         style="font-size:27px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue Light"
+         y="547.43604"
+         x="84.986938"
+         id="tspan3009"
+         sodipodi:role="line">File</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="path3075"
+       sodipodi:sides="3"
+       sodipodi:cx="113.13708"
+       sodipodi:cy="440.38568"
+       sodipodi:r1="50.152828"
+       sodipodi:r2="100.30566"
+       sodipodi:arg1="-0.48166368"
+       sodipodi:arg2="0.52759782"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 157.58379,417.15217 42.21928,73.73332 -88.76854,-0.39107 -84.964568,-0.3037 44.72295,-76.68027 42.745288,-73.42962 z"
+       transform="matrix(-0.18279312,0,0,-0.18279312,392.06416,938.8538)"
+       inkscape:transform-center-x="0.38432993"
+       inkscape:transform-center-y="-4.2469188" />
+    <rect
+       style="fill:#ff0000;fill-opacity:1;stroke:none"
+       id="rect3077"
+       width="342.9129"
+       height="95.367668"
+       x="866.71088"
+       y="734.76093" />
+    <rect
+       style="opacity:0.8;fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect3906"
+       width="359.61429"
+       height="153.54318"
+       x="8.081212"
+       y="888.71747" />
+    <rect
+       y="888.71747"
+       x="373.75644"
+       height="153.54318"
+       width="897.01544"
+       id="rect3908"
+       style="opacity:0.37878788;fill:#ffffff;fill-opacity:1;stroke:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:54.26144409px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+       x="83.26931"
+       y="602.13904"
+       id="text3009"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3011"
+         x="83.26931"
+         y="602.13904"
+         style="font-size:50px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue">Z Stage assembly full</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:54.26144409px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+       x="860.41217"
+       y="425.85333"
+       id="text3013"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3015"
+         x="860.41217"
+         y="425.85333"
+         style="font-size:50px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue">11:23 h</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3017"
+       y="799.28192"
+       x="977.55505"
+       style="font-size:54.26144409px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+       xml:space="preserve"><tspan
+         style="font-size:50px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+         y="799.28192"
+         x="977.55505"
+         id="tspan3019"
+         sodipodi:role="line">Abort</tspan></text>
+    <rect
+       y="634.76093"
+       x="866.71088"
+       height="95.367668"
+       width="342.9129"
+       id="rect3025"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;opacity:0.76969697" />
+    <text
+       xml:space="preserve"
+       style="font-size:54.26144409px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue"
+       x="981.55505"
+       y="699.28192"
+       id="text3027"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3029"
+         x="981.55505"
+         y="699.28192"
+         style="font-size:50px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;fill:#ffffff;font-family:Helvetica Neue;-inkscape-font-specification:Helvetica Neue">Start</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html ng-app="touchApp">
+  <head>
+    <title>RepRapOnRails</title>
+    <meta name="description" content="RepRapOnRails">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    <%= stylesheet_link_tag "touchapp", :media => "all" %>    
+    <%= javascript_include_tag "application" %>   
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+
+    <script type="text/javascript">
+      var WEBSOCKET_URL = "<%= request.host_with_port %>/websocket"
+    </script>
+    
+    <%= javascript_include_tag "touchapp" %>   
+    
+    <!-- Status header
+    ================================================== -->  
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="HeaderController">
+      <div class="jumbotron header-background">
+        <h1>
+          <span class="pull-right">
+            <button type="button" class="btn btn-danger btn-lg"  ng-click="emergencyStop()" style="margin-top:-40px;">Emergency<br/>STOP</button>      
+          </span>
+          <span ng-switch on="print.state">
+            <span ng-switch-when="0">Offline</span>
+            <span ng-switch-when="1">Idle</span>
+            <span ng-switch-when="2">Printing</span>
+            <span ng-switch-when="3">Paused</span>            
+            <span ng-switch-when="4">Emergency Stop!</span>            
+          </span>
+        </h1>
+        <div class="row">
+          <div class="col-md-8"><p><span ng-show="print.job.length">"{{ print.job }}"</span>&nbsp;</p></div>    
+          <div class="col-md-4"><p class="pull-right">{{ time_remaining }}</p></div>
+        </div>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%">
+            <span class="sr-only">{{ progress }}% complete</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'queue' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('queue')">
+          Queue
+        </button>
+        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'manualcontrol' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('manualcontrol')">
+          Manual Control
+        </button> 
+        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'log' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('log')">
+          Log
+        </button>        
+        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'setup' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('setup')">
+          Setup
+        </button>         
+        <div class="pull-right">
+          <button type="button" class="btn btn-warning btn-lg" ng-show="print.state == 2" ng-click="pauseprint()">Pause Print</button>                
+          <button type="button" class="btn btn-warning btn-lg" ng-show="print.state == 3" ng-click="resumeprint()">Resume Print</button>                          
+          <button type="button" class="btn btn-danger btn-lg" ng-show="( print.state == 2 ) || ( print.state == 3 )" ng-click="abortprint()">Abort Print</button>      
+        </div>
+      </div>
+    </nav>    
+    
+    
+    <!-- Content
+    ================================================== -->    
+    <div class="container" id="content">      
+      <ng-view></ng-view>
+    </div>
+
+    <!-- Lock Screen Overlay
+    ================================================== -->
+    <div ng-controller="LockscreenController">
+    <div class="lock" ng-show="lockscreen.locked"></div>
+    <div class="lockbutton" ng-show="lockscreen.locked">
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <center>
+      <button type="button" class="btn btn-info btn-lg navigation">
+          <i class="icon-lock"></i> Screen Locked
+      </button>       
+    </center>
+    </div>
+  </body>
+</html>

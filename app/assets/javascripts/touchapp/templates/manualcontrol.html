@@ -1,0 +1,243 @@
+<div class="row">
+<div class="col-md-9">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="text-right">
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('psu_on')">
+            Build Chamber ON
+          </button>   
+          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_off()">
+            OFF
+          </button> 
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p class="text-left">    
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_on')">
+            Preheat Chamber/Bed ON
+          </button> 
+          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_off')">
+            OFF
+          </button> 
+          </p>
+        </div>  
+      </div>  
+
+      <div class="row">
+        <br/>
+        <br/>        
+      </div>
+      
+      <div class="row">
+        <!-- X Axis Movements -->    
+        <div class="col-md-5">
+          <p class="text-right">
+          <small>left</small>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X-100')">
+            -100
+          </button>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X-10')">
+            -10
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X-1')">
+            -1
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X-0.1')">
+            -0.1
+          </button>  
+          </p>
+        </div>
+        <div class="col-md-2">
+          <p class="text-center">      
+          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('home_x')">
+            Home <b>X</b>
+          </button> 
+          </p>
+        </div>
+        <div class="col-md-5">
+          <p class="text-left">
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X0.1')">
+            +0.1
+          </button>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X1')">
+            +1
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X10')">
+            +10
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('X100')">
+            +100
+          </button>
+          <small>right</small>
+          </p>
+        </div>
+      </div>
+        
+      <div class="row">
+        <div class="col-md-5">
+          <!-- X Axis Movements -->
+          <p class="text-right">      
+          <small>front</small>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y-100')">
+            -100
+          </button>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y-10')">
+            -10
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y-1')">
+            -1
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y-0.1')">
+            -0.1
+          </button> 
+          </p>
+        </div>
+        <div class="col-md-2">
+          <p class="text-center">      
+          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('home_y')">
+            Home <b>Y</b>
+          </button> 
+          </p>
+        </div>
+        <div class="col-md-5">
+          <p class="text-left">      
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y0.1')">
+            +0.1
+          </button>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y1')">
+            +1
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y10')">
+            +10
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Y100')">
+            +100
+          </button> 
+          <small>back</small>      
+          </p>
+        </div>
+      </div>  
+        
+      <div class="row">
+        <div class="col-md-5">
+          <!-- X Axis Movements -->
+          <p class="text-right">
+          <small>up</small>        
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z-100')">
+            -100
+          </button>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z-10')">
+            -10
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z-1')">
+            -1
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z-0.1')">
+            -0.1
+          </button>
+          </p>
+        </div>
+        <div class="col-md-2">
+          <p class="text-center">      
+          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('home_z')">
+            Home <b>Z</b>
+          </button>  
+          </p>
+        </div>
+        <div class="col-md-5">
+          <p class="text-left">          
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z0.1')">
+            +0.1
+          </button>
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z1')">
+            +1
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z10')">
+            +10
+          </button> 
+          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="move('Z100')">
+            +100
+          </button> 
+          <small>down</small>      
+          </p>
+        </div>
+      </div>  
+      
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">
+            <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('home_all')">
+              Home All Axes
+            </button>
+          </p>
+          <p class="text-center">
+            <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('maintenance_position')">
+              Printhead Maintenance Position
+            </button>   
+          </p>      
+        </div>  
+      </div>
+  </div>
+
+  <div class="col-md-3">
+
+    <div class="row" style="height:340px;">
+      <div class="col-md-12">
+        <p>
+          <p ng-repeat="t in temp.list"><b>{{ t.name }}:</b> {{ t.temp }} °C</p>    
+          <button type="button" class="btn btn-primary btn-lg navigation " ng-click="macro('get_temp')">
+            Refresh Temperature
+          </button>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p class="text-right">
+          <button type="button" class="btn btn-danger btn-lg navigation {{ printing && 'disabled' }}" ng-click="shutdown()">
+            Shutdown
+          </button> 
+        </p>  
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+
+  <!-- Extruder Priming
+      <div class="text-center">
+        <div class="btn-group">
+          <a class="btn btn-default btn-lg" ng-model="extruder" btn-radio="0">Left Extruder</a>
+          <a class="btn btn-default btn-lg" ng-model="extruder" btn-radio="1">Right Extruder</a>
+        </div>
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,250)">
+          Set to 250°C
+        </button>         
+        <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,250)">
+          OFF
+        </button>                 
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,250)">
+          Extrude 5mm
+        </button>         
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,250)">
+          Extrude 10mm
+        </button>                 
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,250)">
+          Retract 5mm
+        </button>        
+      </div>      
+      <p class="text-center">
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,250)">
+          E0 250°
+        </button>   
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extruder(0,0)">
+          E0 off
+        </button>   
+        <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="extrude(0,5)">
+          Extrude 5mm
+        </button> 
+      </p>     -->

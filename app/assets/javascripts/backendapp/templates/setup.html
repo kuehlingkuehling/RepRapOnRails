@@ -1,0 +1,58 @@
+<a class="pull-right btn btn-primary" ng-click="toggleForm()">
+  Add Preset
+</a>
+<h4>Filament Presets</h4>  
+
+<div collapse="isCollapsed">
+		<div class="well well-lg">
+      <h4>Add new Preset</h4>
+        <form role="form">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ng-model="newPreset.name" class="form-control" id="name" placeholder="Enter a Name">
+          </div>
+          <div class="form-group">
+            <label for="temp">Extrusion Temperature (°C)</label>
+            <input type="text" ng-model="newPreset.extrusion_temp" class="form-control" id="extrusion_temp" placeholder="250">
+          </div>
+          <button class="btn btn-default" ng-click="createPreset()">Add</button>
+          <button class="btn btn-default" ng-click="toggleForm()">Cancel</button>          
+        </form>
+    </div> 
+</div>
+
+<p ng-show="!presets.length">No Presets stored so far.</p>
+<table class="table table-striped clearfix" ng-show="presets.length">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Extrusion Temperature</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="p in presets">
+      <td>
+        <p ng-show="edit[p.id]">
+          <input type="text" ng-model="presets[$index].name"><br/>
+        </p>
+        <p ng-show="!edit[p.id]">{{ p.name }}</p>
+        <p ng-show="!edit[p.id]" class="text-muted">{{ p.note }}</p>
+      </td>
+      <td>
+        <p ng-show="edit[p.id]">
+          <input type="text" ng-model="presets[$index].extrusion_temp">                
+        </p>        
+        <span ng-show="!edit[p.id]">{{ p.extrusion_temp }}°C</span></td>
+      <td>
+        <p class="text-right">
+          <button class="btn btn-primary"  ng-show="!edit[p.id]" ng-click="editPreset(p.id)">edit</button>
+          <button class="btn btn-default"  ng-show="edit[p.id]" ng-click="updatePreset($index)">update</button>          
+          <button class="btn btn-default"  ng-show="edit[p.id]" ng-click="edit[p.id] = false">cancel</button>          
+          <button class="btn btn-primary {{ now_printing_id == p.id && 'disabled' }}" ng-click="deletePreset(p.id)">remove</button>        
+        </p>
+      </td>                  
+    </tr>
+ </tbody>
+</table>
+</div>

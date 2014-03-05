@@ -1,0 +1,177 @@
+<button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
+  Cancel
+</button>  
+<h3 class="wizard-title">
+  Printbed Leveling
+</h3>
+<div class="clearfix"><br/></div>
+
+<!-- Step 1 -->
+<div class="row" ng-show="step == '1'">
+  <div class="col-md-7">
+    <p>The following steps will guide you through the process of leveling the
+      printbed. This is necessary to achieve best print results and lay down a perfect
+      first layer that bonds firmly to the print surface</p>
+    <p>Please confirm:</p>
+    <ul>
+      <li>A clean printbed is installed.</li>
+      <li>The nozzle tips are cleaned from any print material residue
+        (gently remove any material with tweezers).</li>
+      <li>No Filament is loaded in the right extruder.</li>        
+    </ul>
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
+      OK, continue
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: cleaning nozzle with tweezers -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_tweezers.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+<!-- Step 2 -->
+<div class="row" ng-show="step == '2'">
+  <div class="col-md-7">
+    <p>Please wait while the printbed is beeing preheated. This may take a couple of minutes.</p>
+    <p>Current printbed temperature: <b>{{ bed_temp }}°C</b></p>
+    <br/>
+    <br/>  
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
+      Back
+    </button>         
+    <button type="button" class="pull-right {{ !bed_preheated && 'disabled' }} btn btn-primary btn-lg navigation" ng-click="step3()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: printbed in preheat-position -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_preheat.jpg") %>" class="img-responsive">    
+  </div> 
+</div>
+
+<!-- Step 3 -->
+<div class="row" ng-show="step == 3">
+  <div class="col-md-7">
+    <p>Now loosen the two setscrews on the <b>right</b> extruder barrel.</p>
+    <p><b>WARNING: Carefully check if extruder is still hot before touching the nozzle!.</b></p>
+    <p>Then slide the right extruder barrel up to make sure the right nozzle tip is a bit higher 
+      than the left tip.</p>    
+    <br/>
+    <br/>    
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step5()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: barrel set screws-->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_barrelscrews.jpg") %>" class="img-responsive">    
+  </div> 
+</div>
+
+
+<!-- Step 5 -->
+<div class="row" ng-show="step == 5">
+  <div class="col-md-7">
+    <p>Next, loosen all <b>three</b> printbed leveling thumbscrews a bit (as shown to the right).</p>
+    <p>The printbed must be able to easily slide up and down against the spring suspension.</p>
+    <p>In the following the printhead will move to three leveling positions one after another
+      and push the printbed down some milimeters.</p>
+    <br/>
+    <br/>  
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step3()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step6()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: unscrew leveling bolts -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_thumbscrews.jpg") %>" class="img-responsive">    
+  </div> 
+</div>
+
+<!-- Step 6 -->
+<div class="row" ng-show="step == 6">
+  <div class="col-md-7">
+    <p>Position 1:</p>
+    <p>After the movement gently fasten the bed leveling thumbscrew on the <b>front</b>.</p>
+    <br/>
+    <br/>  
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step5()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step7()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: fasten front thumbscrew -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_bedfront.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+<!-- Step 7 -->
+<div class="row" ng-show="step == 7">
+  <div class="col-md-7">
+    <p>Position 2:</p>
+    <p>After the movement gently fasten the bed leveling thumbscrew on the <b>right</b> side.</p>
+    <br/>
+    <br/>  
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step6()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step8()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: fasten right thumbscrew -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_bedright.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+<!-- Step 8 -->
+<div class="row" ng-show="step == 8">
+  <div class="col-md-7">
+    <p>Position 3:</p>
+    <p>After the movement gently fasten the bed leveling thumbscrew on the <b>left</b> side.</p>
+    <br/>
+    <br/>  
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step7()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step9()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: fasten left thumbscrew -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_bedleft.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+<!-- Step 9 -->
+<div class="row" ng-show="step == 9">
+  <div class="col-md-7">
+    <p>The printbed is leveled now.</p>
+    <p>Finally, slide the <b>right</b> extruder barrel back down until it just
+      touches the printbed and gently tighten the two setscrews again.</p>
+    <p>That's it, you are done.</p>
+    <br/>
+    <br/>  
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step8()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="exit()">
+      Done!
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: fasten barrel -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_rightnozzle.jpg") %>" class="img-responsive">
+  </div> 
+</div>

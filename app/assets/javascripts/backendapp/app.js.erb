@@ -1,0 +1,32 @@
+var backendApp = angular.module('backendApp', ['ngRoute', 'ngTouch', 'ui.bootstrap', 'angularFileUpload']);
+
+backendApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
+  var resolve_websocket = { data: function(MyWebsocket) {
+    return MyWebsocket.online;
+  }}
+  
+  $routeProvider.
+    when('/firststeps', {
+      templateUrl: '<%= asset_path("backendapp/templates/firststeps.html") %>',
+      controller: 'FirststepsController',
+      resolve: resolve_websocket
+    }).      
+    when('/queue', {
+      templateUrl: '<%= asset_path("backendapp/templates/queue.html") %>',
+      controller: 'QueueController',
+      resolve: resolve_websocket
+    }).  
+    when('/setup', {
+      templateUrl: '<%= asset_path("backendapp/templates/setup.html") %>',
+      controller: 'SetupController',
+      resolve: resolve_websocket
+    }). 
+    when('/log', {
+      templateUrl: '<%= asset_path("backendapp/templates/log.html") %>',
+      controller: 'LogController',
+      resolve: resolve_websocket
+    }).     
+    otherwise({
+      redirectTo: '/firststeps'
+    });
+}]);

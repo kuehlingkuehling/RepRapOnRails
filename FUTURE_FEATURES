@@ -1,0 +1,8 @@
+background-jobs:
+  - estimated print time
+  - filament used
+  - total move distance (G1 moves) as more accurate basis for ETA calculations
+    (distance instead of number of gcode lines)
+    
+TouchApp CSS:
+  - Queue/Log/etc Tabelleninhalt Anzeige auf eine Zeile begrenzen (ellipsis)

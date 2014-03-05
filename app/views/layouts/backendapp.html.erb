@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="backendApp">
+  <head>
+    <title>K&uuml;hling&amp;K&uuml;hling RepRap Industrial</title>
+    <meta name="description" content="RepRapOnRails">
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    <%= stylesheet_link_tag "backendapp", :media => "all" %>    
+    <%= javascript_include_tag "application" %>   
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+
+    <script type="text/javascript">
+      var WEBSOCKET_URL = "<%= request.host_with_port %>/websocket"
+    </script>
+    
+    <%= javascript_include_tag "backendapp" %>   
+
+    <!-- Template for "connection lost" Modal window - statically embedded for obvious resons -->
+    <script type="text/ng-template" id="reloadpage_modal.html">
+      <div class="modal-header">
+        <h3>Connection lost</h3>
+      </div>
+      <div class="modal-body">
+        The connection to the printer was lost.<br/>
+        Please reload this page to reconnect.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="reloadpage()">Reload Now</button>
+      </div>
+    </script>
+
+    <div class="container">
+      <div ng-controller="HeaderController">
+        <div class="header">
+          <ul class="nav nav-pills pull-right">
+            <li ng-class="{ active: (tab == 'firststeps') }"><a href="#firststeps" ng-click="go('firststeps')">First Steps</a></li>
+            <li ng-class="{ active: (tab == 'queue') }"><a href="#queue" ng-click="go('queue')">Queue</a></li>
+            <li ng-class="{ active: (tab == 'setup') }"><a href="#setup" ng-click="go('setup')">Setup</a></li>
+            <li ng-class="{ active: (tab == 'log') }"><a href="#log" ng-click="go('log')">Log</a></li>            
+          </ul>
+          <h3 class="text-muted">K&uuml;hling&amp;K&uuml;hling RepRap Industrial</h3>
+        </div>
+
+        <div class="jumbotron header-background">
+          <h1 class="text-left">
+            <span ng-switch on="print.state">
+              <span ng-switch-when="0">Offline</span>
+              <span ng-switch-when="1">Idle</span>
+              <span ng-switch-when="2">Printing</span>
+              <span ng-switch-when="3">Paused</span>            
+              <span ng-switch-when="4">Emergency Stop!</span>            
+            </span>            
+          </h1>
+          <div class="row">
+            <div class="col-md-7"><p><span ng-show="print.job.length">"{{ print.job }}"</span>&nbsp;</p></div>    
+            <div class="col-md-5"><p class="pull-right">{{ time_remaining }}</p></div>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%">
+              <span class="sr-only">{{ progress }}% complete</span>
+            </div>
+          </div>        
+        </div>
+      </div>
+
+      <div class="row marketing">
+        <!--  Content
+        ==================================================  -->
+        <div class="container" id="content">      
+          <ng-view></ng-view>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="text-center"><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+          <br />Developed by <a href="http://kuehlingkuehling.de">Jonas Kühling & Simon Kühling GbR</a>
+          <br />This software is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+      </div>
+
+    </div> <!-- /container -->    
+    
+
+  </body>
+</html>

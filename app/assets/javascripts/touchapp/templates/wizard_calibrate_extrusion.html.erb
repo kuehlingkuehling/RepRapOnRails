@@ -1,0 +1,41 @@
+<button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
+  Cancel
+</button>  
+<h3 class="wizard-title">
+  Calibrate Extrusion
+</h3>
+<div class="clearfix"><br/></div>
+
+<div class="row">
+  <div class="col-md-7">
+    <p>To precisely calibrate the extrusion multiplier for the slicing software
+      a calibration print is necessary. Select one extruder to add a printjob to the queue:</p>
+    <button type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('left')">
+      <b>Left</b> Extruder Calibration
+    </button>
+    <button type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('right')">
+      <b>Right</b> Extruder Calibration
+    </button>    
+    <br/>
+    <br/>    
+    <p>After printing measure the exact wall thickness with calipers and adjust the following
+      calculator according to your measurement:</p>
+    <h4 class="text-center">
+      Measurement:
+    </h4>    
+    <h4 class="text-center">
+      <button type="button" class="btn btn-primary btn-lg" ng-click="del(0.1)">-0.1</button>                    
+      <button type="button" class="btn btn-primary btn-lg" ng-click="del(0.01)">-0.01</button>      
+      &nbsp;<b>{{ measurement }} mm</b>&nbsp;
+      <button type="button" class="btn btn-primary btn-lg" ng-click="add(0.01)">+0.01</button>
+      <button type="button" class="btn btn-primary btn-lg" ng-click="add(0.1)">+0.1</button>              
+    </h4>
+    <br/>
+    <h4 class="text-center">Extrusion Multiplier: <b>{{ multiplier }}</b></h4>
+
+  </div>
+  <div class="col-md-5">
+    <!-- picture: calipers -->
+    <img src="<%= asset_path("touchapp/images/wizard_calibrate_extrusion_calipers.jpg") %>" class="img-responsive">        
+  </div> 
+</div>

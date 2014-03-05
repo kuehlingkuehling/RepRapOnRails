@@ -1,0 +1,91 @@
+<button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
+  Cancel
+</button>  
+<h3 class="wizard-title">
+  Load Filament
+</h3>
+<div class="clearfix"><br/></div>
+
+<!-- Step 1 -->
+<div class="row" ng-show="step == '1'">
+  <div class="col-md-7">
+    <p>Install a new spool of filament by sliding it onto the spool holder at the back of
+      the machine.</p>
+    <p>Pay attention to the sense of rotation, as highlighted in the picture</p>
+    <br/>
+    <br/>
+    
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: spool holders -->
+    <img src="<%= asset_path("touchapp/images/wizard_load_filament_spools.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+
+
+<!-- Step 2 -->
+<div class="row" ng-show="step == 2">
+  <div class="col-md-7">
+    <p>Pull the filament feed tube out of the extruder idler lever.</p>
+    <br/>
+    <br/>    
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step3()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: pull tubes out -->
+    <img src="<%= asset_path("touchapp/images/wizard_load_filament_tube.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+<!-- Step 3 -->
+<div class="row" ng-show="step == 3">
+  <div class="col-md-7">
+    <p>Cut off the beginning of the filament with wire cutters to get a
+      straight end.</p>
+    <p>Lead the plastic rod into the filament feed until it protrudes the feeding tube
+      about 10cm at the other side (at the extruder).</p>
+    <br/>
+    <br/>    
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
+      Back
+    </button>         
+    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step4()">
+      Next
+    </button>     
+  </div>
+  <div class="col-md-5">
+    <!-- picture: slide in filament -->
+    <img src="<%= asset_path("touchapp/images/wizard_load_filament_slidein.jpg") %>" class="img-responsive">
+  </div> 
+</div>
+
+<!-- Step 4 -->
+<div class="row" ng-show="step == '4'">
+  <div class="col-md-7">
+    <p>Pivot the filament idler wheel away from the filament drive gear with two fingers,
+      as shown to the right, and feed the filament from top through the idler lever,
+      down into the extruder barrel.</p>
+    <p>Next, run the priming wizard to prepare the nozzle for printing.</p>
+    <br/>
+    <br/>
+    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step3()">
+      Back
+    </button>         
+    <a href="#/wizard_priming" class="pull-right btn btn-primary btn-lg navigation">
+      Priming Wizard
+    </a>             
+  </div>
+  <div class="col-md-5">
+    <!-- picture: insert into extruder -->
+    <img src="<%= asset_path("touchapp/images/wizard_load_filament_insert.jpg") %>" class="img-responsive">
+  </div> 
+</div>

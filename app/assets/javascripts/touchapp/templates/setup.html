@@ -1,0 +1,68 @@
+<p class="pull-right text-right">Backend-URL:<br /><kbd><b>{{ backendurl }}</b></kbd></p>
+<h3 class="wizard-title">Wizards</h3>
+<div class="clearfix"><br/></div>
+
+<div class="row">
+  <div class="col-md-4">
+    <a href="#/wizard_leveling" class="btn btn-primary btn-lg btn-block {{ !idle && 'disabled' }}">
+      Print Bed Leveling
+    </a>    
+    <a href="#/wizard_unload_filament" class="btn btn-primary btn-lg btn-block {{ !(idle || paused) && 'disabled' }}">
+      Unload Filament
+    </a>
+    <a href="#/wizard_load_filament" class="btn btn-primary btn-lg btn-block {{ !(idle || paused) && 'disabled' }}">
+      Load Filament
+    </a>
+    <a href="#/wizard_priming" class="btn btn-primary btn-lg btn-block {{ !(idle || paused) && 'disabled' }}">
+      Prime Extruders
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="#/wizard_select_filament" class="btn btn-default btn-lg btn-block">
+      Select Filament Profiles
+    </a>        
+    <a href="#/wizard_nozzle_change" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+      Nozzle Change
+    </a>
+<!--    
+    <button class="btn btn-default btn-lg btn-block">
+      Nozzle Cleaning
+    </button>
+    <button class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+      Service Air Filter
+    </button>    
+-->
+    <a href="#/wizard_calibrate_extrusion" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+      Calibrate Extrusion
+    </a>
+    <a href="#/wizard_calibrate_offset" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+      Calibrate Extruder Offset
+    </a>    
+  </div>
+  <div class="col-md-4">
+<!--    
+    <button class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+      Initial Commissioning
+    </button>   
+-->    
+    <a href="#/wizard_regular_maintenance" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+      Regular Maintenance
+    </a>
+
+   </div>  
+</div>
+
+  
+  
+<!--  
+Initial Commissioning
+Regular Maintenance
+Nozzle Changeover
+Print Bed Leveling
+Filament Diameter Calibration
+Unload Filament
+Load Filament
+Reset Backend Password
+Nozzle Cleaning (burn out)
+Service Air Filter
+-->
