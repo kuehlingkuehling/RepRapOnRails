@@ -20,7 +20,7 @@ The app makes use of some features only provided by the [Repetier Firmware](http
 ## Software Layout
 
 Upon start of the rails server, a persistent serial connection is established to the RepRap
-microcontroller through a RepRapHost instance (lib/repraphost.rb).
+microcontroller through a RepRapHost instance (`lib/repraphost.rb`).
 Additionally two AngularJS web apps are provided:
 
 * http://localhost/touchapp
@@ -28,11 +28,11 @@ Additionally two AngularJS web apps are provided:
   The touchscreen interface  - only accessible from localhost (via chromium browser in
 kiosk mode)
 
-* http://YOUR-BBB-HOSTNAME>/
+* http://YOUR-BBB-HOSTNAME/
 
   A backend interface available from the network to upload and manage printjobs
 
-Find the AngularJS sources of these in app/assets/javascripts/touchapp and app/assets/javascripts/backendapp
+Find the AngularJS sources of these in `app/assets/javascripts/touchapp` and `app/assets/javascripts/backendapp`
 
 Communication between the AngularJS apps in the browser and the Rails server is done via websocket connections for live updates in both directions.
 
