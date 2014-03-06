@@ -28,7 +28,7 @@ Additionally two AngularJS web apps are provided:
   The touchscreen interface  - only accessible from localhost (via chromium browser in
 kiosk mode)
 
-* http://<your-hostname>/
+* http://YOUR-BBB-HOSTNAME>/
 
   A backend interface available from the network to upload and manage printjobs
 
