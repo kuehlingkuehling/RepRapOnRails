@@ -201,7 +201,7 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   };   
   
   Service.removePrintjob = function(id) {
-    dispatcher.trigger('remove_printjob', id);
+    dispatcher.trigger('printjob.remove', id);
   };  
   
   Service.calibrateOffsetPrintjob = function() {
