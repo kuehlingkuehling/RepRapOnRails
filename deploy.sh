@@ -3,6 +3,10 @@
 echo "PREPARING CLEAN REPRAPONRAILS INSTALL"
 read -p "Press [Enter] key to start..."
 
+# install default database config file
+echo "setting up database configuration"
+mv config/database.yml.default config/database.yml
+
 # install all gems
 echo "bundle install"
 bundle install
