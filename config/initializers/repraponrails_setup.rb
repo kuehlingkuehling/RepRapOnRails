@@ -19,6 +19,9 @@ RepRapOnRails::Application.configure do
   config.gcode_calibrate_extrusion_left = File.join(Rails.root, "calibration", "calibration_extrusion_left.gcode")
   config.gcode_calibrate_extrusion_right = File.join(Rails.root, "calibration", "calibration_extrusion_right.gcode")
   config.gcode_calibrate_offset = File.join(Rails.root, "calibration", "calibration_offset.gcode")  
+  
+  # location of a new arduino firmware hexfile if available
+  config.arduino_hexfile = File.join( Rails.root, "arduino-firmware-update", "arduino-firmware.hex" )
 end
 
 # moving log database writing to queued background job - this task is too slow
@@ -32,6 +35,21 @@ log_thread = Thread.new do
     else
       sleep 0.01
     end
+  end
+end
+
+# check if arduino firmware update available
+# if true (arduino-firmware.hex file was uploaded to 'arduino-firmware-update' directory)
+# we will upload the new hex file via avrdude and delete the file on success.
+if File.exist?( Rails.application.config.arduino_hexfile )
+  log_queue.push({:level => 1, :line => 'New Arduino Firmware update available - installing...'})
+  avrdude_error = system("avrdude -v -v -v -v -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i")
+    
+  if avrdude_error
+    log_queue.push({:level => 3, :line => 'Arduino Firmware update failed - Exit Code #{ avrdude_error }!'})
+  else
+    log_queue.push({:level => 1, :line => 'Arduino Firmware update successful.'})
+    File.delete( Rails.application.config.arduino_hexfile )
   end
 end
 

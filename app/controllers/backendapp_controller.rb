@@ -28,6 +28,14 @@ class BackendappController < ApplicationController
     end
   end
   
+  def firmware
+    require 'fileutils'
+    FileUtils.mv( firmware_params[:hexfile].tempfile,
+                  Rails.application.config.arduino_hexfile,
+                  {:force => true} )
+    render :nothing => true, :status => :ok
+  end
+  
   
 private
     # Using a private method to encapsulate the permissible parameters is
@@ -37,4 +45,8 @@ private
     def printjob_params
       params.permit(:name, :note, :gcodefile)
     end  
+    
+    def firmware_params
+      params.permit(:hexfile)
+    end
 end

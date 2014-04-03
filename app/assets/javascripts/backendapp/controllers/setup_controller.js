@@ -1,10 +1,15 @@
-backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCode){
+backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCode, $timeout, $upload){
   console.log("Running SetupController");  
 
   $scope.presets = [];
   $scope.newPreset = {name:'',extrusion_temp:''};
   $scope.isCollapsed = true;  
   $scope.edit = {};
+
+  // firmware upload form
+  $scope.uploadProgress = 0;
+  $scope.file = false;  
+  $scope.error = '';
 
   $scope.$watch(function(){ return MyWebsocket.filamentPresets; }, function(){
     $scope.presets = MyWebsocket.filamentPresets;
@@ -38,6 +43,40 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.updatePreset = function(index){
     MyWebsocket.updatePreset($scope.presets[index]);
     $scope.edit[$scope.presets[index].id] = false;    
-  };     
+  };    
+  
+  $scope.onFileSelect = function($files) {
+    //$files: an array of files selected, each file has name, size, and type.
+    $scope.file = $files[0];
+  };  
+  
+  $scope.uploadPrintjob = function() {
+    $scope.upload = $upload.upload({
+      url: 'firmware', //upload.php script, node.js route, or servlet url
+      method: 'POST', //or PUT,
+      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      // withCredential: true,
+      //data: {},
+      file: $scope.file,
+      fileFormDataName: 'hexfile'
+    }).progress(function (evt) {
+        // get upload percentage
+        console.log("uploaded percent: " + parseInt(100.0 * evt.loaded / evt.total));
+        $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total); 
+    }).success(function (data, status, headers, config) {
+        // file is uploaded successfully      
+        console.log("Succesfully uploaded.");
+        $timeout(function(){
+          $scope.uploadProgress = 0;
+          $scope.file = false;        
+          $scope.fileInput = '';                   
+        }, 2000);
+    }).error(function (data, status, headers, config) {
+        // file failed to upload
+        console.log(data);
+        $scope.uploadProgress = 0;        
+        $scope.error = "Error: Failed to upload data."
+    });
+  };   
 
 });
