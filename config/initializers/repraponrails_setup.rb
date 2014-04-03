@@ -46,11 +46,11 @@ if File.exist?( Rails.application.config.arduino_hexfile )
   avrdude_error = system("avrdude -v -v -v -v -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i")
     
   if avrdude_error
-    log_queue.push({:level => 3, :line => 'Arduino Firmware update failed - Exit Code #{ avrdude_error }!'})
+    log_queue.push({:level => 2, :line => "Arduino Firmware update returned exit code #{ avrdude_error }!"})
   else
     log_queue.push({:level => 1, :line => 'Arduino Firmware update successful.'})
-    File.delete( Rails.application.config.arduino_hexfile )
   end
+  File.delete( Rails.application.config.arduino_hexfile )  
 end
 
 # starting RepRap Connection
