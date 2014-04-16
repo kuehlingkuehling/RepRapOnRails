@@ -6,7 +6,8 @@ class WsController < WebsocketRails::BaseController
   end
 
   def logfile
-    trigger_success LogEntry.limit(Rails.application.config.log_max_shown_in_touchapp).order('created_at desc').to_a
+#    trigger_success LogEntry.limit(Rails.application.config.log_max_shown_in_touchapp).order('created_at desc').to_a
+    trigger_success LogEntry.limit(Rails.application.config.log_max_shown_in_touchapp).order('id desc').to_a
   end
   
   def hostname

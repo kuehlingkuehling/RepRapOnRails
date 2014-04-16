@@ -43,13 +43,14 @@ end
 # we will upload the new hex file via avrdude and delete the file on success.
 if File.exist?( Rails.application.config.arduino_hexfile )
   log_queue.push({:level => 1, :line => 'New Arduino Firmware update available - installing...'})
-  avrdude_error = system("avrdude -v -v -v -v -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i")
-    
-  if avrdude_error
-    log_queue.push({:level => 2, :line => "Arduino Firmware update returned exit code #{ avrdude_error }!"})
-  else
-    log_queue.push({:level => 1, :line => 'Arduino Firmware update successful.'})
+  avrdude_log = `avrdude -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i 2>&1`
+  
+  avrdude_log.each_line do |logline|
+    log_queue.push({:level => 0, :line => logline})
   end
+
+  log_queue.push({:level => 1, :line => 'Arduino Firmware update finished.'})
+  
   File.delete( Rails.application.config.arduino_hexfile )  
 end
 
@@ -177,10 +178,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
         printer.verbose = true
       end
       
-      # write first log line to ensure LogEntry class is loaded - otherwise we occasionally get
-      # "circular dependency" issues due to multiple concurrent logging-threads all
-      # trying to load the class
-      LogEntry.create(level: 1, line: "Connecting to RepRap Controller...")      
+      log_queue.push({:level => 1, :line => 'Connecting to RepRap Controller...'})      
       printer.connect(Rails.application.config.reprap_usb_port, Rails.application.config.reprap_usb_baudrate)                      
   
     end
