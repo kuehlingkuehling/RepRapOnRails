@@ -69,4 +69,11 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
     $timeout.cancel($scope.update_temps_timeout);
     $location.path( "/setup" );
   };        
+  
+  $scope.select_profiles = function() {
+    MyWebsocket.macro('wizard_priming_exit');
+    MyWebsocket.menuDisabled = false;
+    $timeout.cancel($scope.update_temps_timeout);
+    $location.path( "/wizard_select_filament" );
+  };     
 });
