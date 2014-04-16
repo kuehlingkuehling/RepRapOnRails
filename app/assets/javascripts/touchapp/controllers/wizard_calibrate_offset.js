@@ -3,8 +3,8 @@ touchApp.controller('WizardCalibrateOffsetController', function($scope, CommonCo
 
   MyWebsocket.menuDisabled = true;
   
-  $scope.x_steps_per_mm = 71.1111;
-  $scope.y_steps_per_mm = 106.6667;
+  $scope.x_steps_per_mm = 35.5556;
+  $scope.y_steps_per_mm = 53.3333;
   $scope.default_x_offset = 58.05; // in mm
   $scope.default_y_offset = 0; // in mm
   
