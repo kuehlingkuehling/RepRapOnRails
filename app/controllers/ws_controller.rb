@@ -47,8 +47,8 @@ class WsController < WebsocketRails::BaseController
   def extrude
     extruder = message[0]
     length = message[1]
+    @@printer.send("T" + extruder.to_s);        
     @@printer.send("G92 E0");
-    @@printer.send("T" + extruder.to_s);    
     @@printer.send("G1 E" + length.to_s + " F70");
   end
   
