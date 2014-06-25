@@ -33,6 +33,7 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
   // initial commands
   MyWebsocket.macro('psu_on');
   MyWebsocket.macro('maintenance_position');
+  MyWebsocket.macro('wizard_priming_init');
   
   $scope.step1 = function() {
     $scope.step = 1;
@@ -48,10 +49,12 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
       case 0:
         $scope.extruder_name = "left";
         $scope.filament = $scope.filaments_loaded.left;
+        MyWebsocket.macro('select_left_extruder');
         break;
       case 1:
         $scope.extruder_name = "right";
         $scope.filament = $scope.filaments_loaded.right;      
+        MyWebsocket.macro('select_right_extruder');
         break;
     }; 
     // preheat extruder
