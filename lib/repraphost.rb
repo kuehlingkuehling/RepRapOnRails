@@ -418,8 +418,7 @@ class RepRapHost
       # home all axes and turn off both extruders, bed and chamber stay untouched
       self.send("G28")
       self.send("M104 S0 T0")
-      self.send("M104 S0 T1")      
-      end      
+      self.send("M104 S0 T1")            
     else
       errorcb.call("Nothing to pause, printer isn't printing right now!") if @errorcb
     end
