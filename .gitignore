@@ -8,6 +8,9 @@
 /lib/dev-experiments
 /_dev
 
+# do not publish precompiled assets
+/public/assets/
+
 # bundler state
 /.bundle
 /vendor/bundle/
