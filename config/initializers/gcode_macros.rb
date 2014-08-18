@@ -74,7 +74,7 @@ MACROS = {
     "M104 S0 T1",    
     "G28",
     "T0"],    
-  :wizard_priming_start => [
+  :wizard_priming_init => [
     "T0",
     "G92 E0",
     "G1 F70 E0.05"],    
