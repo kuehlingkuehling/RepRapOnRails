@@ -44,14 +44,18 @@ end
 if File.exist?( Rails.application.config.arduino_hexfile )
   log_queue.push({:level => 1, :line => 'New Arduino Firmware update available - installing...'})
   avrdude_log = `avrdude -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i 2>&1`
-  
+  exit_status = $?.to_i
+
   avrdude_log.each_line do |logline|
     log_queue.push({:level => 0, :line => logline})
   end
 
-  log_queue.push({:level => 1, :line => 'Arduino Firmware update finished.'})
-  
-  File.delete( Rails.application.config.arduino_hexfile )  
+  if exit_status == 0
+    log_queue.push({:level => 1, :line => 'Arduino Firmware update finished.'})
+    File.delete( Rails.application.config.arduino_hexfile )    
+  else  
+    log_queue.push({:level => 3, :line => 'ERROR: Arduino Firmware update failed! Please reboot for another try.'})
+  end    
 end
 
 # starting RepRap Connection
