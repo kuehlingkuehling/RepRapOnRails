@@ -36,6 +36,7 @@ class RepRapHost
     @printqueue = Array.new
     @gcodefile = nil
     @printing = false
+    @preheating = false
     @paused = false
     @online = false
     @progress = 0
@@ -43,23 +44,42 @@ class RepRapHost
     @timeprintstarted = nil # after 30 lines preheating is usually over, so we assume print start here
     @lines = 0 # number of lines of the gcodefile that is printing
     
-    # stored parameters for resume from pause
-    @target_extruders = Hash.new
-    @active_extruder = 0
-    @last_e_position = 0
-    @retraction_distance = 0
-    @last_feedrate = nil
+    # for preheating: deviation around target temperature to accept as preheated
+    # in +/- °C
+    @temp_deviation = 2
+    @temp_update_interval = 1
+
+    # current parameters of printer 
+    @current_params = Hash.new   
+    @current_params[:current_temps] = {
+      :T0 => 0,
+      :T1 => 0,
+      :T2 => 0,
+      :B  => 0 }
+    @current_params[:target_temps] = {
+      :T0 => 0,
+      :T1 => 0,
+      :T2 => 0,
+      :B  => 0 }
+    @current_params[:active_extruder] = :T0
+    @current_params[:e_position] = 0
+    @current_params[:retraction_distance] = 0
+    @current_params[:feedrate] = nil    
+
+    # snapshot of current params for resume
+    @params_for_resume = nil
 
     # Status
     # 0: Offline
     # 1: Idle
     # 2: Printing
     # 3: Paused
+    # 4: Emergency Stop
+    # 5: Preheating
     @status = 0  
                  
-    
     # callbacks
-    @tempcb = nil  # TODO!
+    @tempcb = nil
     @recvcb = nil
     @sendcb = nil
     @errorcb = nil
@@ -107,6 +127,7 @@ class RepRapHost
         end
 
         @send_thread = Thread.new { self.send_loop }
+        @temp_thread = Thread.new { self.temp_loop }
       rescue Errno::ENOENT => e
         puts "Could not open file (Invalid Port?)"
 #        @errorcb.call("Could not open file (Invalid Port?)") if @errorcb
@@ -173,22 +194,45 @@ class RepRapHost
           puts "<<< " + line if @verbose and @echoreadwrite
           @lastresponse = line
           
-          unless line.start_with?('Resend') or line.start_with?('ok')
+          unless line.start_with?('Resend') or line.start_with?('ok') or line.start_with?('ok T:') or line.start_with?('T:')
             @recvcb.call(line) if @recvcb            
           end
         end
-        
-        # Temperature callback
+
+        # Temperature parsing and callback
         if line.start_with?('ok T:') or line.start_with?('T:')
-          @tempcb.call(line) if @tempcb
+          begin
+            t0 = line.scan(/T0:\-?\s*\d+\.\d+/)[0]
+            t1 = line.scan(/T1:\-?\s*\d+\.\d+/)[0]
+            t2 = line.scan(/T2:\-?\s*\d+\.\d+/)[0]
+            b = line.scan(/B:\-?\s*\d+\.\d+/)[0]
+            @current_params[:current_temps] = {
+              :T0 => t0.match(/:(\-?\s*\d+\.\d+)/)[1].to_f,
+              :T1 => t1.match(/:(\-?\s*\d+\.\d+)/)[1].to_f,
+              :T2 => t2.match(/:(\-?\s*\d+\.\d+)/)[1].to_f,
+              :B => b.match(/:(\-?\s*\d+\.\d+)/)[1].to_f
+            }
+          rescue => e
+            puts "Error in Temp-String RegEx"
+            puts e.inspect
+          end          
+
+          @tempcb.call(@current_params[:current_temps], @current_params[:target_temps]) if @tempcb
+        end
+
+        # remember extruder target temperatures
+        if line.start_with?('TargetExtr')
+          result = /^TargetExtr(?<extruder>\d*):(?<temp>\d+)/.match(line)
+          heater = ( 'T' + result[:extruder] ).to_sym
+          @current_params[:target_temps][heater] = result[:temp].to_i
+        end
+
+        # remember bed target temperature
+        if line.start_with?('TargetBed')
+          result = /^TargetBed:(?<temp>\d+)/.match(line)
+          @current_params[:target_temps][:B] = result[:temp].to_i
         end
         
-        # remember extruder target temperatures for pause/resume
-        # only while printing - so no manual control actions override these
-        if line.start_with?('TargetExtr') and @printing
-          result = /^TargetExtr(?<extruder>\d*):(?<temp>\d+)/.match(line)
-          @target_extruders[result[:extruder]] = result[:temp]
-        end
         
         # act on out-of-filament messages
         if line.start_with?('OutOfFilament')
@@ -234,9 +278,65 @@ class RepRapHost
         line = line.upcase
         
         return unless line.start_with?("M", "G", "T")
+
+        # catch M190/M109 and its parameters and substitute
+        # with M140/M104 to avoid arduino locking up during preheating
+        # (preheating is instead implemented in @preheat_thread)
+        if line.start_with?("M109")
+          target_temp = line.match(/.*S(\d+).*/)
+          heater = line.match(/.*(T\d).*/)
+
+          if target_temp and target_temp[1] and target_temp[1].to_i > 0
+            if heater and heater[1]
+              heater = heater[1].to_sym
+            else
+              heater = @current_params[:active_extruder]
+            end
+
+            target_temp = target_temp[1].to_i
+            preheat = true
+          end
+          
+          line.sub!("M109", "M104")          
+        end
+        if line.start_with?("M190")
+          target_temp = line.match(/.*S(\d+).*/)
+
+          if target_temp and target_temp[1] and target_temp[1].to_i > 0
+            target_temp = target_temp[1].to_i
+            heater = :B
+            preheat = true
+          end
+
+          line.sub!("M190", "M140")         
+        end
+
+        # remember active extruder
+        if result = /^(?<extruder>T\d)/.match(line)
+          @current_params[:active_extruder] = result[:extruder].to_sym
+        end
         
-        puts ">>> " + line if @verbose and @echoreadwrite
-        @sendcb.call(line) if @sendcb and execsendcb
+        # remember current extruder position and current feedrate
+        if line.start_with?("G1")
+          if result = / E(?<position>\d+\.?\d*)/.match(line)
+            if @current_params[:e_position] > result[:position].to_f
+              @current_params[:retraction_distance] = @current_params[:e_position] - result[:position].to_f
+            else
+              @current_params[:retraction_distance] = 0
+            end
+            
+            @current_params[:e_position] = result[:position].to_f
+          end
+          
+          if result = / F(?<feedrate>\d+\.?\d*)/.match(line)
+            @current_params[:feedrate] = result[:feedrate].to_f
+          end        
+        end
+
+        unless line.start_with?("M105")
+          puts ">>> " + line if @verbose and @echoreadwrite
+          @sendcb.call(line) if @sendcb and execsendcb
+        end
         
         begin
           @printer.write(line + "\n")
@@ -248,15 +348,43 @@ class RepRapHost
         # wait for read_loop thread to signal that 'ok' was received    
         @ok_lock.synchronize {        
           @ok.wait(@ok_lock)
-        } 
+        }
+
+        # start @preheat_thread for M109/M190
+        if preheat                    
+          @preheating = true # to stop send_thread or print_thread
+          @preheat_thread = Thread.new(heater, target_temp) { |h,t| self.preheat_loop(h, t) }
+        end
       end
     end
   end
-  
+
+  def preheat_loop(heater, target_temp)
+    # loop waiting for preheat target temperatures to be reached
+    # @print_thread or @send_thread are on hold for the moment and resume afterwards
+    # used in @preheat_thread
+
+    target_range = (target_temp - @temp_deviation)..(target_temp + @temp_deviation)
+    while not target_range.include?(@current_params[:current_temps][heater])
+      break if @paused or @aborted
+      # get temperatures
+      self.write("M105")
+      sleep @temp_update_interval
+    end
+
+    @preheating = false
+
+    # restart send_thread or print_thread
+    if @printing
+      @print_thread.run
+    else
+      @send_thread.run
+    end
+  end
+
   def send(line)
-    # Send a single gcode command to the printer.
-    # Chooses if we can send directly (if not printing)
-    # or through the @printqueue
+    # Send a single gcode command to the @printqueue
+
     if @online
       @printqueue.push(line)
     else
@@ -269,26 +397,40 @@ class RepRapHost
     # used in @send_thread
     
     loop do
-      if @stop_send_thread
-        @stop_send_thread = false
+      if @printing
         Thread.stop
       end
       
       if @printqueue.length > 0
         line = @printqueue.shift
         self.write(line, true)
+
+        if @preheating
+          Thread.stop
+        end        
       else
         sleep 0.1
       end
     end
   end
+
+  def temp_loop
+    # loop sending M105 to receive current temperatures
+    # once every second - unless another M105 is still in @printqueue
+    # used in @temp_thread
+    
+    loop do
+      @printqueue.push("M105") unless @printqueue.include?("M105")
+      
+      sleep @temp_update_interval
+    end
+  end
   
   def print_loop
     # loop printing from a @gcodefile, also sending
-    # commands in @printqueue in between.
+    # commands from @printqueue in between.
     # used in @print_thread
     
-    @printing = true
     @progress = 0
     
     # count number of lines
@@ -305,8 +447,17 @@ class RepRapHost
       # send commands from print queue first
       while cmd = @printqueue.shift
         self.write(cmd, true)
+        
+        if @preheating
+          Thread.stop
+        end        
       end
       
+      if @aborted
+        @send_thread.run        
+        Thread.kill
+      end
+
       if @paused
         @send_thread.run
         Thread.stop
@@ -314,27 +465,10 @@ class RepRapHost
         
       # then continue with next line from gcode file
       self.write(line)
-      
-      # remember active extruder for pause/resume
-      if result = /^T(?<number>\d)/.match(line)
-        @active_extruder = result[:number]
-      end
-      
-      if line.start_with?("G1")
-        if result = / E(?<position>\d+\.?\d*)/.match(line)
-          if @last_e_position > result[:position].to_f
-            @retraction_distance = @last_e_position - result[:position].to_f
-          else
-            @retraction_distance = 0
-          end
-          
-          @last_e_position = result[:position].to_f
-        end
-        
-        if result = / F(?<feedrate>\d+\.?\d*)/.match(line)
-          @last_feedrate = result[:feedrate].to_f
-        end        
-      end
+
+      if @preheating
+        Thread.stop
+      end        
         
       # recalculate progress
       @progress = ((@gcodefile.lineno.to_f / @lines.to_f) * 100).to_i
@@ -385,7 +519,7 @@ class RepRapHost
         @gcodefile = File.open(gcodefilename, 'r')
         # start seperate thread for printing
              
-        @stop_send_thread = true
+        @printing = true
         sleep 0.1 until @send_thread.stop?
 
         @print_thread = Thread.new { self.print_loop }
@@ -405,7 +539,10 @@ class RepRapHost
       # invoke a thread stop inside @print_thread
       @paused = true 
       @printing = false
+      sleep 0.1 until @preheat_thread.stop? if @preheating
       sleep 0.1 until @print_thread.stop?
+
+      @params_for_resume = @current_params.clone
       @send_thread.run
       
       @pausecb.call if @pausecb
@@ -436,33 +573,33 @@ class RepRapHost
       self.send("G28")
       
       # reset all extruder temperatures to stored values 
-      @target_extruders.each do |temp| 
+      @params_for_resume[:target_temps].each do |temp| 
         self.send("M104 S#{ temp[1] } T#{ temp[0] }")
       end
-      self.send("M109") unless @target_extruders.empty?
+      self.send("M109") unless @params_for_resume[:target_temps].empty?
   
       # select extruder, that was active before pause
-      self.send("T#{ @active_extruder }")
+      self.send(@params_for_resume[:active_extruder].to_s)
       
       # restore extruder retraction state
-      if @retraction_distance > 0
+      if @params_for_resume[:retraction_distance] > 0
         self.send("G92 E0")
-        self.send("G1 E-#{ @retraction_distance } 70")
+        self.send("G1 E-#{ @params_for_resume[:retraction_distance] } 70")
       end
       
       # set current extruder value to last seen value
       # so subsequent gcodes can continue from here
-      self.send("G92 E#{ @last_e_position }")
+      self.send("G92 E#{ @params_for_resume[:e_position] }")
       
       # move to last stored printing position
       self.send("M402")
 
       # restore feedrate last used
-      if @last_feedrate
-        self.send("G1 F#{ @last_feedrate }")
+      if @params_for_resume[:feedrate]
+        self.send("G1 F#{ @params_for_resume[:feedrate] }")
       end
       
-      @stop_send_thread = true
+      @printing = true
       sleep 0.1 until @send_thread.stop?
       
       @print_thread.run
@@ -474,7 +611,10 @@ class RepRapHost
   def abort_print
     # stops the print
     if @printing or @paused
-      @print_thread.kill
+      @aborted = true
+      sleep 0.1 until @preheat_thread.stop? if @preheating
+      sleep 0.1 until @print_thread.stop?
+      @aborted = false
       @send_thread.run
       @printing = false
       @paused = false
@@ -485,9 +625,7 @@ class RepRapHost
       @status = 1
       @progress = 0
       @timejobstarted = nil
-      @timeprintstarted = nil
-      @target_extruders = Hash.new
-      @active_extruder = 0      
+      @timeprintstarted = nil     
     else
       @errorcb.call("Cannot abort print - not printing right now!") if @errorcb
     end

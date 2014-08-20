@@ -134,7 +134,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                          end         
   
       # assign temp callback                      
-      printer.tempcb = Proc.new do |line| 
+      printer.tempcb = Proc.new do |temps, targets| 
                             # marlin temp string parser
                             #temps = line.scan(/T\d:\s*\d+\.\d+\s*\/\s*\d+\.\d+/)
                             #temps += line.scan(/B:\s*\d+\.\d+\s*\/\s*\d+\.\d+/)
@@ -143,27 +143,23 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                             #    :current => t.match(/:\s*(\d+\.\d+)/)[1],
                             #    :target => t.match(/\/\s*(\d+\.\d+)/)[1] }
                             #end
-                            begin
-                              left = line.scan(/T0:\-?\s*\d+\.\d+/)[0]
-                              right = line.scan(/T1:\-?\s*\d+\.\d+/)[0]
-                              chamber = line.scan(/T2:\-?\s*\d+\.\d+/)[0]
-                              bed = line.scan(/B:\-?\s*\d+\.\d+/)[0]
-                              temps = [ 
-                                { :name => 'Left Extruder',
-                                  :temp => left.match(/:(\-?\s*\d+\.\d+)/)[1] },
-                                { :name => 'Right Extruder',
-                                  :temp => right.match(/:(\-?\s*\d+\.\d+)/)[1] },
-                                { :name => 'Chamber',
-                                  :temp => chamber.match(/:(\-?\s*\d+\.\d+)/)[1] },
-                                { :name => 'Bed',
-                                  :temp => bed.match(/:(\-?\s*\d+\.\d+)/)[1] }
-                              ]
-     
-                              WebsocketRails[:temp].trigger(:new, temps)
-                            rescue => e
-                              logger.warn "Error in Temp-String RegEx"
-                              logger.warn e.inspect
-                            end
+                        
+                            message = [ 
+                              { :name   => 'Left Extruder',
+                                :temp   => temps[:T0],
+                                :target => targets[:T0] },
+                              { :name   => 'Right Extruder',
+                                :temp   => temps[:T1],
+                                :target => targets[:T1] },
+                              { :name   => 'Chamber',
+                                :temp   => temps[:T2],
+                                :target => targets[:T2] },
+                              { :name   => 'Bed',
+                                :temp   => temps[:B],
+                                :target => targets[:B] }
+                            ]
+   
+                            WebsocketRails[:temp].trigger(:new, message)
                          end  
                         
       # assign error callback                      
