@@ -18,7 +18,7 @@ class RepRapHost
   attr_accessor :verbose, :echoreadwrite,
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
-                :abortcb
+                :abortcb, :preheatcb, :preheatedcb
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
               :status
   alias :online? :online
@@ -89,6 +89,8 @@ class RepRapHost
     @pausecb = nil
     @reloadcb = nil # on filament empty, deliveres :left or :right as parameter
     @abortcb = nil
+    @preheatcb = nil # on M109/M190 start
+    @preheatedcb = nil # on M109/M190 target temp reached
     
     # thread sync
     @printer_lock = Mutex.new
@@ -353,6 +355,7 @@ class RepRapHost
         # start @preheat_thread for M109/M190
         if preheat                    
           @preheating = true # to stop send_thread or print_thread
+          @preheatcb.call if @preheatcb
           @preheat_thread = Thread.new(heater, target_temp) { |h,t| self.preheat_loop(h, t) }
         end
       end
@@ -373,6 +376,7 @@ class RepRapHost
     end
 
     @preheating = false
+    @preheatedcb.call if @preheatedcb
 
     # restart send_thread or print_thread
     if @printing
