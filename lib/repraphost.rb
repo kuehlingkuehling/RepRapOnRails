@@ -19,8 +19,7 @@ class RepRapHost
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
                 :abortcb, :preheatcb, :preheatedcb
-  attr_reader :online, :printing, :paused, :lastresponse, :progress,
-              :status
+  attr_reader :online, :printing, :paused, :lastresponse, :progress
   alias :online? :online
   alias :printing? :printing
   alias :paused? :paused
@@ -67,16 +66,7 @@ class RepRapHost
     @current_params[:feedrate] = nil    
 
     # snapshot of current params for resume
-    @params_for_resume = nil
-
-    # Status
-    # 0: Offline
-    # 1: Idle
-    # 2: Printing
-    # 3: Paused
-    # 4: Emergency Stop
-    # 5: Preheating
-    @status = 0  
+    @params_for_resume = nil  
                  
     # callbacks
     @tempcb = nil
@@ -148,7 +138,6 @@ class RepRapHost
     # Disconnects from printer
     self.abort_print if @printing
     @online = false
-    @status = 0
     @send_thread.kill
     @read_thread.kill
     if @printer
@@ -180,8 +169,7 @@ class RepRapHost
 
         if line.start_with?('start')
           self.abort_print if @printing              
-          @online = true
-          @status = 1               
+          @online = true             
           @onlinecb.call if @onlinecb
         end
   
@@ -491,7 +479,6 @@ class RepRapHost
     puts "Print finished!" if @verbose
     @endcb.call(self.time_elapsed) if @endcb
     @send_thread.run
-    @status = 1
   end
   
   def time_remaining
@@ -528,7 +515,6 @@ class RepRapHost
 
         @print_thread = Thread.new { self.print_loop }
         @startcb.call if @startcb
-        @status = 2
       rescue => e
         puts "Error while starting print of file " + (gcodefilename ? gcodefilename : "NO FILE SUPPLIED")
         puts e
@@ -550,7 +536,6 @@ class RepRapHost
       @send_thread.run
       
       @pausecb.call if @pausecb
-      @status = 3
       
       # store last printing position
       self.send("M400")
@@ -571,7 +556,6 @@ class RepRapHost
       @printing = true
       
       @resumecb.call if @resumecb
-      @status = 2
       
       # home all axes
       self.send("G28")
@@ -626,12 +610,44 @@ class RepRapHost
       @gcodefile = nil
       @abortcb.call if @abortcb
       @endcb.call(self.time_elapsed) if @endcb 
-      @status = 1
       @progress = 0
       @timejobstarted = nil
       @timeprintstarted = nil     
     else
       @errorcb.call("Cannot abort print - not printing right now!") if @errorcb
+    end
+  end
+
+  def emergencystop
+    @emergencystop = true
+    @emergencystopcb.call if @emergencystopcb
+    self.reset
+    @emergencystop = false    
+  end
+
+  def status
+    # Status
+    # 0: Offline
+    # 1: Idle
+    # 2: Printing
+    # 3: Paused
+    # 4: Emergency Stop
+    # 5: Preheating
+
+    if @preheating    
+      5 # preheating
+    elsif @online
+      if @printing
+        2 # printing
+      elsif @paused
+        3 # paused
+      else
+        1 # idle
+      end
+    elsif @emergencystop
+      4 # emergency stop
+    else
+      0 # offline
     end
   end
   
