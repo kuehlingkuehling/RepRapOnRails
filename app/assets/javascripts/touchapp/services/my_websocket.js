@@ -143,6 +143,7 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     // 2: Printing
     // 3: Paused
     // 4: Emergency Stop
+    // 5: Preheating
     $timeout(function(){
       Service.print.state = message;
     });

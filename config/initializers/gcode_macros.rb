@@ -6,11 +6,11 @@ MACROS = {
     "M140 S0"],
   :before_shutdown => [
     "M81"],
-  :after_abort => [
+  :after_abort => [              # deprecated - now implemented in repraphost.rb
     "M104 S0 T0",
     "M104 S0 T1",
     "G28"],
-  :after_pause => [
+  :after_pause => [              # deprecated - now implemented in repraphost.rb
     "M104 S0 T0",
     "M104 S0 T1",
     "G28"],

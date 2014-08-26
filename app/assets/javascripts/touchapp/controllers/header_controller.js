@@ -35,17 +35,17 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, My
   
   $scope.abortprint = function() {
     MyWebsocket.abortprint();
-    MyWebsocket.macro("after_abort");
   };  
   
   $scope.pauseprint = function() {
-    MyWebsocket.pauseprint();
-    MyWebsocket.macro("after_pause");    
+    MyWebsocket.pauseprint();    
     MyWebsocket.macro("maintenance_position");    
   };    
   
   $scope.resumeprint = function() {
     MyWebsocket.resumeprint();
     $scope.go("queue");
-  };   
+  };
+
+  $scope.temp = MyWebsocket.temp;    
 });

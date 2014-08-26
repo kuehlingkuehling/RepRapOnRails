@@ -45,11 +45,16 @@ $brand-primary: #7FFF00;
 
 // override all css styles below here
 body { 
-  padding-top: 350px; 
+  padding-top: 330px; 
   -webkit-user-select: none;
      -moz-user-select: -moz-none;
       -ms-user-select: none;
           user-select: none;  
+  padding-bottom: 50px;          
+}
+
+.navbar-nav > li:first-child {
+  padding-left:15px;
 }
 
 input,
@@ -90,9 +95,6 @@ textarea {
 }
 
 .header-background {
-  /* background-image: url(http://www.psdgraphics.com/file/blurry-autumn-background.jpg);  */
-  /* background-image: url(http://farm1.staticflickr.com/230/449458256_ae365d3d05_o_d.jpg); */
-  /* background-image: image-url('kiel.jpg'); */
   background-image: image-url('blurry-autumn-background.jpg');
   background-position: 0px -400px;  
   background-repeat: repeat-x;
