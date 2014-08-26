@@ -1,4 +1,4 @@
-touchApp.controller('HeaderController', function($scope, $location, $timeout, MyWebsocket){
+touchApp.controller('HeaderController', function($scope, $location, $timeout, $modal, MyWebsocket){
   console.log("Running HeaderController");
   
   $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
@@ -47,5 +47,13 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, My
     $scope.go("queue");
   };
 
-  $scope.temp = MyWebsocket.temp;    
+  $scope.shutdown = function(){
+    // open cooldown dialog
+    var shutdownModal = $modal.open({
+      templateUrl: '<%= asset_path("touchapp/templates/dialog_shutdown.html") %>', // statically included in backendapp.html.erb
+      controller: 'DialogShutdownController',
+      backdrop: 'static'
+    });    
+
+  };     
 });

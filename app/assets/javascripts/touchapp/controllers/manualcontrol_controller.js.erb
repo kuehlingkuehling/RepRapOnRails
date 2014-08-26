@@ -2,7 +2,7 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   console.log("Running ManualcontrolController");
   
   $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (MyWebsocket.print.state == 2) {
+    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 5 )) {
       $scope.printing = true;
     } else {
       $scope.printing = false;      
@@ -34,15 +34,5 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   $scope.extrude = function( num, length ){
     MyWebsocket.extrude([num, length]);    
   };     
-  
-  $scope.shutdown = function(){
-    // open cooldown dialog
-    var shutdownModal = $modal.open({
-      templateUrl: '<%= asset_path("touchapp/templates/dialog_shutdown.html") %>', // statically included in backendapp.html.erb
-      controller: 'DialogShutdownController',
-      backdrop: 'static'
-    });    
-
-  };   
 
 });

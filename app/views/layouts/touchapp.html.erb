@@ -21,9 +21,15 @@
     ================================================== -->  
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="HeaderController">
       <div class="jumbotron header-background">
-        <h1>        
+        <h1>     
+           
           <span class="pull-right">
-            <button type="button" class="btn btn-danger btn-lg"  ng-click="emergencyStop()" style="margin-top:-40px;">Emergency<br/>STOP</button>      
+            <button type="button" class="btn btn-warning btn-lg"  ng-click="shutdown()" style="margin-top:-40px;margin-left:30px;height:80px;width:80px;">
+              <i class="fa fa-power-off fa-2x"></i>
+            </button>      
+          </span>        
+          <span class="pull-right">
+            <button type="button" class="btn btn-danger btn-lg"  ng-click="emergencyStop()" style="margin-top:-40px;height:80px;width:140px;">Emergency<br/>STOP</button>      
           </span>              
           <span ng-switch on="print.state">
             <span ng-switch-when="0">Offline</span>
@@ -78,7 +84,12 @@
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" ng-controller="FooterController">
       <div class="navbar-collapse collapse">    
         <ul class="nav navbar-nav">
-          <li ng-repeat="t in temp.list"><p class="navbar-text"><b>{{ t.name }}:</b> <span class="{{ ( t.target > 0 ) && 'text-danger' }}">{{ t.temp | number:2 }} / {{ t.target | number:0 }} °C</span></p></li>
+          <li ng-repeat="t in temp.list"><p class="navbar-text">
+            <b>{{ t.name }}:</b> <span class="{{ ( t.target > 0 ) && 'text-danger' }}">{{ t.temp | number:2 }} / {{ t.target | number:0 }} / <span class="text-success">265</span></p>
+          </li>
+          <li><p class="navbar-text">
+            Current / Target / <span class="text-success">Preset</span> (°C) </p>
+          </li>          
         </ul>
       </div>
     </nav>
