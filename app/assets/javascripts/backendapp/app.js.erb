@@ -25,7 +25,7 @@ backendApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
       templateUrl: '<%= asset_path("backendapp/templates/log.html") %>',
       controller: 'LogController',
       resolve: resolve_websocket
-    }).     
+    }).
     otherwise({
       redirectTo: '/firststeps'
     });

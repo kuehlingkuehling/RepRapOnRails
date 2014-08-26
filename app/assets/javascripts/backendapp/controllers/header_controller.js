@@ -5,11 +5,10 @@ backendApp.controller('HeaderController', function($scope, $modal, $location, $t
     $scope.print = MyWebsocket.print;  
   }, true);  
   
-  $scope.tab = 'firststeps';
-  $location.path( "/" + $scope.tab );  
+  $scope.tab = $location.path();  
   $scope.go = function( tab ){
-    $location.path( "/" + tab );
-    $scope.tab = tab;
+    $location.path( tab );
+    $scope.tab = $location.path();
   };
   
   $scope.progress = 0;
