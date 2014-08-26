@@ -71,11 +71,10 @@ class WsController < WebsocketRails::BaseController
   end
   
   def emergencystop
-    WebsocketRails[:print].trigger(:state, 4)   
-    LogEntry.create(level: 2, line: 'Emergency Stop triggered!')
     @@printjob[:id] = nil
     @@printjob[:title] = ""
-    @@printer.reset  
+
+    @@printer.emergencystop
   end
   
   def progress
