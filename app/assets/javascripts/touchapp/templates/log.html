@@ -20,9 +20,14 @@
       </p>    
   </div>
   <div class="col-md-4">
-    <form role="form">
+    <form role="form" class="pull-right">
       <p>      
-        <input type="text" ng-model="gcode" class="form-control" id="gcode" placeholder="Enter GCODE commands">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" ng-model="gcode" class="form-control input-lg" id="gcode" placeholder="Enter GCODE commands" style="width:280px;">&nbsp;
+            <button type="submit" ng-click="send()" class="btn btn-lg btn-primary keypad">Send</button>
+          </div>
+        </div>
       </p>
       <p>
         <button ng-click="add('G')" class="btn btn-lg btn-info keypad">G</button>
@@ -53,11 +58,11 @@
         <button ng-click="add('E')" class="btn btn-lg btn-warning keypad">E</button>
       </p>
       <p>
-        <button ng-click="add(' ')" class="btn btn-lg btn-default keypad">_</button>
+        <button ng-click="add('-')" class="btn btn-lg btn-default keypad">-</button>
         <button ng-click="add('0')" class="btn btn-lg btn-default keypad">0</button>
         <button ng-click="add('.')" class="btn btn-lg btn-default keypad">.</button>
+        <button ng-click="add(' ')" class="btn btn-lg btn-default keypad">_</button>        
         <button ng-click="backspace()" class="btn btn-lg btn-default keypad">&larr;</button>      
-        <button type="submit" ng-click="send()" class="btn btn-lg btn-primary keypad">Send</button>
       </p>
  
     </form>  
