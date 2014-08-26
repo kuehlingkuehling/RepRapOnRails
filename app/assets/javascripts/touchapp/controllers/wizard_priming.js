@@ -22,14 +22,7 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
       };
     };
   }, true);   
-  
-  // get temperatures every 3s
-  $scope.update_temps = function() {
-    MyWebsocket.macro('get_temp');
-    $scope.update_temps_timeout = $timeout($scope.update_temps, 3000);        
-  };
-  $scope.update_temps_timeout = $timeout($scope.update_temps, 3000);  
-  
+    
   // initial commands
   MyWebsocket.macro('psu_on');
   MyWebsocket.macro('maintenance_position');
@@ -69,14 +62,12 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
   $scope.exit = function() {
     MyWebsocket.macro('wizard_priming_exit');
     MyWebsocket.menuDisabled = false;
-    $timeout.cancel($scope.update_temps_timeout);
     $location.path( "/setup" );
   };        
   
   $scope.select_profiles = function() {
     MyWebsocket.macro('wizard_priming_exit');
     MyWebsocket.menuDisabled = false;
-    $timeout.cancel($scope.update_temps_timeout);
     $location.path( "/wizard_select_filament" );
   };     
 });

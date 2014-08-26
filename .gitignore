@@ -11,6 +11,9 @@
 # do not publish precompiled assets
 /public/assets/
 
+# do not publish uploaded gcode files
+/gcodefiles/*
+
 # bundler state
 /.bundle
 /vendor/bundle/

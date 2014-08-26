@@ -18,13 +18,6 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
     };
   }, true); 
   
-  // get bed temperature every 3s
-  $scope.update_bed_temp = function() {
-    MyWebsocket.macro('get_temp');
-    $scope.update_bed_timeout = $timeout($scope.update_bed_temp, 3000);        
-  };
-  $scope.update_bed_timeout = $timeout($scope.update_bed_temp, 3000);  
-  
   // initial commands
   MyWebsocket.macro('psu_on');
   MyWebsocket.macro('get_temp');
@@ -75,7 +68,6 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   $scope.exit = function() {
     MyWebsocket.macro('wizard_leveling_exit');
     MyWebsocket.menuDisabled = false;
-    $timeout.cancel($scope.update_bed_timeout);
     $location.path( "/setup" );
   };        
 });
