@@ -650,18 +650,18 @@ class RepRapHost
 
     status = 0 # offline
 
-    if @preheating    
-      status = 5 # preheating
+    if @emergencystop
+      status = 4 # emergency stop      
     elsif @online
-      if @printing
+      if @preheating    
+        status = 5 # preheating      
+      elsif @printing
         status = 2 # printing
       elsif @paused
         status = 3 # paused
       else
         status = 1 # idle
       end
-    elsif @emergencystop
-      status = 4 # emergency stop
     end
 
     status    
