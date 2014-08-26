@@ -17,7 +17,8 @@ class WsController < WebsocketRails::BaseController
   def status
     status = { :state => @@printer.status,
                :job => @@printjob[:title],
-               :job_id => @@printjob[:id] } 
+               :job_id => @@printjob[:id],
+               :psu_on => @@printer.current_params[:psu_on] } 
 
     trigger_success status
   end

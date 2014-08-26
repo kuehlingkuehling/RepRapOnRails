@@ -18,8 +18,10 @@ class RepRapHost
   attr_accessor :verbose, :echoreadwrite,
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
-                :abortcb, :preheatcb, :preheatedcb, :emergencystopcb
-  attr_reader :online, :printing, :paused, :lastresponse, :progress
+                :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
+                :psuoncb, :psuoffcb
+  attr_reader :online, :printing, :paused, :lastresponse, :progress,
+              :current_params
   alias :online? :online
   alias :printing? :printing
   alias :paused? :paused
@@ -63,7 +65,8 @@ class RepRapHost
     @current_params[:active_extruder] = :T0
     @current_params[:e_position] = 0
     @current_params[:retraction_distance] = 0
-    @current_params[:feedrate] = nil    
+    @current_params[:feedrate] = nil   
+    @current_params[:psu_on] = false 
 
     # snapshot of current params for resume
     @params_for_resume = nil  
@@ -82,6 +85,8 @@ class RepRapHost
     @preheatcb = nil # on M109/M190 start
     @preheatedcb = nil # on M109/M190 target temp reached
     @emergencystopcb = nil
+    @psuoncb = nil # on M80 power supply on
+    @psuoffcb = nil # on M81 power supply off
     
     # thread sync
     @printer_lock = Mutex.new
@@ -306,6 +311,16 @@ class RepRapHost
         if preheat
           self.write("M400", execsendcb)
         end        
+
+        # remember PSU state (on/off) from M80/M81
+        if line.start_with?("M80")
+          @current_params[:psu_on] = true
+          @psuoncb.call if @psuoncb
+        end
+        if line.start_with?("M81")
+          @current_params[:psu_on] = false
+          @psuoffcb.call if @psuoffcb
+        end
 
         # remember active extruder
         if result = /^(?<extruder>T\d)/.match(line)

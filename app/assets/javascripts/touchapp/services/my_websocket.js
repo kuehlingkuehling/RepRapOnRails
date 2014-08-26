@@ -5,7 +5,8 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     state:0,
     job:'',
     elapsed_in_words:'',
-    job_id:0
+    job_id:0,
+    psu_on:false
   };
   Service.printjobs = [];
   Service.filamentPresets = [];
@@ -23,6 +24,7 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
         Service.print.state = data.state;
         Service.print.job = data.job;      
         Service.print.job_id = data.job_id;
+        Service.print.psu_on = data.psu_on;
       });
     });     
     Service.get('logfile').then(function(data){
@@ -153,6 +155,12 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     $timeout(function(){
       Service.print.job = message.name;
       Service.print.job_id = message.job_id;
+    });
+  }); 
+  printchannel.bind('psu', function(message){
+    console.log('New PSU_on status received: ' + message);
+    $timeout(function(){
+      Service.print.psu_on = message;
     });
   }); 
   printchannel.bind('finished', function(message){
