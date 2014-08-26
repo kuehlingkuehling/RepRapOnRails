@@ -44,9 +44,9 @@ class RepRapHost
     @lines = 0 # number of lines of the gcodefile that is printing
     
     # for preheating: deviation around target temperature to accept as preheated
-    # in +/- °C
-    @temp_deviation = 2
-    @temp_update_interval = 1
+    @temp_deviation = 2           # in +/- °C
+    @temp_update_interval = 1     # in sec
+    @temp_stabilize_cycles = 3    # temp needs to stay withing deviation for this many temp refreh cycles
 
     # current parameters of printer 
     @current_params = Hash.new   
@@ -362,10 +362,18 @@ class RepRapHost
     # used in @preheat_thread
 
     @preheatcb.call if @preheatcb    
-
+    
+    stabilize_cycles = 0
     target_range = (target_temp - @temp_deviation)..(target_temp + @temp_deviation)
-    while not target_range.include?(@current_params[:current_temps][heater])
+    while not @temp_stabilize_cycles == stabilize_cycles
+      if target_range.include?(@current_params[:current_temps][heater])
+        stabilize_cycles += 1
+      else
+        stabilize_cycles = 0
+      end
+
       break if @paused or @aborted
+
       # get temperatures
       self.write("M105")
       sleep @temp_update_interval
