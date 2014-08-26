@@ -18,7 +18,7 @@ class RepRapHost
   attr_accessor :verbose, :echoreadwrite,
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
-                :abortcb, :preheatcb, :preheatedcb
+                :abortcb, :preheatcb, :preheatedcb, :emergencystopcb
   attr_reader :online, :printing, :paused, :lastresponse, :progress
   alias :online? :online
   alias :printing? :printing
@@ -81,6 +81,7 @@ class RepRapHost
     @abortcb = nil
     @preheatcb = nil # on M109/M190 start
     @preheatedcb = nil # on M109/M190 target temp reached
+    @emergencystopcb = nil
     
     # thread sync
     @printer_lock = Mutex.new
@@ -161,7 +162,7 @@ class RepRapHost
   def read_loop
     loop do
       begin
-        line = @printer.readline          
+        line = @printer.readline 
         # soemtimes the start string occurs as "\u0000start\n" on first connect             
         line.delete!("\0")
         # strip all leading whitespaces
@@ -222,7 +223,7 @@ class RepRapHost
           result = /^TargetBed:(?<temp>\d+)/.match(line)
           @current_params[:target_temps][:B] = result[:temp].to_i
         end
-        
+       
         
         # act on out-of-filament messages
         if line.start_with?('OutOfFilament')
@@ -284,7 +285,7 @@ class RepRapHost
             end
 
             target_temp = target_temp[1].to_i
-            preheat = true
+            preheat = true if @printing
           end
           
           line.sub!("M109", "M104")          
@@ -295,11 +296,16 @@ class RepRapHost
           if target_temp and target_temp[1] and target_temp[1].to_i > 0
             target_temp = target_temp[1].to_i
             heater = :B
-            preheat = true
+            preheat = true if @printing
           end
 
           line.sub!("M190", "M140")         
-        end
+        end        
+        # for M109 and M190 we need to wait for empty command buffer (M400) on arduino
+        # so we know exactly when temperatures will be set - for timing the @preheat_thread
+        if preheat
+          self.write("M400", execsendcb)
+        end        
 
         # remember active extruder
         if result = /^(?<extruder>T\d)/.match(line)
@@ -328,6 +334,7 @@ class RepRapHost
           @sendcb.call(line) if @sendcb and execsendcb
         end
         
+        # write command to arduino
         begin
           @printer.write(line + "\n")
         rescue => e
@@ -341,9 +348,8 @@ class RepRapHost
         }
 
         # start @preheat_thread for M109/M190
-        if preheat                    
+        if preheat               
           @preheating = true # to stop send_thread or print_thread
-          @preheatcb.call if @preheatcb
           @preheat_thread = Thread.new(heater, target_temp) { |h,t| self.preheat_loop(h, t) }
         end
       end
@@ -352,8 +358,10 @@ class RepRapHost
 
   def preheat_loop(heater, target_temp)
     # loop waiting for preheat target temperatures to be reached
-    # @print_thread or @send_thread are on hold for the moment and resume afterwards
+    # @print_thread or @send_thread are suspended by @preheating and resume afterwards
     # used in @preheat_thread
+
+    @preheatcb.call if @preheatcb    
 
     target_range = (target_temp - @temp_deviation)..(target_temp + @temp_deviation)
     while not target_range.include?(@current_params[:current_temps][heater])
@@ -366,12 +374,9 @@ class RepRapHost
     @preheating = false
     @preheatedcb.call if @preheatedcb
 
-    # restart send_thread or print_thread
-    if @printing
-      @print_thread.run
-    else
-      @send_thread.run
-    end
+    # restart print_thread
+    @print_thread.run
+    Thread.exit
   end
 
   def send(line)
@@ -395,11 +400,8 @@ class RepRapHost
       
       if @printqueue.length > 0
         line = @printqueue.shift
-        self.write(line, true)
 
-        if @preheating
-          Thread.stop
-        end        
+        self.write(line, true)      
       else
         sleep 0.1
       end
@@ -445,25 +447,28 @@ class RepRapHost
         end        
       end
       
-      if @aborted
-        @send_thread.run        
-        Thread.kill
-      end
 
-      if @paused
-        @send_thread.run
-        Thread.stop
-      end
-        
       # then continue with next line from gcode file
       self.write(line)
 
+      # recalculate progress
+      @progress = ((@gcodefile.lineno.to_f / @lines.to_f) * 100).to_i      
+
       if @preheating
         Thread.stop
-      end        
-        
-      # recalculate progress
-      @progress = ((@gcodefile.lineno.to_f / @lines.to_f) * 100).to_i
+      end      
+
+      if @aborted
+        @printing = false
+        @send_thread.run        
+        Thread.exit
+      end
+
+      if @paused
+        @printing = false
+        @send_thread.run
+        Thread.stop
+      end
       
       # save time when actual printing started (after preheating etc)
       # we asume after 30 lines of gcode the preheat should be done...
@@ -528,13 +533,10 @@ class RepRapHost
     if @printing and not @paused
       # invoke a thread stop inside @print_thread
       @paused = true 
-      @printing = false
-      sleep 0.1 until @preheat_thread.stop? if @preheating
-      sleep 0.1 until @print_thread.stop?
+      sleep 0.1 until not @printing
 
-      @params_for_resume = @current_params.clone
-      @send_thread.run
-      
+      # deep-copy printer parameters for resume
+      @params_for_resume = Marshal.load(Marshal.dump(@current_params))
       @pausecb.call if @pausecb
       
       # store last printing position
@@ -554,18 +556,24 @@ class RepRapHost
     if @paused and not @printing
       @paused = false
       @printing = true
-      
+      sleep 0.1 until @send_thread.stop?
+
       @resumecb.call if @resumecb
-      
+
       # home all axes
       self.send("G28")
       
-      # reset all extruder temperatures to stored values 
-      @params_for_resume[:target_temps].each do |temp| 
-        self.send("M104 S#{ temp[1] } T#{ temp[0] }")
+      # reset all extruder temperatures and bed temp to stored values 
+      @params_for_resume[:target_temps].each do |heater, temp| 
+        if heater == :B
+          self.send("M190 S#{ temp }")
+        elsif heater == :T2   # do not wait for chamber temp
+          self.send("M104 S#{ temp } #{ heater.to_s }")
+        else
+          self.send("M109 S#{ temp } #{ heater.to_s }")
+        end
       end
-      self.send("M109") unless @params_for_resume[:target_temps].empty?
-  
+
       # select extruder, that was active before pause
       self.send(@params_for_resume[:active_extruder].to_s)
       
@@ -586,10 +594,7 @@ class RepRapHost
       if @params_for_resume[:feedrate]
         self.send("G1 F#{ @params_for_resume[:feedrate] }")
       end
-      
-      @printing = true
-      sleep 0.1 until @send_thread.stop?
-      
+
       @print_thread.run
     else
       errorcb.call("Nothing to resume, printer isn't paused right now!") if @errorcb
@@ -600,11 +605,8 @@ class RepRapHost
     # stops the print
     if @printing or @paused
       @aborted = true
-      sleep 0.1 until @preheat_thread.stop? if @preheating
-      sleep 0.1 until @print_thread.stop?
+      sleep 0.1 until not @printing
       @aborted = false
-      @send_thread.run
-      @printing = false
       @paused = false
       @gcodefile.close
       @gcodefile = nil
@@ -613,6 +615,18 @@ class RepRapHost
       @progress = 0
       @timejobstarted = nil
       @timeprintstarted = nil     
+
+      # home all axes
+      self.send("G28")
+      
+      # disable all extruders and bed
+      @current_params[:target_temps].each do |heater, temp| 
+        if heater == :B
+          self.send("M140 S0")
+        else
+          self.send("M104 S0 #{ heater.to_s }")
+        end
+      end      
     else
       @errorcb.call("Cannot abort print - not printing right now!") if @errorcb
     end
@@ -634,21 +648,23 @@ class RepRapHost
     # 4: Emergency Stop
     # 5: Preheating
 
+    status = 0 # offline
+
     if @preheating    
-      5 # preheating
+      status = 5 # preheating
     elsif @online
       if @printing
-        2 # printing
+        status = 2 # printing
       elsif @paused
-        3 # paused
+        status = 3 # paused
       else
-        1 # idle
+        status = 1 # idle
       end
     elsif @emergencystop
-      4 # emergency stop
-    else
-      0 # offline
+      status = 4 # emergency stop
     end
+
+    status    
   end
-  
+
 end
