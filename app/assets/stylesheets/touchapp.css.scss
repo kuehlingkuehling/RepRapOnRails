@@ -50,7 +50,13 @@ body {
      -moz-user-select: -moz-none;
       -ms-user-select: none;
           user-select: none;  
-  padding-bottom: 50px;          
+  padding-bottom: 30px;          
+}
+
+.container {
+  margin-left:15px;
+  margin-right:15px;
+  width:auto;
 }
 
 .navbar-nav > li:first-child {
