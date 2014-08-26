@@ -67,7 +67,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
     if printer.is_a?(RepRapHost) and not printer.online?
       # assign online callback
       printer.onlinecb = Proc.new do
-                             WebsocketRails[:print].trigger(:state, 1)                              
+                             WebsocketRails[:print].trigger(:state, printer.status)                              
                              #LogEntry.create(level: 1, line: 'RepRap Controller is online!')                            
                              log_queue.push({:level => 1, :line => 'RepRap Controller is online!'})
                            end
@@ -88,7 +88,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                         
       # assign start callback
       printer.startcb = Proc.new do |line|
-                             WebsocketRails[:print].trigger(:state, 2)
+                             WebsocketRails[:print].trigger(:state, printer.status)
                              WebsocketRails[:print].trigger(:job, { :name => printjob[:title], :job_id => printjob[:id] })
                              log_queue.push({:level => 1, :line => 'Printjob started'})
                              #LogEntry.create(level: 1, line: 'Printjob started')
@@ -96,21 +96,21 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                         
       # assign pause callback                      
       printer.pausecb = Proc.new do |line|
-                            WebsocketRails[:print].trigger(:state, 3) # paused
+                            WebsocketRails[:print].trigger(:state, printer.status) # paused
                             log_queue.push({:level => 1, :line => 'Printjob paused'})
                             #LogEntry.create(level: 1, line: 'Printjob paused')
                         end  
                         
       # assign pause callback                      
       printer.resumecb = Proc.new do |line| 
-                            WebsocketRails[:print].trigger(:state, 2) # printing
+                            WebsocketRails[:print].trigger(:state, printer.status) # printing
                             log_queue.push({:level => 1, :line => 'Printjob resumed'})
                             #LogEntry.create(level: 1, line: 'Printjob resumed')                            
                         end                      
   
       # assign end callback
       printer.endcb = Proc.new do |elapsed|
-                          WebsocketRails[:print].trigger(:state, 1)
+                          WebsocketRails[:print].trigger(:state, printer.status)        
                           WebsocketRails[:print].trigger(:job, { :name => "", :job_id => 0 })
                           WebsocketRails[:print].trigger(:finished, {:id => printjob[:id], :elapsed => UsefulGlobalMethods.timespan_in_words( elapsed )})
                           printjob[:id] = nil
@@ -166,7 +166,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       printer.reloadcb = Proc.new do |spool|
                            if printer.printing?
                              printer.pause_print
-                             WebsocketRails[:print].trigger(:state, 3)  # paused
+                             WebsocketRails[:print].trigger(:state, printer.status)  # paused
                              WebsocketRails[:print].trigger(:out_of_filament, spool)
                              log_queue.push({:level => 2, :line => "Out of Filament: Please reload #{ spool } spool!"})
                            end
@@ -174,14 +174,20 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
 
       # assign preheating start callback                      
       printer.preheatcb = Proc.new do |line|
-                            WebsocketRails[:print].trigger(:state, 5) # preheating
+                            WebsocketRails[:print].trigger(:state, printer.status) # preheating
                         end  
                         
       # assign preheating done callback                      
       printer.preheatedcb = Proc.new do |line| 
                             WebsocketRails[:print].trigger(:state, printer.status)                          
-                        end                                                     
-                        
+                        end
+
+      # assign emergency stop callback
+      printer.emergencystopcb = Proc.new do |line| 
+                            WebsocketRails[:print].trigger(:state, printer.status)                          
+                            LogEntry.create(level: 2, line: 'Emergency Stop triggered!')                            
+                        end                             
+
       # debugging in development environment
       if Rails.env.development?
         printer.echoreadwrite = true
