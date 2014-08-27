@@ -49,8 +49,9 @@ class WsController < WebsocketRails::BaseController
     extruder = message[0]
     length = message[1]
     @@printer.send("T" + extruder.to_s);        
-    @@printer.send("G92 E0");
-    @@printer.send("G1 E" + length.to_s + " F70");
+    @@printer.send("G91");    # relative positioning
+    @@printer.send("G1 E" + length.to_s + " F30");  # extrude <length> mm of filament
+    @@printer.send("G90");    # back to absolute positioning    
   end
   
   def macro
