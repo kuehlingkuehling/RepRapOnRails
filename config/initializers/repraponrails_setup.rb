@@ -51,6 +51,7 @@ if File.exist?( Rails.application.config.arduino_hexfile )
   end
 
   if exit_status == 0
+    arduino_updated = true  # to later issue M502+M500 commands to set EEPROM values
     log_queue.push({:level => 1, :line => 'Arduino Firmware update finished.'})
     File.delete( Rails.application.config.arduino_hexfile )    
   else  
@@ -207,8 +208,13 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       end
       
       log_queue.push({:level => 1, :line => 'Connecting to RepRap Controller...'})      
-      printer.connect(Rails.application.config.reprap_usb_port, Rails.application.config.reprap_usb_baudrate)                      
-  
+      printer.connect(Rails.application.config.reprap_usb_port, Rails.application.config.reprap_usb_baudrate)
+
+      # load firmware configuration values into EEPROM after arduino firmware update
+      if arduino_updated
+        printer.send("M502") # load settings from firmware config
+        printer.send("M500") # store loaded values in EEPROM
+      end
     end
   rescue => error
     puts 'Could not connect to RepRap Controller: ' + error.message
