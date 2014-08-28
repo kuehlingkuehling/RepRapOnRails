@@ -1,40 +1,65 @@
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>&nbsp;</th>      
-      <th style="width:70%">Name/ Note</th>
-      <th>Modified</th>
-      <!--
-      <th>Estimated Print Time</th>
-      <th>Filament used</th>
-      -->
-      <th>&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="p in pagedPrintjobs[currentPage - 1]">
-      <td>{{ p.pos }}</td>
-      <td>
-        <p>{{ p.name }}</p>
-        <p class="muted">{{ p.note }}</p>
-      </td>
-      <td>{{ p.updated_at | date:'yyyy-MM-dd HH:mm' }}</td>
-      <!--
-      <td>n/a</td>
-      <td>n/a</td>
-      -->
-      <td>
-        <p class="text-right">    
-        <a class="btn btn-primary btn-lg {{ !idle && 'disabled' }}" href="#/print_check/{{ p.id }}">
-          print
-        </a>
-        </p>
-      </td>                  
-    </tr>
- </tbody>
- <tfoot>
-    <td colspan="6">
-        <pagination class="pull-right" total-items="numPrintjobs" items-per-page="itemsPerPage" page="currentPage"></pagination>
-    </td>
-</tfoot>
-</table>
+<div class="row">
+  <div class="col-md-8">
+
+    <!-- QUEUE -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>      
+          <th style="width:70%">Print Job / Note</th>
+          <th>Modified</th>
+          <!--
+          <th>Estimated Print Time</th>
+          <th>Filament used</th>
+          -->
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="p in pagedPrintjobs[currentPage - 1]">
+          <td>{{ p.pos }}</td>
+          <td>
+            <p>{{ p.name }}</p>
+            <p class="muted">{{ p.note }}</p>
+          </td>
+          <td>{{ p.updated_at | date:'yyyy-MM-dd HH:mm' }}</td>
+          <!--
+          <td>n/a</td>
+          <td>n/a</td>
+          -->
+          <td>
+            <p class="text-right">    
+            <a class="btn btn-primary btn-lg {{ !idle && 'disabled' }}" href="#/print_check/{{ p.id }}">
+              print
+            </a>
+            </p>
+          </td>                  
+        </tr>
+     </tbody>
+     <tfoot>
+        <td colspan="6">
+            <pagination class="pull-right" total-items="numPrintjobs" items-per-page="itemsPerPage" page="currentPage"></pagination>
+        </td>
+    </tfoot>
+    </table>
+
+  </div>
+  <div class="col-md-4">
+    <p class="text-right">
+      <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('psu_on')">
+        Build Chamber ON
+      </button>   
+      <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_off()">
+        OFF
+      </button> 
+    </p>
+    <p class="text-right">
+      <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_on')">
+        Preheat Chamber/Bed ON
+      </button> 
+      <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_off')">
+        OFF
+      </button>
+    </p>
+  </div>
+</div>

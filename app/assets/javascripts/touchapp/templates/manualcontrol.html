@@ -1,32 +1,5 @@
 <div class="row">
 <div class="col-md-9">
-      <div class="row">
-        <div class="col-md-6">
-          <p class="text-right">
-          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('psu_on')">
-            Build Chamber ON
-          </button>   
-          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_off()">
-            OFF
-          </button> 
-          </p>
-        </div>
-        <div class="col-md-6">
-          <p class="text-left">    
-          <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_on')">
-            Preheat Chamber/Bed ON
-          </button> 
-          <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_off')">
-            OFF
-          </button> 
-          </p>
-        </div>  
-      </div>  
-
-      <div class="row">
-        <br/>
-        <br/>        
-      </div>
       
       <div class="row">
         <!-- X Axis Movements -->    
@@ -189,11 +162,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <p class="text-right">
-          <button type="button" class="btn btn-danger btn-lg navigation {{ printing && 'disabled' }}" ng-click="shutdown()">
-            Shutdown
-          </button> 
-        </p>  
+        
       </div>
     </div>
     

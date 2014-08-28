@@ -18,15 +18,6 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
     MyWebsocket.macro(name);    
   };   
   
-  $scope.psu_off = function(state){
-    // open cooldown dialog
-    var cooldownModal = $modal.open({
-      templateUrl: '<%= asset_path("touchapp/templates/dialog_cooldown.html") %>', // statically included in backendapp.html.erb
-      controller: 'DialogCooldownController',
-      backdrop: 'static'
-    });       
-  };
-  
   $scope.extruder = function( num, temp ){
     MyWebsocket.set_temp([num, temp]);
   };   
