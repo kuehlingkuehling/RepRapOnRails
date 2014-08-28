@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'serialport'
 require 'thread'
+require 'gcode'
+require 'fakereprap'
 
 # credits
 # inspired by 
@@ -26,7 +28,7 @@ class RepRapHost
   alias :printing? :printing
   alias :paused? :paused
   
-  def initialize(port = nil, baud = nil)
+  def initialize(port = nil, baud = nil)  
     # Initializes a printer instance. Pass the port and baud rate to connect immediately
     @baud = nil
     @port = nil
@@ -110,6 +112,7 @@ class RepRapHost
     @errorcb.call("Could not connect to RepRap Controller - no baudrate defined!") if @errorcb and @baud.nil?    
     unless @port.nil? or @baud.nil?
       begin
+        #@printer = FakeRepRap.new(@port, @baud, 8, 1, SerialPort::NONE)
         @printer = SerialPort.new(@port, @baud, 8, 1, SerialPort::NONE)
         
         while not @online
@@ -121,7 +124,10 @@ class RepRapHost
           self.reset
           
           # wait for successful reset
-          sleep 5
+          10.times do
+            break if @online
+            sleep 0.5
+          end
         end
 
         @send_thread = Thread.new { self.send_loop }
@@ -691,3 +697,4 @@ class RepRapHost
   end
 
 end
+
