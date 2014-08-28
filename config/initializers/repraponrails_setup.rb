@@ -2,7 +2,7 @@ require(File.join(Rails.root, "lib", "repraphost.rb"))
 require(File.join(Rails.root, "lib", "useful_global_methods.rb"))
 
 RepRapOnRails::Application.configure do
-  # Configuring all the RepRapOnRails-specific parameters
+  # Configuring all the general RepRapOnRails-specific parameters
   
   # Autodetect USB Port on which the RepRap Arduino is connected
   ports = Dir['/dev/ttyUSB*'] + Dir['/dev/ttyACM*']
