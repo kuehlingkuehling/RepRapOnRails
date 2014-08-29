@@ -145,20 +145,16 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                             #    :target => t.match(/\/\s*(\d+\.\d+)/)[1] }
                             #end
                         
-                            message = [ 
-                              { :name   => 'Left Extruder',
-                                :temp   => temps[:T0],
-                                :target => targets[:T0] },
-                              { :name   => 'Right Extruder',
-                                :temp   => temps[:T1],
-                                :target => targets[:T1] },
-                              { :name   => 'Chamber',
-                                :temp   => temps[:T2],
-                                :target => targets[:T2] },
-                              { :name   => 'Bed',
-                                :temp   => temps[:B],
-                                :target => targets[:B] }
-                            ]
+                            message = { 
+                              :left_extruder  => { :temp   => temps[:T0],
+                                                   :target => targets[:T0] },
+                              :right_extruder => { :temp   => temps[:T1],
+                                                   :target => targets[:T1] },
+                              :chamber        => { :temp   => temps[:T2],
+                                                   :target => targets[:T2] },
+                              :bed            => { :temp   => temps[:B],
+                                                   :target => targets[:B] }
+                            }
    
                             WebsocketRails[:temp].trigger(:new, message)
                          end  
