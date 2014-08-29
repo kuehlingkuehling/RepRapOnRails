@@ -1,123 +1,135 @@
-<button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
-  Cancel
-</button>  
-<h3 class="wizard-title">
-  Unload Filament
-</h3>
-<div class="clearfix"><br/></div>
-
-<!-- Step 1 -->
-<div class="row" ng-show="step == '1'">
+<div class="row">
   <div class="col-md-7">
-    <p>Prior to unloading the filament from an extruder, the nozzle needs to preheat up to
-      extrusion temperature.</p>
-    <p>Select your extruder:</p>
-    <div class="btn-group text-center">
-        <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="0">Left</button>
-        <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="1">Right</button>
+    <div class="row">
+
+      <!-- header line -->
+      <div class="col-md-12">
+        <button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
+          Cancel
+        </button>  
+        <h3 class="wizard-title">
+          Unload Filament
+        </h3>
+        <br/>&nbsp;
+      </div>
+
+      <!-- text step 1 -->
+      <div class="col-md-12" ng-show="step == '1'">
+        <p>Prior to unloading the filament from an extruder, the nozzle needs to preheat up to
+          extrusion temperature.</p>
+        <p>Select your extruder:</p>
+        <div class="btn-group text-center">
+            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="0">Left</button>
+            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="1">Right</button>
+        </div>
+        <br/>
+        <br/>
+        <p ng-show="extruder != null"><b>Currently loaded Filament:</b>
+          <span ng-show="(extruder == 0) && filaments_loaded.left">
+            {{ filaments_loaded.left.name }} ({{ filaments_loaded.left.extrusion_temp }})°C
+          </span>
+          <span ng-show="(extruder == 1) && filaments_loaded.right">
+            {{ filaments_loaded.right.name }} ({{ filaments_loaded.right.extrusion_temp }})°C
+          </span>   
+          <span ng-show="((extruder == 0) && !filaments_loaded.left) || ((extruder == 1) && !filaments_loaded.right)">
+            No material loaded or not configured (see Setup &rarr; Select Filament Profiles)!
+          </span>      
+        </p>
+        <div class="clearfix"></div>    
+        <button type="button" class="{{ ((extruder == null) || ((extruder == 0) && !filaments_loaded.left) || ((extruder == 1) && !filaments_loaded.right)) && 'disabled' }} pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
+          OK, continue
+        </button>     
+      </div>
+
+      <!-- text step 2 -->
+      <div class="col-md-12" ng-show="step == '2'">
+        <p>Please wait while the <b>{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
+        <p>Current extruder temperature: <b>{{ extruder_temp }}°C</b></p>
+        <br/>
+        <br/>
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
+          Back
+        </button>         
+        <button type="button" class="pull-right {{ !extruder_preheated && 'disabled' }} btn btn-primary btn-lg navigation" ng-click="step3()">
+          Next
+        </button>     
+      </div>
+
+      <!-- text step 3 -->
+      <div class="col-md-12" ng-show="step == '3'">
+        <p>Pull the filament feeding tube out of the extruder idler lever about 3cm.</p>
+        <p>Cut the filament with wire cutters about 1cm above the extruder idler lever.</p>
+        <br/>
+        <br/>
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
+          Back
+        </button>         
+        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step4()">
+          Next
+        </button>     
+      </div>
+
+      <!-- text step 4 -->
+      <div class="col-md-12" ng-show="step == '4'">
+        <p>Cut the filament with wire cutters between filament feed insert and
+          filament spool at the back of the machine.</p>
+        <p>From inside of the build chamber, pull the separated strand of filament out of 
+          the feeding tube.</p>
+        <br/>
+        <br/>
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step3()">
+          Back
+        </button>         
+        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step5()">
+          Next
+        </button>     
+      </div>
+
+      <!-- text step 5 -->      
+      <div class="col-md-12" ng-show="step == '5'">
+        <p>Pivot the filament idler wheel away from the filament drive gear with two fingers,
+          as shown to the right, and pull the remaining filament section upwards out of the
+          nozzle.</p>
+
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step4()">
+          Back
+        </button>         
+        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="exit()">
+          Done!
+        </button>       
+      </div>
+      
     </div>
-    <br/>
-    <br/>
-    <p ng-show="extruder != null"><b>Currently loaded Filament:</b>
-      <span ng-show="(extruder == 0) && filaments_loaded.left">
-        {{ filaments_loaded.left.name }} ({{ filaments_loaded.left.extrusion_temp }})°C
-      </span>
-      <span ng-show="(extruder == 1) && filaments_loaded.right">
-        {{ filaments_loaded.right.name }} ({{ filaments_loaded.right.extrusion_temp }})°C
-      </span>   
-      <span ng-show="((extruder == 0) && !filaments_loaded.left) || ((extruder == 1) && !filaments_loaded.right)">
-        No material loaded or not configured (see Setup &rarr; Select Filament Profiles)!
-      </span>      
-    </p>
-    <div class="clearfix"></div>    
-    <button type="button" class="{{ ((extruder == null) || ((extruder == 0) && !filaments_loaded.left) || ((extruder == 1) && !filaments_loaded.right)) && 'disabled' }} pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
-      OK, continue
-    </button>     
-  </div>
-  <div class="col-md-5">
+  </div>      
+
+  <!-- picture Step 1 -->
+  <div class="col-md-5" ng-show="step == '1'">
     <!-- picture: printhead in maintenance-position -->
     <img src="<%= asset_path("touchapp/images/wizard_unload_filament_maintenance.jpg") %>" class="img-responsive">    
   </div> 
-</div>
 
-<!-- Step 2 -->
-<div class="row" ng-show="step == '2'">
-  <div class="col-md-7">
-    <p>Please wait while the <b>{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
-    <p>Current extruder temperature: <b>{{ extruder_temp }}°C</b></p>
-    <br/>
-    <br/>
-    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
-      Back
-    </button>         
-    <button type="button" class="pull-right {{ !extruder_preheated && 'disabled' }} btn btn-primary btn-lg navigation" ng-click="step3()">
-      Next
-    </button>     
-  </div>
-  <div class="col-md-5">
+  <!-- picture Step 2 -->
+  <div class="col-md-5" ng-show="step == '2'">
     <!-- picture: printhead in maintenance-position -->
     <img src="<%= asset_path("touchapp/images/wizard_unload_filament_maintenance.jpg") %>" class="img-responsive">    
   </div> 
-</div>
 
-<!-- Step 3 -->
-<div class="row" ng-show="step == 3">
-  <div class="col-md-7">
-    <p>Pull the filament feeding tube out of the extruder idler lever about 3cm.</p>
-    <p>Cut the filament with wire cutters about 1cm above the extruder idler lever.</p>
-    <br/>
-    <br/>
-    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
-      Back
-    </button>         
-    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step4()">
-      Next
-    </button>     
-  </div>
-  <div class="col-md-5">
+  <!-- picture Step 3 -->
+  <div class="col-md-5" ng-show="step == '3'">
     <!-- picture: cut filament above extruder -->
     <img src="<%= asset_path("touchapp/images/wizard_unload_filament_cutextruder.jpg") %>" class="img-responsive">    
   </div> 
-</div>
 
-<!-- Step 4 -->
-<div class="row" ng-show="step == 4">
-  <div class="col-md-7">
-    <p>Cut the filament with wire cutters between filament feed insert and
-      filament spool at the back of the machine.</p>
-    <p>From inside of the build chamber, pull the separated strand of filament out of 
-      the feeding tube.</p>
-    <br/>
-    <br/>
-    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step3()">
-      Back
-    </button>         
-    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step5()">
-      Next
-    </button>     
-  </div>
-  <div class="col-md-5">
+  <!-- picture Step 4 -->
+  <div class="col-md-5" ng-show="step == '4'">
     <!-- picture: cut filament at spool -->
     <img src="<%= asset_path("touchapp/images/wizard_unload_filament_cutspool.jpg") %>" class="img-responsive">    
   </div> 
-</div>
 
-<!-- Step 5 -->
-<div class="row" ng-show="step == '5'">
-  <div class="col-md-7">
-    <p>Pivot the filament idler wheel away from the filament drive gear with two fingers,
-      as shown to the right, and pull the remaining filament section upwards out of the
-      nozzle.</p>
-
-    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step4()">
-      Back
-    </button>         
-    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="exit()">
-      Done!
-    </button>       
-  </div>
-  <div class="col-md-5">
+  <!-- picture Step 5 -->
+  <div class="col-md-5" ng-show="step == '5'">
     <!-- picture: pull filament out -->
     <img src="<%= asset_path("touchapp/images/wizard_unload_filament_pullout.jpg") %>" class="img-responsive">    
   </div> 
+
 </div>
