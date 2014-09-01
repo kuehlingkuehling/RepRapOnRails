@@ -12,10 +12,9 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   },true);
   
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
+    $scope.temp = MyWebsocket.temp;
     if (MyWebsocket.temp.bed) {
       $scope.bed_temp = MyWebsocket.temp.bed.temp;
-console.log($scope.bed_temp);
-console.log($scope.bed_target);
       if (($scope.bed_temp > ($scope.bed_target - $scope.deviation)) && ($scope.bed_temp < ($scope.bed_target + $scope.deviation))) {
         $scope.bed_preheated = true;
         if ($scope.step == 2) {

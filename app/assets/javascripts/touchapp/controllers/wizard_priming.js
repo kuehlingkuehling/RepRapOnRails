@@ -3,6 +3,7 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
 
   MyWebsocket.menuDisabled = true;
   $scope.step = 1;
+  $scope.deviation = 3; // +/- C deviation around target temp
   $scope.filament = null;
   $scope.extruder_temp = 0;  
   $scope.extruder_preheated = false;
@@ -13,9 +14,10 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
   }, true);
 
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
-    if ($scope.filament && ($scope.extruder != null) && MyWebsocket.temp.list[$scope.extruder]) {
-      $scope.extruder_temp = MyWebsocket.temp.list[$scope.extruder].temp;
-      if ($scope.extruder_temp > (0.99 * $scope.filament.extrusion_temp)) {
+    $scope.temp = MyWebsocket.temp;
+    if ($scope.filament && ($scope.extruder != null) && MyWebsocket.temp[$scope.extruder]) {
+      $scope.extruder_temp = MyWebsocket.temp[$scope.extruder].temp;
+      if (($scope.extruder_temp > ($scope.filament.extrusion_temp - $scope.deviation)) && ($scope.extruder_temp < ($scope.filament.extrusion_temp + $scope.deviation))) {
         $scope.extruder_preheated = true;
       } else {
         $scope.extruder_preheated = false;      
@@ -39,24 +41,26 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
   $scope.step2 = function() {
     $scope.step = 2;
     switch ($scope.extruder) {
-      case 0:
+      case 'left_extruder':
         $scope.extruder_name = "left";
         $scope.filament = $scope.filaments_loaded.left;
+        $scope.extruder_number = 0;
         MyWebsocket.macro('select_left_extruder');
         break;
-      case 1:
+      case 'right_extruder':
         $scope.extruder_name = "right";
-        $scope.filament = $scope.filaments_loaded.right;      
+        $scope.filament = $scope.filaments_loaded.right; 
+        $scope.extruder_number = 1;     
         MyWebsocket.macro('select_right_extruder');
         break;
     }; 
     // preheat extruder
-    MyWebsocket.set_temp([$scope.extruder, $scope.filament.extrusion_temp]);        
+    MyWebsocket.set_temp([$scope.extruder_number, $scope.filament.extrusion_temp]);        
   };
   
   $scope.extrude = function () {
     // manually extrude 5mm
-    MyWebsocket.extrude([$scope.extruder, 5]);
+    MyWebsocket.extrude([$scope.extruder_number, 5]);
   };
   
   $scope.exit = function() {
@@ -65,9 +69,4 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
     $location.path( "/setup" );
   };        
   
-  $scope.select_profiles = function() {
-    MyWebsocket.macro('wizard_priming_exit');
-    MyWebsocket.menuDisabled = false;
-    $location.path( "/wizard_select_filament" );
-  };     
 });

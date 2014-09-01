@@ -3,6 +3,7 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
 
   MyWebsocket.menuDisabled = true;
   $scope.step = 1;
+  $scope.deviation = 3; // +/- C deviation around target temp
   $scope.filament = null;
   $scope.extruder_temp = 0;  
   $scope.extruder_preheated = false;
@@ -13,10 +14,17 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   }, true);
 
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
-    if ($scope.filament && ($scope.extruder != null) && MyWebsocket.temp.list[$scope.extruder]) {
-      $scope.extruder_temp = MyWebsocket.temp.list[$scope.extruder].temp;
-      if ($scope.extruder_temp > (0.99 * $scope.filament.extrusion_temp)) {
+    $scope.temp = MyWebsocket.temp;
+  }, true);
+
+  $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
+    if ($scope.filament && ($scope.extruder != null) && MyWebsocket.temp[$scope.extruder]) {
+      $scope.extruder_temp = MyWebsocket.temp[$scope.extruder].temp;
+      if (($scope.extruder_temp > ($scope.filament.extrusion_temp - $scope.deviation)) && ($scope.extruder_temp < ($scope.filament.extrusion_temp + $scope.deviation))) {
         $scope.extruder_preheated = true;
+        if ($scope.step == 2) {
+          $scope.step = 3;
+        }
       } else {
         $scope.extruder_preheated = false;      
       };
@@ -25,7 +33,6 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   
   // initial commands
   MyWebsocket.macro('psu_on');
-  MyWebsocket.macro('get_temp');
   MyWebsocket.macro('maintenance_position');
   
   $scope.step1 = function() {
@@ -35,17 +42,19 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   $scope.step2 = function() {
     $scope.step = 2;
     switch ($scope.extruder) {
-      case 0:
+      case 'left_extruder':
         $scope.extruder_name = "left";
         $scope.filament = $scope.filaments_loaded.left;
+        $scope.extruder_number = 0;
         break;
-      case 1:
+      case 'right_extruder':
         $scope.extruder_name = "right";
         $scope.filament = $scope.filaments_loaded.right;      
+        $scope.extruder_number = 1;
         break;
     };
     // preheat extruder
-    MyWebsocket.set_temp([$scope.extruder, $scope.filament.extrusion_temp]);   
+    MyWebsocket.set_temp([$scope.extruder_number, $scope.filament.extrusion_temp]);   
   };
   
   $scope.step3 = function() {

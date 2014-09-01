@@ -19,24 +19,24 @@
           extrusion temperature.</p>
         <p>Select your extruder:</p>
         <div class="btn-group text-center">
-            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="0">Left</button>
-            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="1">Right</button>
+            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'left_extruder'">Left</button>
+            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'right_extruder'">Right</button>
         </div>
         <br/>
         <br/>
         <p ng-show="extruder != null"><b>Currently loaded Filament:</b>
-          <span ng-show="(extruder == 0) && filaments_loaded.left">
+          <span ng-show="(extruder == 'left_extruder') && filaments_loaded.left">
             {{ filaments_loaded.left.name }} ({{ filaments_loaded.left.extrusion_temp }})°C
           </span>
-          <span ng-show="(extruder == 1) && filaments_loaded.right">
+          <span ng-show="(extruder == 'right_extruder') && filaments_loaded.right">
             {{ filaments_loaded.right.name }} ({{ filaments_loaded.right.extrusion_temp }})°C
           </span>   
-          <span ng-show="((extruder == 0) && !filaments_loaded.left) || ((extruder == 1) && !filaments_loaded.right)">
-            No material loaded or not configured (see Setup &rarr; Select Filament Profiles)!
+          <span ng-show="((extruder == 'left_extruder') && !filaments_loaded.left) || ((extruder == 'right_extruder') && !filaments_loaded.right)">
+            No material loaded or not configured (see <i>Configuration</i> tab)!
           </span>      
         </p>
         <div class="clearfix"></div>    
-        <button type="button" class="{{ ((extruder == null) || ((extruder == 0) && !filaments_loaded.left) || ((extruder == 1) && !filaments_loaded.right)) && 'disabled' }} pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
+        <button type="button" class="{{ ((extruder == null) || ((extruder == 'left_extruder') && !filaments_loaded.left) || ((extruder == 'right_extruder') && !filaments_loaded.right)) && 'disabled' }} pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
           OK, continue
         </button>     
       </div>
@@ -44,7 +44,7 @@
       <!-- text step 2 -->
       <div class="col-md-12" ng-show="step == '2'">
         <p>Please wait while the <b>{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
-        <p>Current extruder temperature: <b>{{ extruder_temp }}°C</b></p>
+        <p>Current/ Target extruder temperature: <b>{{ extruder_temp }}/ {{ temp[extruder].target }}°C</b></p>
         <br/>
         <br/>
         <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
