@@ -33,19 +33,16 @@
       <!-- text contents step 2 -->
       <div class="col-md-12" ng-show="step == '2'">
         <p>Please wait while the print bed is beeing preheated. This may take a couple of minutes.</p>
-        <p>Current print bed temperature: <b>{{ bed_temp }}°C</b></p>
+        <p>Current/ Target print bed temperature: <b>{{ bed_temp }} / {{ bed_target }} °C</b></p>
         <br/>
         <br/>  
         <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
           Back
-        </button>         
-        <button type="button" class="pull-right {{ !bed_preheated && 'disabled' }} btn btn-primary btn-lg navigation" ng-click="step3()">
-          Next
-        </button>     
+        </button>            
       </div>
 
       <!-- text contents step 3 -->
-      <div class="col-md-7" ng-show="step == '3'"> 
+      <div class="col-md-12" ng-show="step == '3'"> 
         <p>Now loosen the two set screws on the <b>right</b> extruder barrel.</p>
         <p><b>WARNING: Carefully check if extruder is still hot before touching the nozzle!.</b></p>
         <p>Then slide the right extruder barrel up to make sure the right nozzle tip is a bit higher 
@@ -61,7 +58,7 @@
       </div>
 
       <!-- text contents step 5 -->
-      <div class="col-md-7" ng-show="step == '5'">
+      <div class="col-md-12" ng-show="step == '5'">
         <p>Next, loosen all <b>three</b> print bed leveling thumb screws a bit (as shown to the right).</p>
         <p>The print bed must be able to easily slide up and down against the spring suspension.</p>
         <p>In the following the print head will move to three leveling positions one after another
@@ -77,7 +74,7 @@
       </div>      
 
       <!-- text contents step 6 -->
-      <div class="col-md-7" ng-show="step == '6'">
+      <div class="col-md-12" ng-show="step == '6'">
         <p>Position 1:</p>
         <p>After the movement gently fasten the bed leveling thumb screw on the <b>front</b>.</p>
         <br/>
@@ -91,7 +88,7 @@
       </div>      
 
       <!-- text contents step 7 -->
-      <div class="col-md-7" ng-show="step == '7'">
+      <div class="col-md-12" ng-show="step == '7'">
         <p>Position 2:</p>
         <p>After the movement gently fasten the bed leveling thumb screw on the <b>right</b> side.</p>
         <br/>
@@ -105,7 +102,7 @@
       </div>
 
       <!-- text contents step 8 -->
-      <div class="col-md-7" ng-show="step == '8'">
+      <div class="col-md-12" ng-show="step == '8'">
         <p>Position 3:</p>
         <p>After the movement gently fasten the bed leveling thumb screw on the <b>left</b> side.</p>
         <br/>
@@ -119,7 +116,7 @@
       </div>
 
       <!-- text contents step 9 -->
-      <div class="col-md-7" ng-show="step == '9'">
+      <div class="col-md-12" ng-show="step == '9'">
         <p>The print bed is leveled now.</p>
         <p>Finally, slide the <b>right</b> extruder barrel back down until it just
           touches the print bed and gently tighten the two set screws again.</p>

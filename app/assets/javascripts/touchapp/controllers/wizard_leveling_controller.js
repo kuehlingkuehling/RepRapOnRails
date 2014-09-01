@@ -3,15 +3,24 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
 
   MyWebsocket.menuDisabled = true;
   $scope.step = 1;
+  $scope.deviation = 3; // +/- °C around target
   $scope.bed_temp = 0;
-  $scope.bed_target = 100;
   $scope.bed_preheated = false;
+
+  $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
+    $scope.bed_target = MyWebsocket.preheatingProfile.bed_temp;
+  },true);
   
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
-    if (MyWebsocket.temp.list[3]) {
-      $scope.bed_temp = MyWebsocket.temp.list[3].temp;
-      if ($scope.bed_temp > (0.95 * $scope.bed_target)) {
+    if (MyWebsocket.temp.bed) {
+      $scope.bed_temp = MyWebsocket.temp.bed.temp;
+console.log($scope.bed_temp);
+console.log($scope.bed_target);
+      if (($scope.bed_temp > ($scope.bed_target - $scope.deviation)) && ($scope.bed_temp < ($scope.bed_target + $scope.deviation))) {
         $scope.bed_preheated = true;
+        if ($scope.step == 2) {
+          $scope.step = 3;
+        }
       } else {
         $scope.bed_preheated = false;      
       };
@@ -20,7 +29,6 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   
   // initial commands
   MyWebsocket.macro('psu_on');
-  MyWebsocket.macro('get_temp');
   MyWebsocket.macro('wizard_leveling_init');
   
   $scope.step1 = function() {
@@ -29,7 +37,7 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   
   $scope.step2 = function() {
     $scope.step = 2;
-    MyWebsocket.macro('wizard_leveling_preheat');
+    MyWebsocket.preheat(0, $scope.bed_target);
   };
   
   $scope.step3 = function() {
