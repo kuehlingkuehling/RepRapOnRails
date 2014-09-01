@@ -11,6 +11,11 @@ touchApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
       controller: 'QueueController',
       resolve: resolve_websocket
     }).
+    when('/configuration', {
+      templateUrl: '<%= asset_path("touchapp/templates/configuration.html") %>',
+      controller: 'ConfigurationController',
+      resolve: resolve_websocket
+    }).
     when('/print_check/:printjobId', {
       templateUrl: '<%= asset_path("touchapp/templates/print_check.html") %>',
       controller: 'PrintCheckController',

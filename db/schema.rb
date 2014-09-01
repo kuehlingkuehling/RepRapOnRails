@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140213131530) do
+ActiveRecord::Schema.define(version: 20140901084251) do
 
   create_table "filaments", force: true do |t|
     t.text     "name"
@@ -25,6 +25,14 @@ ActiveRecord::Schema.define(version: 20140213131530) do
     t.text     "line"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "preheating_profile", force: true do |t|
+    t.string   "name"
+    t.integer  "chamber_temp"
+    t.integer  "bed_temp"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "printjobs", force: true do |t|

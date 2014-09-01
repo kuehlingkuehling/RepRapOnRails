@@ -44,6 +44,13 @@ class WsController < WebsocketRails::BaseController
     temp = message[1]
     @@printer.send("M104 S" + temp.to_s + " T" + extruder.to_s)
   end
+
+  def preheat
+    chamber = message[0]
+    bed = message[1]    
+    @@printer.send("M104 S" + chamber.to_s + " T2")
+    @@printer.send("M140 S" + bed.to_s)    
+  end
   
   def extrude
     extruder = message[0]
@@ -52,7 +59,7 @@ class WsController < WebsocketRails::BaseController
     @@printer.send("G91");    # relative positioning
     @@printer.send("G1 E" + length.to_s + " F30");  # extrude <length> mm of filament
     @@printer.send("G90");    # back to absolute positioning    
-  end
+  end  
   
   def macro
     macro = MACROS[message.to_sym]  

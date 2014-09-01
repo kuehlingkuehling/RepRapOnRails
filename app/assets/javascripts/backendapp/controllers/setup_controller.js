@@ -6,6 +6,11 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.isCollapsed = true;  
   $scope.edit = {};
 
+  $scope.preheatingProfiles = [];
+  $scope.newPreheatingProfile = {name:'',chamber_temp:'',bed_temp:''};
+  $scope.isCollapsedPreheating = true;  
+  $scope.editPreheating = {};
+
   // firmware upload form
   $scope.uploadProgress = 0;
   $scope.file = false;  
@@ -26,7 +31,7 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   };
   
   $scope.deletePreset = function(id) {
-    if (confirm("Do you really want to remove this Preset?")) {
+    if (confirm("Do you really want to remove this Profile?")) {
       MyWebsocket.deletePreset(id);      
     }
   };
@@ -78,5 +83,41 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
         $scope.error = "Error: Failed to upload data."
     });
   };   
+
+  // Preheating Profiles
+  $scope.$watch(function(){ return MyWebsocket.preheatingProfiles; }, function(){
+    $scope.preheatingProfiles = MyWebsocket.preheatingProfiles;
+  },true);  
+
+  $scope.toggleFormPreheating = function() {
+    $scope.resetFormPreheating();    
+    $scope.isCollapsedPreheating = !$scope.isCollapsedPreheating;
+  };
+  
+  $scope.resetFormPreheating = function() {
+    $scope.newPreheatingProfile.name = '';
+    $scope.newPreheatingProfile.chamber_temp = '';
+    $scope.newPreheatingProfile.bed_temp = '';
+  };
+  
+  $scope.deletePreheatingProfile = function(id) {
+    if (confirm("Do you really want to remove this Profile?")) {
+      MyWebsocket.deletePreheatingProfile(id);
+    }
+  };
+
+  $scope.createPreheatingProfile = function() {
+    MyWebsocket.createPreheatingProfile($scope.newPreheatingProfile);
+    $scope.toggleFormPreheating();
+  };
+  
+  $scope.editPreheatingProfile = function(id){
+    $scope.editPreheating[id] = true;
+  };
+  
+  $scope.updatePreheatingProfile = function(index){
+    MyWebsocket.updatePreheatingProfile($scope.preheatingProfiles[index]);
+    $scope.editPreheating[$scope.preheatingProfiles[index].id] = false;    
+  };
 
 });

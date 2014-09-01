@@ -220,6 +220,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
   
   Settings.filament_left = nil if not Settings.all.has_key?("filament_left")
   Settings.filament_right = nil if not Settings.all.has_key?("filament_right")
+  Settings.preheating_profile = nil if not Settings.all.has_key?("preheating_profile")
 
 end #unless  
 

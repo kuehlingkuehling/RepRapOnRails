@@ -53,6 +53,9 @@
         <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'queue' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('queue')">
           Print
         </button>
+        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'configuration' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('configuration')">
+          Configuration
+        </button>         
         <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'manualcontrol' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('manualcontrol')">
           Expert Control
         </button> 
@@ -84,14 +87,39 @@
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" ng-controller="FooterController">
       <div class="navbar-collapse collapse">    
         <ul class="nav navbar-nav">
-          <li ng-repeat="t in temp.list"><p class="navbar-text">
-            <b>{{ t.name }}:</b> <span class="{{ ( t.target > 0 ) && 'text-danger' }}">{{ t.temp | number:2 }} / {{ t.target | number:0 }}</span>
-            <br/>
-            <small>ABS snow-white</small></p>
+          <li>
+            <p class="navbar-text">
+              <b>Left Extruder:</b> <span class="{{ ( temp.left_extruder.target > 0 ) && 'text-danger' }}">{{ temp.left_extruder.temp | number:2 }} / {{ temp.left_extruder.target | number:0 }}</span>
+              <br/>
+              <small ng-show="filaments.left">{{ filaments.left.name | limitTo:40 }}</small>
+              <small ng-show="!filaments.left" class="text-muted">No material loaded</small>
+            </p>
           </li>
+          <li>
+            <p class="navbar-text">
+              <b>Right Extruder:</b> <span class="{{ ( temp.right_extruder.target > 0 ) && 'text-danger' }}">{{ temp.right_extruder.temp | number:2 }} / {{ temp.right_extruder.target | number:0 }}</span>
+              <br/>
+              <small ng-show="filaments.right">{{ filaments.right.name | limitTo:40 }}</small>
+              <small ng-show="!filaments.right" class="text-muted">No material loaded</small>
+            </p>
+          </li>
+          <li>
+            <p class="navbar-text">
+              <b>Chamber:</b> <span class="{{ ( temp.chamber.target > 0 ) && 'text-danger' }}">{{ temp.chamber.temp | number:2 }} / {{ temp.chamber.target | number:0 }}</span>
+              <br/>
+              <small ng-show="preheatingProfile">{{ preheatingProfile.name | limitTo:40 }}</small>
+              <small ng-show="!preheatingProfile" class="text-muted">No Preheating Profile selected</small>
+            </p>
+          </li>
+          <li>
+            <p class="navbar-text">
+              <b>Bed:</b> <span class="{{ ( temp.bed.target > 0 ) && 'text-danger' }}">{{ temp.bed.temp | number:2 }} / {{ temp.bed.target | number:0 }}</span>
+              <br/>
+            </p>
+          </li>          
           <li><p class="navbar-text ">
             <span class="text-muted">Current / Target °C</span><br/>
-            <small class="text-muted">Preset</small></p>
+            <small class="text-muted">Profile</small></p>
           </li>          
         </ul>
       </div>

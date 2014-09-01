@@ -45,5 +45,21 @@ touchApp.controller('QueueController', function($scope, $modal, MyWebsocket, Com
       backdrop: 'static'
     });       
   };
+
+  $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
+    $scope.preheatingProfile = MyWebsocket.preheatingProfile;
+  },true);  
+
+  $scope.preheat_on = function(){
+    MyWebsocket.preheat($scope.preheatingProfile.chamber_temp, $scope.preheatingProfile.bed_temp);    
+  };  
+
+  $scope.preheat_off = function(){
+    MyWebsocket.preheat(0,0);    
+  };  
+
+  $scope.$watch(function(){ return MyWebsocket.temp; }, function(){
+    $scope.temp = MyWebsocket.temp;
+  },true);   
      
 });

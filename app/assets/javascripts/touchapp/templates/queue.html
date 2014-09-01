@@ -54,11 +54,11 @@
       </button> 
     </p>
     <p class="text-right">
-      <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_on')">
+      <button type="button" class="btn btn-primary btn-lg navigation {{ ( printing || !preheatingProfile ) && 'disabled' }}" ng-click="preheat_on()" ng-show="( temp.chamber.target == 0 ) && ( temp.bed.target == 0 )">
         Preheat Chamber/Bed ON
       </button> 
-      <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="macro('preheat_off')">
-        OFF
+      <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="preheat_off()" ng-show="!(( temp.chamber.target == 0 ) && ( temp.bed.target == 0 ))">
+        Preheat Chamber/Bed OFF
       </button>
     </p>
   </div>

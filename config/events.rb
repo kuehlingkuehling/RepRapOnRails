@@ -33,6 +33,15 @@ WebsocketRails::EventMap.describe do
     subscribe :set_loaded, :to => FilamentController, :with_method => :set_loaded   
   end  
 
+  namespace :preheating_profile do  
+    subscribe :all, :to => PreheatingProfileController, :with_method => :all
+    subscribe :create, :to => PreheatingProfileController, :with_method => :create    
+    subscribe :delete, :to => PreheatingProfileController, :with_method => :delete
+    subscribe :update, :to => PreheatingProfileController, :with_method => :update
+    subscribe :get_selected, :to => PreheatingProfileController, :with_method => :get_selected
+    subscribe :set_selected, :to => PreheatingProfileController, :with_method => :set_selected   
+  end    
+
   subscribe :sendgcode, :to => WsController, :with_method => :sendgcode  
   subscribe :emergencystop, :to => WsController, :with_method => :emergencystop
   subscribe :progress, :to => WsController, :with_method => :progress
@@ -47,6 +56,7 @@ WebsocketRails::EventMap.describe do
   subscribe :macro, :to => WsController, :with_method => :macro  
   subscribe :move, :to => WsController, :with_method => :move    
   subscribe :set_temp, :to => WsController, :with_method => :set_temp 
+  subscribe :preheat, :to => WsController, :with_method => :preheat
   subscribe :extrude, :to => WsController, :with_method => :extrude 
   subscribe :set_extruder_offset, :to => WsController, :with_method => :set_extruder_offset
  

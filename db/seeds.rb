@@ -10,3 +10,9 @@ Filament.create(
   :name => "K\u00fchling\u0026K\u00fchling ABS snow-white",
   :extrusion_temp => 260
 )
+
+PreheatingProfile.create(
+  :name => "Preheating for ABS",
+  :chamber_temp => 70,
+  :bed_temp => 100
+)

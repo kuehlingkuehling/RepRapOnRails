@@ -9,6 +9,7 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
   };
   Service.printjobs = [];
   Service.filamentPresets = [];
+  Service.preheatingProfiles = [];
   var deferred = $q.defer();  
   var dispatcher = new WebSocketRails(WEBSOCKET_URL);
 
@@ -35,6 +36,9 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
     Service.get('filament.all').then(function(data){
       Service.filamentPresets = data;
     });      
+    Service.get('preheating_profile.all').then(function(data){
+      Service.preheatingProfiles = data;
+    });  
   };  
     
   // bind to disconnect event - show "please reload page" modal
@@ -149,7 +153,8 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
   Service.updatePrintjob = function(job) {
     dispatcher.trigger('printjob.update', job);
   };  
-  
+
+  // Filament Profiles
   filamentchannel = dispatcher.subscribe('filaments');
   filamentchannel.bind('reload', function(message){
     console.log('Filaments updated, reloading!');
@@ -173,5 +178,32 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
     dispatcher.trigger('filament.update', preset);
   }   
   
+  // Preheating Profiles
+  preheatingchannel = dispatcher.subscribe('preheating_profiles');
+  preheatingchannel.bind('reload', function(message){
+    console.log('Preheating Profiles updated, reloading!');
+    $timeout(function(){
+      Service.get('preheating_profile.all').then(function(data){
+        Service.preheatingProfiles = data;
+console.log("PREHEATING PROFILES RECEIVED:");
+console.log(data);        
+      }); 
+    });
+  });     
+  
+  
+  Service.createPreheatingProfile = function(preset) {
+    dispatcher.trigger('preheating_profile.create', preset);
+  }
+  
+  Service.deletePreheatingProfile = function(id) {
+    dispatcher.trigger('preheating_profile.delete', id);
+  }
+  
+  Service.updatePreheatingProfile = function(preset) {
+    dispatcher.trigger('preheating_profile.update', preset);
+  }   
+
+
   return Service;
 });

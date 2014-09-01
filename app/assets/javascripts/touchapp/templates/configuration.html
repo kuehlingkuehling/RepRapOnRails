@@ -1,0 +1,225 @@
+<div class="row" ng-show="( !selectLeft && !selectRight && !selectChamberBed )" style="height:100px;">  
+
+  <!-- Left Extruder -->
+  <div class="col-md-4"> 
+    <h4>Left Extruder Filament Profile</h4>
+    <p ng-show="filaments.left">
+      <b>{{ filaments.left.name }}</b><br/>
+      {{ filaments.left.extrusion_temp }}°C Extrusion Temperature
+    </p>
+    <p ng-show="!filaments.left" class="text-muted">
+      No material loaded.
+    </p>
+  </div>
+
+  <!-- Right Extruder -->
+  <div class="col-md-4"> 
+    <h4>Right Extruder Filament Profile</h4>
+    <p ng-show="filaments.right">
+      <b>{{ filaments.right.name }}</b><br/>
+      {{ filaments.right.extrusion_temp }}°C Extrusion Temperature
+    </p>
+    <p ng-show="!filaments.right" class="text-muted">
+      No profile selected.
+    </p>
+  </div>
+
+  <!-- Chamber/Bed -->
+  <div class="col-md-4"> 
+    <h4>Chamber/Bed Preheating Profile</h4>
+    <p ng-show="preheatingProfile">
+      <b>{{ preheatingProfile.name }}</b><br/>
+      {{ preheatingProfile.chamber_temp }}°C Chamber Temperature<br>
+      {{ preheatingProfile.bed_temp }}°C Bed Temperature
+    </p>
+    <p ng-show="!preheatingProfile" class="text-muted">
+      No profile selected.
+    </p>
+  </div>
+</div>
+
+<div class="row" ng-show="( !selectLeft && !selectRight && !selectChamberBed )">
+<br/><br/>
+  <!-- left extruder buttons -->
+  <div class="col-md-4">
+    <p>
+      <button class="btn btn-primary btn-lg" ng-click="selectLeft = true">
+        Select
+      </button>
+      &nbsp;
+      <button class="btn btn-default btn-lg" ng-click="setLeft(null)">
+        Clear
+      </button>
+    </p>
+  </div>
+
+  <!-- right extruder buttons -->
+  <div class="col-md-4">
+    <p>
+      <button class="btn btn-primary btn-lg" ng-click="selectRight = true">
+        Select
+      </button>
+      &nbsp;
+      <button class="btn btn-default btn-lg" ng-click="setRight(null)">
+        Clear
+      </button>
+    </p>
+  </div>
+
+  <!-- chamber/bed buttons -->
+  <div class="col-md-4">
+    <p>
+      <button class="btn btn-primary btn-lg" ng-click="selectChamberBed = true">
+        Select
+      </button>
+      &nbsp;
+      <button class="btn btn-default btn-lg" ng-click="setChamberBed(null)">
+        Clear
+      </button>
+    </p>
+  </div>
+</div>
+
+ 
+<div class="row" ng-show="selectLeft">
+  <div class="col-md-12">
+    <button class="pull-right btn btn-danger btn-lg" ng-click="selectLeft = false">
+      Cancel
+    </button>
+    <h4>Select Left Extruder Filament Profile</h4> 
+    <table class="table table-striped">
+      <thead>
+        <tr>     
+          <th style="width:45%;">Filament Profile</th>
+          <th style="width:35%;">Extrusion Temperature</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="f in pagedFilaments[currentPageRight - 1]">
+          <td>{{ f.name }}</td>
+          <td>{{ f.extrusion_temp }}°C</td>
+          <td>
+            <p class="text-right">
+            <button class="btn btn-primary btn-lg" ng-click="setLeft(f.id)">
+              Set
+            </button>
+            </p>
+          </td>                  
+        </tr>
+     </tbody>
+     <tfoot>
+        <td colspan="3">
+            <pagination class="pull-right" total-items="numFilaments" items-per-page="itemsPerPage" page="currentPageRight"></pagination>
+        </td>
+     </tfoot>
+    </table>      
+  </div>
+</div>
+
+<div class="row" ng-show="selectRight">
+  <div class="col-md-12">
+    <button class="pull-right btn btn-danger btn-lg" ng-click="selectRight = false">
+      Cancel
+    </button> 
+    <h4>Select Right Extruder Filament Profile</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>     
+          <th style="width:45%;">Filament Profile</th>
+          <th style="width:35%;">Extrusion Temperature</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="f in pagedFilaments[currentPageRight - 1]">
+          <td>{{ f.name }}</td>
+          <td>{{ f.extrusion_temp }}°C</td>
+          <td>
+            <p class="text-right">
+            <button class="btn btn-primary btn-lg" ng-click="setRight(f.id)">
+              Set
+            </button>
+            </p>
+          </td>                  
+        </tr>
+     </tbody>
+     <tfoot>
+        <td colspan="3">
+            <pagination class="pull-right" total-items="numFilaments" items-per-page="itemsPerPage" page="currentPageRight"></pagination>
+        </td>
+     </tfoot>
+    </table>      
+  </div>
+</div>
+
+<div class="row" ng-show="selectChamberBed">
+  <div class="col-md-12">
+    <button class="pull-right btn btn-danger btn-lg" ng-click="selectChamberBed = false">
+      Cancel
+    </button>
+    <h4>Select Chamber/Bed Preheating Profile</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>     
+          <th style="width:45%;">Preheating Profile</th>
+          <th style="width:35%;">Temperatures</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="f in pagedPreheatingProfiles[currentPageRight - 1]">
+          <td>{{ f.name }}</td>
+          <td>
+            Chamber: {{ f.chamber_temp }}°C<br/>
+            Bed: {{ f.bed_temp }}°C
+          </td>
+          <td>
+            <p class="text-right">
+            <button class="btn btn-primary btn-lg" ng-click="setChamberBed(f.id)">
+              Set
+            </button>
+            </p>
+          </td>                  
+        </tr>
+     </tbody>
+     <tfoot>
+        <td colspan="3">
+            <pagination class="pull-right" total-items="numProfiles" items-per-page="itemsPerPage" page="currentPageRight"></pagination>
+        </td>
+     </tfoot>
+    </table>      
+  </div>
+</div>
+
+  
+
+  <!--
+    <table class="table table-striped">
+      <thead>
+        <tr>     
+          <th style="width:45%;">Name</th>
+          <th style="width:35%;">Extrusion Temperature</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="f in pagedFilaments[currentPageLeft - 1]">
+          <td>{{ f.name }}</td>
+          <td>{{ f.extrusion_temp }}°C</td>
+          <td>
+            <p class="text-right">
+            <button class="btn btn-primary btn-lg" ng-click="setLeft(f.id)">
+              Select
+            </button>
+            </p>
+          </td>                  
+        </tr>
+     </tbody>
+     <tfoot>
+        <td colspan="3">
+            <pagination class="pull-right" total-items="numFilaments" items-per-page="itemsPerPage" page="currentPageLeft"></pagination>
+        </td>
+     </tfoot>
+    </table>    
+    -->

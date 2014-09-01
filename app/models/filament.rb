@@ -8,5 +8,6 @@ class Filament < ActiveRecord::Base
   
   def notify_change_via_websocket
     WebsocketRails[:filaments].trigger(:reload)
+    WebsocketRails[:filaments].trigger(:reload_loaded)
   end    
 end

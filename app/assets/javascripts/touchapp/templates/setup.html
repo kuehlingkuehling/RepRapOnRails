@@ -1,4 +1,3 @@
-<p class="pull-right text-right">Backend-URL:<br /><kbd><b>{{ backendurl }}</b></kbd></p>
 <h3 class="wizard-title">Wizards</h3>
 <div class="clearfix"><br/></div>
 
@@ -18,9 +17,6 @@
     </a>
   </div>
   <div class="col-md-4">
-    <a href="#/wizard_select_filament" class="btn btn-default btn-lg btn-block">
-      Select Filament Profiles
-    </a>        
     <a href="#/wizard_nozzle_change" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Nozzle Change
     </a>
@@ -40,15 +36,30 @@
     </a>    
   </div>
   <div class="col-md-4">
+    <p class="text-right">
+      Backend-URL:<br />
+      <kbd><b>{{ backendurl }}</b></kbd>
+    </p>
+    <br/>
+    <p class="text-right">
+      Software Version:<br />
+      <kbd><b>RepRapOnRails v1.1.0</b></kbd>
+    </p>
+    <br/>
+    <p class="text-right">
+      Hardware Revision:<br />
+      <kbd><b>RepRap Industrial v1.1.0</b></kbd>
+    </p>
+
 <!--    
     <button class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Initial Commissioning
     </button>   
--->    
+    
     <a href="#/wizard_regular_maintenance" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Regular Maintenance
     </a>
-
+-->
    </div>  
 </div>
 

@@ -1,11 +1,11 @@
 <a class="pull-right btn btn-primary" ng-click="toggleForm()">
-  Add Preset
+  Add Profile
 </a>
-<h4>Filament Presets</h4>  
+<h4>Filament Profiles</h4>  
 
 <div collapse="isCollapsed">
 		<div class="well well-lg">
-      <h4>Add new Preset</h4>
+      <h4>Add new Profile</h4>
         <form role="form">
           <div class="form-group">
             <label for="name">Name</label>
@@ -21,7 +21,7 @@
     </div> 
 </div>
 
-<p ng-show="!presets.length">No Presets stored so far.</p>
+<p ng-show="!presets.length">No Profiles stored so far.</p>
 <table class="table table-striped clearfix" ng-show="presets.length">
   <thead>
     <tr>
@@ -56,6 +56,80 @@
  </tbody>
 </table>
 <br/><br/>
+
+
+<a class="pull-right btn btn-primary" ng-click="toggleFormPreheating()">
+  Add Profile
+</a>
+<h4>Chamber/Bed Preheating Profiles</h4>  
+
+<div collapse="isCollapsedPreheating">
+    <div class="well well-lg">
+      <h4>Add new Profile</h4>
+        <form role="form">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ng-model="newPreheatingProfile.name" class="form-control" id="name" placeholder="Enter a Name">
+          </div>
+          <div class="form-group">
+            <label for="temp">Chamber Temperature (°C)</label>
+            <input type="text" ng-model="newPreheatingProfile.chamber_temp" class="form-control" id="chamber_temp" placeholder="70">
+          </div>
+          <div class="form-group">
+            <label for="temp">Bed Temperature (°C)</label>
+            <input type="text" ng-model="newPreheatingProfile.bed_temp" class="form-control" id="bed_temp" placeholder="100">
+          </div>          
+          <button class="btn btn-default" ng-click="createPreheatingProfile()">Add</button>
+          <button class="btn btn-default" ng-click="toggleFormPreheating()">Cancel</button>          
+        </form>
+    </div> 
+</div>
+
+<p ng-show="!preheatingProfiles.length">No Profiles stored so far.</p>
+<table class="table table-striped clearfix" ng-show="preheatingProfiles.length">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Chamber Temperature</th>
+      <th>Bed Temperature</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="p in preheatingProfiles">
+      <td>
+        <p ng-show="editPreheating[p.id]">
+          <input type="text" ng-model="preheatingProfiles[$index].name"><br/>
+        </p>
+        <p ng-show="!editPreheating[p.id]">{{ p.name }}</p>
+        <p ng-show="!editPreheating[p.id]" class="text-muted">{{ p.note }}</p>
+      </td>
+      <td>
+        <p ng-show="editPreheating[p.id]">
+          <input type="text" ng-model="preheatingProfiles[$index].chamber_temp">                
+        </p>        
+        <span ng-show="!editPreheating[p.id]">{{ p.chamber_temp }}°C</span>
+      </td>
+      <td>
+        <p ng-show="editPreheating[p.id]">
+          <input type="text" ng-model="preheatingProfiles[$index].bed_temp">                
+        </p>        
+        <span ng-show="!editPreheating[p.id]">{{ p.bed_temp }}°C</span>
+      </td>
+      <td>
+        <p class="text-right">
+          <button class="btn btn-primary"  ng-show="!editPreheating[p.id]" ng-click="editPreheatingProfile(p.id)">edit</button>
+          <button class="btn btn-default"  ng-show="editPreheating[p.id]" ng-click="updatePreheatingProfile($index)">update</button>          
+          <button class="btn btn-default"  ng-show="editPreheating[p.id]" ng-click="editPreheating[p.id] = false">cancel</button>          
+          <button class="btn btn-primary {{ now_printing_id == p.id && 'disabled' }}" ng-click="deletePreheatingProfile(p.id)">remove</button>        
+        </p>
+      </td>                  
+    </tr>
+ </tbody>
+</table>
+<br/><br/>
+
+
 <h4>Upload Arduino Firmware Update</h4> 
 <p>To update the Arduino Firmware on this printer, please upload the new .hex
   file through the following form. Next, properly shut down the printer through the

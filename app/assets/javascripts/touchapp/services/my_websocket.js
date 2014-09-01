@@ -11,6 +11,8 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   Service.printjobs = [];
   Service.filamentPresets = [];
   Service.filamentsLoaded = {};
+  Service.preheatingProfiles = [];
+  Service.preheatingProfile = 0;
   Service.menuDisabled = false;  
   var deferred = $q.defer();  
   var dispatcher = new WebSocketRails(WEBSOCKET_URL);
@@ -45,6 +47,16 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     Service.get('filament.get_loaded').then(function(data){
       $timeout(function(){
         Service.filamentsLoaded = data;
+      });
+    });
+    Service.get('preheating_profile.all').then(function(data){
+      $timeout(function(){
+        Service.preheatingProfiles = data;
+      });
+    });
+    Service.get('preheating_profile.get_selected').then(function(data){
+      $timeout(function(){
+        Service.preheatingProfile = data;
       });
     }); 
     Service.macro('get_temp');
@@ -118,12 +130,13 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     });
   });
 
-  Service.temp = {list:[]};
+  Service.temp = {};
   tempchannel = dispatcher.subscribe('temp');
   tempchannel.bind('new', function(message){
-    console.log('New Temp String received: ' + message);
+    console.log('New Temp String received!');
+    //console.log(message);    
     $timeout(function(){
-      Service.temp.list = message;
+      Service.temp = message;
     });
   });  
   
@@ -224,6 +237,10 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   Service.setExtruderOffset = function(x, y) {
     dispatcher.trigger("set_extruder_offset", [x, y]);
   };  
+
+  Service.preheat = function(chamber, bed) {
+    dispatcher.trigger("preheat", [chamber, bed]);
+  };  
   
   filamentchannel = dispatcher.subscribe('filaments');
   filamentchannel.bind('reload', function(message){
@@ -248,6 +265,29 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     // filaments.right => ID
     dispatcher.trigger('filament.set_loaded', filaments);
   };  
+
+  preheatingchannel = dispatcher.subscribe('preheating_profiles');
+  preheatingchannel.bind('reload', function(message){
+    console.log('Preheating Profiles updated, reloading!');
+    $timeout(function(){
+      Service.get('preheating_profile.all').then(function(data){
+        Service.preheatingProfiles = data;
+console.log(data);
+      }); 
+    });
+  });   
+  preheatingchannel.bind('reload_selected', function(message){
+    console.log('Loaded Preheating Profile changed, reloading!');
+    $timeout(function(){
+      Service.get('preheating_profile.get_selected').then(function(data){
+        Service.preheatingProfile = data;
+      }); 
+    });
+  });     
+  
+  Service.setPreheatingProfile = function(id) {
+    dispatcher.trigger('preheating_profile.set_selected', id);
+  };    
   
   return Service;
 });
