@@ -1,68 +1,81 @@
-<button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
-  Cancel
-</button>  
-<h3 class="wizard-title">
-  Nozzle Change
-</h3>
-<div class="clearfix"><br/></div>
-
-<!-- Step 1 -->
-<div class="row" ng-show="step == 1">
+<div class="row">
   <div class="col-md-7">
-    <p>Before working on the nozzle, loosen the two setscrews on the corresponding
-      extruder barrel.</p>
-    <br/>
-    <br/>    
-    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
-      Next
-    </button>    
+    <div class="row">
+
+      <!-- header line -->
+      <div class="col-md-12">
+        <button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
+          Cancel
+        </button>  
+        <h3 class="wizard-title">
+          Nozzle Change
+        </h3>
+        <br/>&nbsp;
+      </div>
+
+      <!-- text contents step 1 -->
+      <div class="col-md-12" ng-show="step == 1">
+        <p>Before working on the nozzle, loosen the two set screws on the corresponding
+          extruder barrel.</p>
+        <br/>
+        <br/>    
+        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
+          Next
+        </button>    
+      </div>
+
+      <!-- text contents step 2 -->
+      <div class="col-md-12" ng-show="step == 2">
+        <p>Now, unscrew the brass nozzle tip with a size 8 combination wrench while countering
+          with another size 8 wrench on the hex section above the aluminum heater block.
+        </p>
+        <p>Screw on another nozzle tip, gently tightening again with two wrenches.</p>
+        <p><b>WARNING: make sure you have a clean printbed installed!</b></p>
+        <p>Next, the print bed will move to its uppermost position.</p>
+        <br/>
+        <br/>    
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
+          Back
+        </button>         
+        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step3()">
+          Next
+        </button>     
+      </div>
+
+      <!-- text contents step 3 -->
+      <div class="col-md-12" ng-show="step == 3">
+        <p>After bed movement finished, slide the extruder barrel down until it touches
+          the print bed.</p>
+        <p>Gently refasten the two set screws to secure it in place.</p>
+        <br/>
+        <br/>    
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
+          Back
+        </button>         
+        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="exit()">
+          Done.
+        </button>     
+      </div>
+
+    </div>
   </div>
-  <div class="col-md-5">
+
+  <!-- image step 1 -->
+  <div class="col-md-5" ng-show="step == 1">
     <!-- picture: barrel set screws-->
     <img src="<%= asset_path("touchapp/images/wizard_leveling_barrelscrews.jpg") %>" class="img-responsive">    
   </div> 
-</div>
 
-<!-- Step 2 -->
-<div class="row" ng-show="step == 2">
-  <div class="col-md-7">
-    <p>Now, unscrew the brass nozzle tip with a size 8 combination wrench while countering
-      with another size 8 wrench on the hex section above the aluminum heater block.
-    </p>
-    <p>Screw on another nozzle tip, gently tightening again with two wrenches.</p>
-    <p>Next, the print bed will move to its uppermost position.</p>
-    <br/>
-    <br/>    
-    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
-      Back
-    </button>         
-    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step3()">
-      Next
-    </button>     
-  </div>
-  <div class="col-md-5">
+  <!-- image step 2 -->
+  <div class="col-md-5" ng-show="step == 2">
     <!-- picture: unscrew nozzle with wrenches -->
     <img src="<%= asset_path("touchapp/images/wizard_nozzle_change_wrenches.jpg") %>" class="img-responsive">    
   </div> 
-</div>
 
-<!-- Step 3 -->
-<div class="row" ng-show="step == 3">
-  <div class="col-md-7">
-    <p>After bed movement finished, slide the extruder barrel down until it touches
-      the print bed.</p>
-    <p>Gently refasten the two set screws to secure it in place.</p>
-    <br/>
-    <br/>    
-    <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
-      Back
-    </button>         
-    <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="exit()">
-      Done.
-    </button>     
-  </div>
-  <div class="col-md-5">
+  <!-- image step 3 -->
+  <div class="col-md-5" ng-show="step == 3">
     <!-- picture: fasten barrel -->
     <img src="<%= asset_path("touchapp/images/wizard_leveling_rightnozzle.jpg") %>" class="img-responsive">
   </div> 
+
 </div>
