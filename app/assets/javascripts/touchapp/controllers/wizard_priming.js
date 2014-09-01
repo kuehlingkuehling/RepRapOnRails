@@ -26,7 +26,7 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
   }, true);   
     
   // initial commands
-  MyWebsocket.macro('psu_on');
+  MyWebsocket.psu_on();
   MyWebsocket.macro('maintenance_position');
   MyWebsocket.macro('wizard_priming_init');
   

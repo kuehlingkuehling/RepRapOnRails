@@ -6,7 +6,7 @@ touchApp.controller('WizardRegularMaintenanceController', function($scope, Commo
   $scope.step = 1;
   
   // initial commands
-  MyWebsocket.macro('psu_on');
+  MyWebsocket.psu_on());
   MyWebsocket.macro('maintenance_position');    
   
   $scope.step1 = function() {

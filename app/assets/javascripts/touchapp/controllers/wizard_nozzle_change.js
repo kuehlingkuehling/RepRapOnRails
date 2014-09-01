@@ -5,7 +5,7 @@ touchApp.controller('WizardNozzleChangeController', function($scope, $location, 
   $scope.step = 1;
   
   // initial commands
-  MyWebsocket.macro('psu_on');
+  MyWebsocket.psu_on();
   MyWebsocket.macro('maintenance_position');  
   
   $scope.step1 = function() {

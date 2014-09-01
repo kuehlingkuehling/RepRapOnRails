@@ -27,7 +27,7 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   }, true); 
   
   // initial commands
-  MyWebsocket.macro('psu_on');
+  MyWebsocket.psu_on();
   MyWebsocket.macro('wizard_leveling_init');
   
   $scope.step1 = function() {

@@ -32,7 +32,7 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   }, true); 
   
   // initial commands
-  MyWebsocket.macro('psu_on');
+  MyWebsocket.psu_on();
   MyWebsocket.macro('maintenance_position');
   
   $scope.step1 = function() {
