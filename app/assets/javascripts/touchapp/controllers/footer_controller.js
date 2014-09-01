@@ -3,12 +3,10 @@ touchApp.controller('FooterController', function($scope, $location, $timeout, My
  
   $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(){
     $scope.filaments = MyWebsocket.filamentsLoaded;
-    console.log($scope.filaments);
   },true);  
 
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
     $scope.preheatingProfile = MyWebsocket.preheatingProfile;
-    console.log($scope.preheatingProfile);
   },true);    
 
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(){
