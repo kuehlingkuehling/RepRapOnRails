@@ -241,6 +241,10 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   Service.preheat = function(chamber, bed) {
     dispatcher.trigger("preheat", [chamber, bed]);
   };  
+
+  Service.psu_on = function() {
+    dispatcher.trigger("psu_on");
+  }
   
   filamentchannel = dispatcher.subscribe('filaments');
   filamentchannel.bind('reload', function(message){

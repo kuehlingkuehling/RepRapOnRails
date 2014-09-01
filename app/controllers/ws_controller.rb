@@ -69,6 +69,13 @@ class WsController < WebsocketRails::BaseController
       end    
     end
   end
+
+  def psu_on
+    if not @@printer.current_params[:psu_on]
+      @@printer.send("M80")
+      @@printer.send("G28")
+    end
+  end
   
   # right extruder offset calibration
   # x and y are steps
