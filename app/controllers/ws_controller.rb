@@ -74,6 +74,7 @@ class WsController < WebsocketRails::BaseController
     if not @@printer.current_params[:psu_on]
       @@printer.send("M80")
       @@printer.send("G28")
+      @@printer.send("T0")
     end
   end
   

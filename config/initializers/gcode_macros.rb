@@ -35,20 +35,15 @@ MACROS = {
   :preheat_off => [
     "M104 S0 T2",
     "M140 S0"],
-  :psu_on => [
-    "M80",
-    "G28",
-    "T0"],
+  :psu_on => [],                  # deprecated - now implemented in ws_controller.rb
   :psu_off => [
     "M104 S0 T0",    
     "M104 S0 T1",
     "M104 S0 T2",
     "M140 S0",    
     "M81"],
-  :get_temp => [
-    "M105"],
-  :motors_off => [
-    "M84"],
+  :get_temp => [],                # deprecated - repraphost has an internal temp refresh loop running now
+  :motors_off => [],               # deprecated - never ever used anymore to prevent damage from positioning misalignments
   :wizard_leveling_init => [
     "T0",
     "G1 X112 Y213 Z100 F12000"],
