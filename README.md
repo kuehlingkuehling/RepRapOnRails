@@ -70,7 +70,7 @@ RepRapOnRails stands on the shoulders of exceptionally awesome open source softw
 
 ## Current Version
 
-v1.1-dev
+see VERSION file in the project root directory.
 
 All stable releases can be found at [https://github.com/kuehlingkuehling/RepRapOnRails/releases](https://github.com/kuehlingkuehling/RepRapOnRails/releases)
 

@@ -1,7 +1,7 @@
 touchApp.controller('DialogShutdownController', function($scope, $timeout, $modalInstance, CommonCode, MyWebsocket){
   console.log("Running DialogShutdownController");  
 
-  $scope.seconds = 180;
+  $scope.seconds = <%= Rails.application.config.chamber_heater_cooldown_time %>;
   $scope.countdown = CommonCode.formatSeconds($scope.seconds);
   $scope.title = "Please wait";
   

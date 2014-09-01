@@ -22,6 +22,9 @@ RepRapOnRails::Application.configure do
   
   # location of a new arduino firmware hexfile if available
   config.arduino_hexfile = File.join( Rails.root, "arduino-firmware-update", "arduino-firmware.hex" )
+
+  # RepRapOnRails software version string
+  config.software_version = "RepRapOnRails " + File.open(File.join(Rails.root, "VERSION"), &:readline)
 end
 
 # moving log database writing to queued background job - this task is too slow
