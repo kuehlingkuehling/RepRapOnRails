@@ -24,7 +24,10 @@ RepRapOnRails::Application.configure do
   config.arduino_hexfile = File.join( Rails.root, "arduino-firmware-update", "arduino-firmware.hex" )
 
   # RepRapOnRails software version string
-  config.software_version = "RepRapOnRails " + File.open(File.join(Rails.root, "VERSION"), &:readline)
+  config.software_version = "RepRapOnRails " + File.open(File.join(Rails.root, "VERSION"), &:readline).strip
+
+  # Get hardware revision string to define which machine specific config set to load in repraponrails_02_config.rb
+  config.hardware_revision_number = File.open(File.join(Rails.root, "HARDWARE_REVISION"), &:readline).strip
 end
 
 # moving log database writing to queued background job - this task is too slow
@@ -94,7 +97,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       printer.startcb = Proc.new do |line|
                              WebsocketRails[:print].trigger(:state, printer.status)
                              WebsocketRails[:print].trigger(:job, { :name => printjob[:title], :job_id => printjob[:id] })
-                             log_queue.push({:level => 1, :line => 'Printjob started'})
+                             log_queue.push({:level => 1, :line => "Printjob started: \"#{printjob[:title]}\""})
                              #LogEntry.create(level: 1, line: 'Printjob started')
                          end
                         
@@ -117,9 +120,9 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                           WebsocketRails[:print].trigger(:state, printer.status)        
                           WebsocketRails[:print].trigger(:job, { :name => "", :job_id => 0 })
                           WebsocketRails[:print].trigger(:finished, {:id => printjob[:id], :elapsed => UsefulGlobalMethods.timespan_in_words( elapsed )})
+                          log_queue.push({:level => 1, :line => "Printjob \"#{printjob[:title]}\" finished after " + UsefulGlobalMethods.timespan_in_words( elapsed )})
                           printjob[:id] = nil
                           printjob[:title] = ""
-                          log_queue.push({:level => 1, :line => 'Printjob finished after ' + UsefulGlobalMethods.timespan_in_words( elapsed )})
                           #LogEntry.create(level: 1, line: 'Printjob finished after ' + UsefulGlobalMethods.timespan_in_words( elapsed ))
                       end  
 

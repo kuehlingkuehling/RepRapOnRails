@@ -3,6 +3,11 @@
 echo "PREPARING CLEAN REPRAPONRAILS INSTALL"
 read -p "Press [Enter] key to start..."
 
+echo "Please enter the hardware revision number you are installing RepRapOnRails onto (e.g. \"v1.1.0\")"
+read hwrevision
+echo $hwrevision > ./HARDWARE_REVISION
+echo "Hardware revision configured. Proceeding with install..."
+
 # install default database config file
 echo "setting up database configuration"
 mv config/database.yml.default config/database.yml

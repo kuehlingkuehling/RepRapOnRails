@@ -16,7 +16,7 @@ MACROS = {
     "G28"],
   :maintenance_position => [
     "T0",
-    "G1 X112 Y90"],
+    "G1 X%d Y%d F12000" % [ Rails.application.config.maintenance_position[0], Rails.application.config.maintenance_position[1] ]],
   :home_all => [
     "G28"],
   :home_x => [
@@ -46,20 +46,20 @@ MACROS = {
   :motors_off => [],               # deprecated - never ever used anymore to prevent damage from positioning misalignments
   :wizard_leveling_init => [
     "T0",
-    "G1 X112 Y213 Z100 F12000"],
+    "G1 X%d Y%d Z100 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ] ],
   :wizard_leveling_preheat => [
     "M140 S100"],
   :wizard_leveling_front => [
-    "G1 X140 Y150 Z20 F12000",
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_front[0], Rails.application.config.leveling_point_front[1] ],
     "G1 Z0 F6000"],
   :wizard_leveling_right => [
-    "G1 X192 Y238 Z20 F12000",
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_right[0], Rails.application.config.leveling_point_right[1] ],
     "G1 Z0 F6000"],
   :wizard_leveling_left => [
-    "G1 X86 Y238 Z20 F12000",
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_left[0], Rails.application.config.leveling_point_left[1] ],
     "G1 Z0 F6000"],
   :wizard_leveling_center => [
-    "G1 X112 Y213 Z20 F12000",
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ],
     "G1 Z0 F6000"],
   :wizard_leveling_exit => [
     "M140 S0",
