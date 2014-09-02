@@ -59,7 +59,6 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
         Service.preheatingProfile = data;
       });
     }); 
-    Service.macro('get_temp');
     $rootScope.$apply(function(){    
       deferred.resolve(Service); 
     });    

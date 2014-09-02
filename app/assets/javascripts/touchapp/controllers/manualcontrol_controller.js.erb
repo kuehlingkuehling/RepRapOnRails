@@ -1,11 +1,33 @@
 touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal, MyWebsocket){
   console.log("Running ManualcontrolController");
   
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 5 )) {
-      $scope.printing = true;
+  $scope.ext_num = null;
+  $scope.temp_left = 0;
+  $scope.temp_right = 0;
+
+  $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(newValue){
+    $scope.filaments_loaded = MyWebsocket.filamentsLoaded;
+
+    if ( $scope.filaments_loaded.left ) {
+      $scope.temp_left = $scope.filaments_loaded.left.extrusion_temp;
     } else {
-      $scope.printing = false;      
+      $scope.temp_left = 180;
+    }
+
+    if ( $scope.filaments_loaded.right ) {
+      $scope.temp_right = $scope.filaments_loaded.right.extrusion_temp;
+    } else {
+      $scope.temp_right = 180;
+    }    
+  }, true);
+
+  
+ 
+  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
+    if (( MyWebsocket.print.state == 1) || ( MyWebsocket.print.state == 3 )) {
+      $scope.disable_buttons = false;
+    } else {
+      $scope.disable_buttons = true;      
     }    
   }, true);  
   
@@ -17,13 +39,56 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   $scope.macro = function( name ){
     MyWebsocket.macro(name);    
   };   
+
+  $scope.dec = function( val ){
+    if ($scope.ext_num == 'left') {
+      $scope.temp_left -= val;
+      if ($scope.temp_left < 0) {
+        $scope.temp_left = 0;
+      }
+    }
+    if ($scope.ext_num == 'right') {
+      $scope.temp_right -= val;
+      if ($scope.temp_right < 0) {
+        $scope.temp_right = 0;
+      }
+    }    
+  };
+
+  $scope.inc = function( val ){
+    if ($scope.ext_num == 'left') {
+      $scope.temp_left += val;
+    }
+    if ($scope.ext_num == 'right') {
+      $scope.temp_right += val;
+    }
+  };
   
-  $scope.extruder = function( num, temp ){
-    MyWebsocket.set_temp([num, temp]);
+  $scope.set = function(){
+    if ($scope.ext_num == 'left') {
+      MyWebsocket.set_temp([0, $scope.temp_left]);
+    }
+    if ($scope.ext_num == 'right') {
+      MyWebsocket.set_temp([1, $scope.temp_right]);
+    }
+  }; 
+
+  $scope.off = function(){
+    if ($scope.ext_num == 'left') {
+      MyWebsocket.set_temp([0, 0]);
+    }
+    if ($scope.ext_num == 'right') {
+      MyWebsocket.set_temp([1, 0]);
+    }
   };   
   
-  $scope.extrude = function( num, length ){
-    MyWebsocket.extrude([num, length]);    
+  $scope.extrude = function( length ){
+    if ($scope.ext_num == 'left') {
+      MyWebsocket.extrude([0, length]);
+    }
+    if ($scope.ext_num == 'right') {
+      MyWebsocket.extrude([1, length]);
+    }    
   };     
 
 });
