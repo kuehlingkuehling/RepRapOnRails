@@ -26,6 +26,11 @@ touchApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
       controller: 'PrintFinishedController',
       resolve: resolve_websocket
     }). 
+    when('/print_delete/:printjobId', {
+      templateUrl: '<%= asset_path("touchapp/templates/print_delete.html") %>',
+      controller: 'PrintDeleteController',
+      resolve: resolve_websocket
+    }). 
     when('/out_of_filament/:spool', {
       templateUrl: '<%= asset_path("touchapp/templates/out_of_filament.html") %>',
       controller: 'OutOfFilamentController',

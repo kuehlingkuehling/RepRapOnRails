@@ -1,18 +1,18 @@
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-9">
 
     <!-- QUEUE -->
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>&nbsp;</th>      
-          <th style="width:70%">Print Job / Note</th>
-          <th>Modified</th>
+          <th style="width:40px">&nbsp;</th>      
+          <th>Print Job / Note</th>
+          <th style="width:160px">Modified</th>
           <!--
           <th>Estimated Print Time</th>
           <th>Filament used</th>
           -->
-          <th>&nbsp;</th>
+          <th style="width:200px">&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +32,9 @@
             <a class="btn btn-primary btn-lg {{ !idle && 'disabled' }}" href="#/print_check/{{ p.id }}">
               print
             </a>
+            <a class="btn btn-danger btn-lg {{ !idle && 'disabled' }}" href="#/print_delete/{{ p.id }}">
+              delete
+            </a>
             </p>
           </td>                  
         </tr>
@@ -44,7 +47,7 @@
     </table>
 
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <p class="text-right">
       <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_on()" ng-show="!print.psu_on">
         Build Chamber ON

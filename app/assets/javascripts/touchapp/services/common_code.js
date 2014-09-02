@@ -22,5 +22,15 @@ touchApp.factory('CommonCode', function() {
     return mm + ":" + (ss < 10 ? "0" : "") + ss
   };
   
+  CommonCode.getById = function(input, id) {
+    var i=0, len=input.length;
+    for (; i<len; i++) {
+      if (+input[i].id == +id) {
+        return input[i];
+      }
+    }
+    return null;
+  }
+  
   return CommonCode; 
 });
