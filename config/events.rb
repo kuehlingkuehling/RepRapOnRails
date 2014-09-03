@@ -59,6 +59,6 @@ WebsocketRails::EventMap.describe do
   subscribe :preheat, :to => WsController, :with_method => :preheat
   subscribe :psu_on, :to => WsController, :with_method => :psu_on
   subscribe :extrude, :to => WsController, :with_method => :extrude 
-  subscribe :set_extruder_offset, :to => WsController, :with_method => :set_extruder_offset
+  subscribe :set_eeprom, :to => WsController, :with_method => :set_eeprom
  
 end

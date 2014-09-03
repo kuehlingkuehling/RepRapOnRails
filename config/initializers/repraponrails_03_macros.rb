@@ -79,5 +79,7 @@ MACROS = {
   :select_left_extruder => [
     "T0"],
   :select_right_extruder => [
-    "T1"] 
+    "T1"],
+  :reload_eeprom => [
+    "M205"] 
 }

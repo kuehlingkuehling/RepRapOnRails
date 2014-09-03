@@ -78,13 +78,19 @@ class WsController < WebsocketRails::BaseController
     end
   end
   
-  # right extruder offset calibration
-  # x and y are steps
-  def set_extruder_offset
-    x = message[0]
-    y = message[1]
-    @@printer.send("M206 T2 P331 S" + x.to_s)
-    @@printer.send("M206 T2 P335 S" + y.to_s)    
+  # set EEPROM values in Repetier Firmware
+  def set_eeprom
+    pos = message[0]
+    type = message[1]
+    val = message[2]
+    if type == 3
+      char = "X"
+      val = val.to_f
+    else
+      char = "S"
+      val = val.to_i
+    end
+    @@printer.send("M206 T#{ type } P#{ pos } #{ char }#{ val }")    
   end
   
   def emergencystop

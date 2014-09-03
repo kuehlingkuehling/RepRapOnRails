@@ -201,7 +201,13 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       printer.psuoffcb = Proc.new do |line| 
                             WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
                             LogEntry.create(level: 1, line: 'Build Chamber deactivated')                            
-                        end                                                                              
+                        end
+
+      # assign EEPROM value callback
+      printer.eepromcb = Proc.new do |config| 
+                            WebsocketRails[:eeprom].trigger(:line, config)                          
+                        end 
+
 
       # debugging in development environment
       if Rails.env.development?

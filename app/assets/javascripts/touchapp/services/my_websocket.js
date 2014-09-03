@@ -14,6 +14,7 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   Service.preheatingProfiles = [];
   Service.preheatingProfile = 0;
   Service.menuDisabled = false;  
+  Service.eeprom = {};
   var deferred = $q.defer();  
   var dispatcher = new WebSocketRails(WEBSOCKET_URL);
 
@@ -232,10 +233,6 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   Service.calibrateExtrusionPrintjob = function(ext) {
     dispatcher.trigger("printjob.calibrate_extrusion", ext);
   };  
-  
-  Service.setExtruderOffset = function(x, y) {
-    dispatcher.trigger("set_extruder_offset", [x, y]);
-  };  
 
   Service.preheat = function(chamber, bed) {
     dispatcher.trigger("preheat", [chamber, bed]);
@@ -275,7 +272,6 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     $timeout(function(){
       Service.get('preheating_profile.all').then(function(data){
         Service.preheatingProfiles = data;
-console.log(data);
       }); 
     });
   });   
@@ -291,6 +287,27 @@ console.log(data);
   Service.setPreheatingProfile = function(id) {
     dispatcher.trigger('preheating_profile.set_selected', id);
   };    
+
+
+  eepromchannel = dispatcher.subscribe('eeprom');
+  eepromchannel.bind('line', function(config){
+    $timeout(function(){
+      Service.eeprom[config.pos] = {
+        type:config.type,
+        val:config.val,        
+        name:config.name
+      };
+    });
+  });
+
+  Service.reloadEEPROM = function() {
+    Service.eeprom = {};
+    Service.macro('reload_eeprom');
+  };   
+
+  Service.setEEPROM = function(pos, type, val) {
+    dispatcher.trigger("set_eeprom", [pos, type, val]);
+  };  
   
   return Service;
 });
