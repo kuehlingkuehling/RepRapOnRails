@@ -28,6 +28,10 @@ RepRapOnRails::Application.configure do
 
   # Get hardware revision string to define which machine specific config set to load in repraponrails_02_config.rb
   config.hardware_revision_number = File.open(File.join(Rails.root, "HARDWARE_REVISION"), &:readline).strip
+
+  # preheating parameters (M109/M190)
+  config.preheat_deviation = 2  # +/- in °C
+  config.preheat_stabilize_time = 3  # in sec  
 end
 
 # moving log database writing to queued background job - this task is too slow
@@ -214,6 +218,10 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
         printer.echoreadwrite = true
         printer.verbose = true
       end
+
+      # set preheating parameters (M109/M190)
+      printer.temp_deviation = Rails.application.config.preheat_deviation
+      printer.temp_stabilize_time = Rails.application.config.preheat_stabilize_time
       
       log_queue.push({:level => 1, :line => 'Connecting to RepRap Controller...'})      
       printer.connect(Rails.application.config.reprap_usb_port, Rails.application.config.reprap_usb_baudrate)

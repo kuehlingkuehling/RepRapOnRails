@@ -17,11 +17,11 @@ require 'fakereprap'
 Thread.abort_on_exception = true 
 
 class RepRapHost
-  attr_accessor :verbose, :echoreadwrite,
+  attr_accessor :verbose, :echoreadwrite, :temp_deviation, :temp_stabilize_time,
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
-                :psuoncb, :psuoffcb
+                :psuoncb, :psuoffcb, :eepromcb
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
               :current_params
   alias :online? :online
@@ -50,8 +50,8 @@ class RepRapHost
     # for preheating: deviation around target temperature to accept as preheated
     @temp_deviation = 2           # in +/- °C
     @temp_update_interval = 1     # in sec
-    @temp_stabilize_cycles = 3    # temp needs to stay withing deviation for this many temp refreh cycles
-
+    @temp_stabilize_time = 3      # in sec, temp needs to stay withing deviation for this time
+    
     # current parameters of printer 
     @current_params = Hash.new   
     @current_params[:current_temps] = {
@@ -89,6 +89,7 @@ class RepRapHost
     @emergencystopcb = nil
     @psuoncb = nil # on M80 power supply on
     @psuoffcb = nil # on M81 power supply off
+    @eepromcb = nil # on response lines to M205 (show eeprom values)
     
     # thread sync
     @printer_lock = Mutex.new
@@ -241,6 +242,21 @@ class RepRapHost
           result = /^OutOfFilament:(?<spool>\w+)/.match(line)
           @reloadcb.call(result[:spool]) if @reloadcb and @printing
         end
+
+        # check for responses containing EEPROM config values
+        if line.start_with?('EPR:')
+          result = /^EPR:(?<type>\d) (?<pos>\d+) (?<val>-?\d+(\.\d+)?) (?<name>.+)/.match(line)
+
+          if result[:type] and result[:pos] and result[:val] and result[:name]
+            config = {
+              :type => result[:type].to_i,
+              :pos => result[:pos].to_i,
+              :val => result[:val].to_f,
+              :name => result[:name]
+            }
+            @eepromcb.call(config) if @eepromcb
+          end
+        end
       rescue EOFError => e
         puts "DEBUG: EOF from serialport readline"
         # do nothing - sometimes serialport sends EOF when done sending stuff
@@ -386,7 +402,7 @@ class RepRapHost
     
     stabilize_cycles = 0
     target_range = (target_temp - @temp_deviation)..(target_temp + @temp_deviation)
-    while not @temp_stabilize_cycles == stabilize_cycles
+    while not (stabilize_cycles >= (@temp_stabilize_time / @temp_update_interval ))
       if target_range.include?(@current_params[:current_temps][heater])
         stabilize_cycles += 1
       else
