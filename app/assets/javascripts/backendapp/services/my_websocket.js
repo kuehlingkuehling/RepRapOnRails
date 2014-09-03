@@ -10,6 +10,7 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
   Service.printjobs = [];
   Service.filamentPresets = [];
   Service.preheatingProfiles = [];
+  Service.eeprom = {};
   var deferred = $q.defer();  
   var dispatcher = new WebSocketRails(WEBSOCKET_URL);
 
@@ -204,6 +205,26 @@ console.log(data);
     dispatcher.trigger('preheating_profile.update', preset);
   }   
 
+
+  eepromchannel = dispatcher.subscribe('eeprom');
+  eepromchannel.bind('line', function(config){
+    $timeout(function(){
+      Service.eeprom[config.pos] = {
+        type:config.type,
+        val:config.val,        
+        name:config.name
+      };
+    });
+  });
+
+  Service.reloadEEPROM = function() {
+    Service.eeprom = {};
+    dispatcher.trigger('macro', 'reload_eeprom');
+  };   
+
+  Service.setEEPROM = function(pos, type, val) {
+    dispatcher.trigger("set_eeprom", [pos, type, val]);
+  };  
 
   return Service;
 });

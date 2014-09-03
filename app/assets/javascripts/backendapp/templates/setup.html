@@ -149,3 +149,44 @@
   <span class="text-danger"> {{ error }}</span>
 </form>
 </div>
+<br/><br/>
+
+
+<a class="pull-right btn btn-primary" ng-click="reloadEEPROM()">
+  Reload List
+</a>
+<h4>EEPROM Editor</h4>
+<p>The RUMBA board inside this printer is an Arduino compatible microcontroller board that controls all processes of the printing process, i.e. the motors, the heating resistors, heating fans and the temperature sensors</p>
+<p>A number of configuration settings for the microcontroller are stored in its integrated EEPROM memory and can be altered at runtime.</p>
+<p><b>ATTENTION: Do not change any of these unless you know exactly what you are doing. Wrong settings can result in severe damage of the printer!</b></p>
+
+<table class="table table-striped clearfix">
+  <thead>
+    <tr>
+      <th style="width:50%">Name</th>
+      <th style="width:10%">Value</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="e in eeprom | toArray">
+      <td>
+        <p>{{ e.name }}</p>
+      </td>
+      <td>
+        <p ng-show="edit_eeprom[e.$key]">
+          <input type="text" ng-model="eeprom[e.$key].val">                
+        </p>        
+        <span ng-show="!edit_eeprom[e.$key]">{{ e.val }}</span>
+      </td>
+      <td>
+        <p class="text-right">
+          <button class="btn btn-primary" ng-show="!edit_eeprom[e.$key]" ng-click="editEEPROM(e.$key)">edit</button>
+          <button class="btn btn-default" ng-show="edit_eeprom[e.$key]" ng-click="updateEEPROM(e.$key)">update</button>          
+          <button class="btn btn-default" ng-show="edit_eeprom[e.$key]" ng-click="edit_eeprom[e.$key] = false">cancel</button>
+        </p>
+      </td>                  
+    </tr>
+ </tbody>
+</table>
+<br/><br/>

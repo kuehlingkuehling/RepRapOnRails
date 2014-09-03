@@ -11,6 +11,13 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.isCollapsedPreheating = true;  
   $scope.editPreheating = {};
 
+  $scope.eeprom = null;
+  MyWebsocket.reloadEEPROM();
+  $scope.$watch(function(){ return MyWebsocket.eeprom; }, function(newValue){
+    $scope.eeprom = MyWebsocket.eeprom;  
+  }, true); 
+  $scope.edit_eeprom = {};
+
   // firmware upload form
   $scope.uploadProgress = 0;
   $scope.file = false;  
@@ -118,6 +125,24 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.updatePreheatingProfile = function(index){
     MyWebsocket.updatePreheatingProfile($scope.preheatingProfiles[index]);
     $scope.editPreheating[$scope.preheatingProfiles[index].id] = false;    
+  };
+
+
+  $scope.reloadEEPROM = function(){
+    MyWebsocket.reloadEEPROM();
+  };
+
+  $scope.editEEPROM = function(pos){
+    $scope.edit_eeprom[pos] = true;
+  };
+
+  $scope.updateEEPROM = function(pos){
+    MyWebsocket.setEEPROM(pos, $scope.eeprom[pos].type, $scope.eeprom[pos].val);
+    
+    if ( $scope.eeprom[pos].type != 3) {
+      $scope.eeprom[pos].val = Math.floor($scope.eeprom[pos].val);
+    };
+    $scope.edit_eeprom[pos] = false;    
   };
 
 });
