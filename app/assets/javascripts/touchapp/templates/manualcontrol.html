@@ -144,7 +144,8 @@
           <button type="button" class="btn btn-default btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="macro('home_all')">
             Home All Axes
           </button>
-        
+        </p>
+        <p class="text-center">
           <button type="button" class="btn btn-primary btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="macro('maintenance_position')">
             Printhead Maintenance Position
           </button>   
@@ -158,19 +159,19 @@
     <p>
       select:<br/>
       <div class="btn-group text-center">
-        <button type="button" ng-model="ext_num" class="btn btn-primary btn-lg {{ disable_buttons && 'disabled' }}" btn-radio="'left'">Left</button>
-        <button type="button" ng-model="ext_num" class="btn btn-primary btn-lg {{ disable_buttons && 'disabled' }}" btn-radio="'right'">Right</button>
+        <button type="button" ng-model="ext_name" class="btn btn-primary btn-lg {{ disable_buttons && 'disabled' }}" btn-radio="'left_extruder'">Left</button>
+        <button type="button" ng-model="ext_name" class="btn btn-primary btn-lg {{ disable_buttons && 'disabled' }}" btn-radio="'right_extruder'">Right</button>
       </div>
     </p>
-    <p ng-show="ext_num">
+    <p ng-show="ext_name">
       <button type="button" class="btn btn-default btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="dec(10)" style="width:50px;">
           - -
       </button>
       <button type="button" class="btn btn-default btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="dec(1)" style="width:50px;">
           -
       </button>
-      <span ng-show="ext_num == 'left'">{{ temp_left }}°C</span> 
-      <span ng-show="ext_num == 'right'">{{ temp_right }}°C</span> 
+      <span ng-show="ext_name == 'left_extruder'"> {{ temp_left }}°C </span> 
+      <span ng-show="ext_name == 'right_extruder'"> {{ temp_right }}°C </span> 
       <button type="button" class="btn btn-default btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="inc(1)" style="width:50px;">
           +
       </button>
@@ -178,7 +179,7 @@
           + +
       </button>
     </p>
-    <p ng-show="ext_num">
+    <p ng-show="ext_name != null">
       <button type="button" class="btn btn-primary btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="set()">
           set
       </button> 
@@ -186,11 +187,11 @@
           OFF
       </button>
     </p>
-    <p ng-show="ext_num">
-      <button type="button" class="btn btn-primary btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="extrude(5)">
+    <p ng-show="ext_name != null">
+      <button type="button" class="btn btn-primary btn-lg navigation {{ ( disable_buttons || !extruder_preheated ) && 'disabled' }}" ng-click="extrude(5)">
           extrude
       </button> 
-      <button type="button" class="btn btn-default btn-lg navigation {{ disable_buttons && 'disabled' }}" ng-click="extrude(-5)">
+      <button type="button" class="btn btn-default btn-lg navigation {{ ( disable_buttons || !extruder_preheated ) && 'disabled' }}" ng-click="extrude(-5)">
           retract
       </button>
     </p> 

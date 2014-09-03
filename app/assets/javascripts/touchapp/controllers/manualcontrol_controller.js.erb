@@ -1,9 +1,14 @@
 touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal, MyWebsocket){
   console.log("Running ManualcontrolController");
   
-  $scope.ext_num = null;
+  $scope.ext_name = null;
   $scope.temp_left = 0;
   $scope.temp_right = 0;
+
+  $scope.deviation = 3; // +/- C deviation around target temp
+  $scope.extruder_temp = 0;  
+  $scope.extruder_preheated = false;
+  $scope.extruder_target = 0;
 
   $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(newValue){
     $scope.filaments_loaded = MyWebsocket.filamentsLoaded;
@@ -21,7 +26,31 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
     }    
   }, true);
 
-  
+
+  $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
+    $scope.temp = MyWebsocket.temp;
+
+    if ( ( $scope.ext_name == 'left_extruder') && MyWebsocket.temp.left_extruder) {
+      $scope.extruder_temp = MyWebsocket.temp.left_extruder.temp;
+      $scope.extruder_target = MyWebsocket.temp.left_extruder.target;
+      if (($scope.extruder_temp > ($scope.extruder_target - $scope.deviation)) && ($scope.extruder_temp < ($scope.extruder_target + $scope.deviation))) {
+        $scope.extruder_preheated = true;
+      } else {
+        $scope.extruder_preheated = false;      
+      };
+    };
+
+    if ( ( $scope.ext_name == 'right_extruder') && MyWebsocket.temp.right_extruder) {
+      $scope.extruder_temp = MyWebsocket.temp.right_extruder.temp;
+      $scope.extruder_target = MyWebsocket.temp.right_extruder.target;
+      if (($scope.extruder_temp > ($scope.extruder_target - $scope.deviation)) && ($scope.extruder_temp < ($scope.extruder_target + $scope.deviation))) {
+        $scope.extruder_preheated = true;
+      } else {
+        $scope.extruder_preheated = false;      
+      };
+    };
+  }, true); 
+
  
   $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
     if (( MyWebsocket.print.state == 1) || ( MyWebsocket.print.state == 3 )) {
@@ -31,6 +60,12 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
     }    
   }, true);  
   
+
+  $scope.getExtId = function(){
+    ext_id = ( $scope.ext_name == 'left_extruder' ) ? 0 : ( ( $scope.ext_name == 'right_extruder' ) ? 1 : null );
+    return ext_id;
+  }
+
   // relative positioning
   $scope.move = function( coord ){
     MyWebsocket.move(coord);
@@ -41,13 +76,13 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   };   
 
   $scope.dec = function( val ){
-    if ($scope.ext_num == 'left') {
+    if ($scope.ext_name == 'left_extruder') {
       $scope.temp_left -= val;
       if ($scope.temp_left < 0) {
         $scope.temp_left = 0;
       }
     }
-    if ($scope.ext_num == 'right') {
+    if ($scope.ext_name == 'right_extruder') {
       $scope.temp_right -= val;
       if ($scope.temp_right < 0) {
         $scope.temp_right = 0;
@@ -56,39 +91,29 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   };
 
   $scope.inc = function( val ){
-    if ($scope.ext_num == 'left') {
+    if ($scope.ext_name == 'left_extruder') {
       $scope.temp_left += val;
     }
-    if ($scope.ext_num == 'right') {
+    if ($scope.ext_name == 'right_extruder') {
       $scope.temp_right += val;
     }
   };
   
   $scope.set = function(){
-    if ($scope.ext_num == 'left') {
+    if ( $scope.ext_name == 'left_extruder') {
       MyWebsocket.set_temp([0, $scope.temp_left]);
     }
-    if ($scope.ext_num == 'right') {
+    if ( $scope.ext_name == 'right_extruder') {
       MyWebsocket.set_temp([1, $scope.temp_right]);
     }
   }; 
 
   $scope.off = function(){
-    if ($scope.ext_num == 'left') {
-      MyWebsocket.set_temp([0, 0]);
-    }
-    if ($scope.ext_num == 'right') {
-      MyWebsocket.set_temp([1, 0]);
-    }
+    MyWebsocket.set_temp([$scope.getExtId(), 0]);
   };   
   
   $scope.extrude = function( length ){
-    if ($scope.ext_num == 'left') {
-      MyWebsocket.extrude([0, length]);
-    }
-    if ($scope.ext_num == 'right') {
-      MyWebsocket.extrude([1, length]);
-    }    
+    MyWebsocket.extrude([$scope.getExtId(), length]);    
   };     
 
 });
