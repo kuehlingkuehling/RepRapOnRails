@@ -86,8 +86,9 @@
     <button class="pull-right btn btn-danger btn-lg" ng-click="selectLeft = false">
       Cancel
     </button>
-    <h4>Select Left Extruder Filament Profile</h4> 
-    <table class="table table-striped">
+    <h4>Select Left Extruder Filament Profile</h4>
+    <p ng-show="!pagedFilaments.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="pagedFilaments.length">
       <thead>
         <tr>     
           <th style="width:45%;">Filament Profile</th>
@@ -123,7 +124,8 @@
       Cancel
     </button> 
     <h4>Select Right Extruder Filament Profile</h4>
-    <table class="table table-striped">
+    <p ng-show="!pagedFilaments.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="pagedFilaments.length">
       <thead>
         <tr>     
           <th style="width:45%;">Filament Profile</th>
@@ -159,7 +161,8 @@
       Cancel
     </button>
     <h4>Select Chamber/Bed Preheating Profile</h4>
-    <table class="table table-striped">
+    <p ng-show="!pagedPreheatingProfiles.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="pagedPreheatingProfiles.length">
       <thead>
         <tr>     
           <th style="width:45%;">Preheating Profile</th>
