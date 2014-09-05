@@ -1,3 +1,5 @@
+require 'matrix'
+
 class FakeRepRap
   
   def initialize(port, baud, p1, p2, p3)
@@ -10,6 +12,10 @@ class FakeRepRap
       2 => 0,
       :B => 0
     }
+
+    @last_coord = nil
+    @new_coord = [ 0, 0, 0 ]
+    @feedrate = nil
  
     puts " "
     puts "    *********** WARNING *************"
@@ -22,8 +28,26 @@ class FakeRepRap
 
   def write(line)
     gcode = Gcode.new(line)
-    @response_queue.push("ok")
+    
+    @feedrate = gcode.f if gcode.f
+      
+    if gcode.g?(1) and @feedrate
+      @new_coord[0] = gcode.x if gcode.x
+      @new_coord[1] = gcode.y if gcode.y
+      @new_coord[2] = gcode.z if gcode.z
 
+      if @last_coord
+        segment = Vector.elements([
+          @new_coord[0] - @last_coord[0],
+          @new_coord[1] - @last_coord[1],
+          @new_coord[2] - @last_coord[2]])
+     
+        segment_duration = segment.norm / (@feedrate / 60)
+        sleep segment_duration # imitate mechanical move by delaying the "ok"
+      end
+      @last_coord = @new_coord.dup
+    end
+    
 
     if gcode.m?(105)
       @response_queue.push("T:#{ randstr(19) } /#{ @targets[0] } B:23.89 /#{ @targets[:B] } B@:0 @:0 T0:#{ randstr(19) } /#{ @targets[0] } @0:0 T1:#{ randstr(20) } /#{ @targets[1] } @1:0 T2:#{ randstr(21) } /#{ @targets[2] } @2:0") 
@@ -38,6 +62,8 @@ class FakeRepRap
       #@response_queue.push("TargetBed:#{ gcode.s }")
       @targets[:B] = gcode.s.to_i
     end
+
+    @response_queue.push("ok")
 
     if gcode.m?(205)
       @response_queue.push("EPR:3 446 0.000 Extr.3 advance L [0=off]")
@@ -141,7 +167,6 @@ class FakeRepRap
 
   def readline 
     count = 0
-    sleep 0.1
     while @response_queue.empty?
       sleep 0.1
       count += 1

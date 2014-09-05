@@ -51,6 +51,11 @@ class RepRapHost
     @print_duration = 0 # calculated duration the print will take
     @duration_calculated = false
     
+    # hide print time estimate until a sufficient number of G1 commands were taken into account
+    # --> to prevent large estimate deviations at the beginning of a print
+    @g1_to_skip_for_time_estimate = 30               
+    @g1count = 0
+    
     # for preheating: deviation around target temperature to accept as preheated
     @temp_deviation = 2           # in +/- °C
     @temp_update_interval = 1     # in sec
@@ -484,17 +489,19 @@ class RepRapHost
       last_coord = nil
       new_coord = [0, 0, 0]
       feedrate = nil
+      g1_count = 0
       file = File.open(@gcodefile.path,'r')# @gcodefile.dup
       file.each_line do |line|
         gcode = Gcode.new(line)
         feedrate = gcode.f if gcode.f
       
-        if gcode.g?(1) and feedrate
+        if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
+          g1_count += 1
           new_coord[0] = gcode.x if gcode.x
           new_coord[1] = gcode.y if gcode.y
           new_coord[2] = gcode.z if gcode.z
 
-          if last_coord
+          if last_coord and g1_count > @g1_to_skip_for_time_estimate
             segment = Vector.elements([
               new_coord[0] - last_coord[0],
               new_coord[1] - last_coord[1],
@@ -514,7 +521,8 @@ class RepRapHost
     last_coord = nil
     new_coord = [0, 0, 0]
     feedrate = nil
-    @timeprintstarted = Time.now
+    @g1count = 0
+    
  
 
     # the actual loop
@@ -536,11 +544,12 @@ class RepRapHost
       gcode = Gcode.new(line)
       feedrate = gcode.f if gcode.f
       if gcode.valid and gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
+        @g1count += 1
         new_coord[0] = gcode.x if gcode.x
         new_coord[1] = gcode.y if gcode.y
         new_coord[2] = gcode.z if gcode.z
 
-        if last_coord
+        if last_coord and @g1count > @g1_to_skip_for_time_estimate
           segment = Vector.elements([
             new_coord[0] - last_coord[0],
             new_coord[1] - last_coord[1],
@@ -552,9 +561,14 @@ class RepRapHost
         last_coord = new_coord.dup
       end
 
+      # get time of "real" print start - after first lines of preheating and priming etc
+      if @g1count == @g1_to_skip_for_time_estimate
+        @timeprintstarted = Time.now
+      end
+
       # recalculate progress
-      if @duration_calculated and ( @print_duration > 0 )   
-        @progress = ((@current_duration / @print_duration) * 100).to_i
+      if @duration_calculated and ( @print_duration > 0 )
+        @progress = ((@current_duration / @print_duration) * 100).to_i      
       end
 
       if @preheating
@@ -590,7 +604,7 @@ class RepRapHost
   end
   
   def time_remaining
-    if @printing and @duration_calculated and ( @current_duration > 0 )
+    if @printing and @timeprintstarted and @duration_calculated and ( @current_duration > 0 )
       ( Time.now - @timeprintstarted ) / @current_duration * ( @print_duration - @current_duration )
     else
       nil
