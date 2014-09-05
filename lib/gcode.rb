@@ -1,9 +1,15 @@
 class Gcode
   attr_reader :m, :g, :t,
               :x, :y, :z, :e,
-              :f, :p, :s, :t
+              :f, :p, :s, :t,
+              :valid
 
   def initialize(line)
+    # remove comments from end of line
+    line.sub!(/;.*/, "")
+    line.strip!
+
+    @valid = line.length > 0 ? true : false
 
     # scan for commands
     @m = line.scan(/^M(\d+)/).first
@@ -22,7 +28,7 @@ class Gcode
     @x = line.scan(/X(\d+(\.\d+)?)/).first
     @y = line.scan(/Y(\d+(\.\d+)?)/).first
     @z = line.scan(/Z(\d+(\.\d+)?)/).first
-    @z = line.scan(/E(\d+(\.\d+)?)/).first
+    @e = line.scan(/E(\d+(\.\d+)?)/).first
 
     # scan for additional parameters
     @f = line.scan(/F(\d+(\.\d+)?)/).first
@@ -34,7 +40,7 @@ class Gcode
     # convert numbers from strings to float or int
     @x = @x.first.to_f if @x
     @y = @y.first.to_f if @y
-    @z = @z.first.first.to_f if @z
+    @z = @z.first.to_f if @z
     @e = @e.first.to_f if @e
     @f = @f.first.to_f if @f
     @p = @p.first.to_f if @p

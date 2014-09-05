@@ -133,6 +133,7 @@ class FakeRepRap
 
   def readline 
     count = 0
+    sleep 0.1
     while @response_queue.empty?
       sleep 0.1
       count += 1

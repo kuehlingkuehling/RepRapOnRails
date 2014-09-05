@@ -3,6 +3,7 @@ require 'serialport'
 require 'thread'
 require 'gcode'
 require 'fakereprap'
+require 'matrix'
 
 # credits
 # inspired by 
@@ -46,6 +47,9 @@ class RepRapHost
     @timejobstarted = nil
     @timeprintstarted = nil # after 30 lines preheating is usually over, so we assume print start here
     @lines = 0 # number of lines of the gcodefile that is printing
+    @current_duration = 0 # calculated duration the print must have elapsed
+    @print_duration = 0 # calculated duration the print will take
+    @duration_calculated = false
     
     # for preheating: deviation around target temperature to accept as preheated
     @temp_deviation = 2           # in +/- °C
@@ -471,18 +475,52 @@ class RepRapHost
     # used in @print_thread
     
     @progress = 0
-    
-    # count number of lines
-    @lines = 0
-    @gcodefile.each_line do
-      @lines += 1
+    @duration_calculated = false
+
+    # calculate printjob duration in background thread
+    @print_duration = 0
+    @current_duration = 0
+
+    @calc_duration_thread = Thread.new do
+      last_coord = nil
+      new_coord = [0, 0, 0]
+      feedrate = nil
+      file = File.open(@gcodefile.path,'r')# @gcodefile.dup
+      file.each_line do |line|
+        gcode = Gcode.new(line)
+        feedrate = gcode.f if gcode.f
+      
+        if gcode.g?(1) and feedrate
+          new_coord[0] = gcode.x if gcode.x
+          new_coord[1] = gcode.y if gcode.y
+          new_coord[2] = gcode.z if gcode.z
+
+          if last_coord
+            segment = Vector.elements([
+              new_coord[0] - last_coord[0],
+              new_coord[1] - last_coord[1],
+              new_coord[2] - last_coord[2]])
+         
+            segment_duration = segment.norm / (feedrate / 60)
+            @print_duration += segment_duration
+          end
+          last_coord = new_coord.dup
+        end
+      end
+      file.close
+      @duration_calculated = true
     end
-    # go back to first line
-    @gcodefile.rewind
-    
+    @calc_duration_thread.priority = -1
+
+    last_coord = nil
+    new_coord = [0, 0, 0]
+    feedrate = nil
+    @timeprintstarted = Time.now
+ 
+
     # the actual loop
     while line = @gcodefile.gets
-            
+
       # send commands from print queue first
       while cmd = @printqueue.shift
         self.write(cmd, true)
@@ -491,13 +529,34 @@ class RepRapHost
           Thread.stop
         end        
       end
-      
 
       # then continue with next line from gcode file
       self.write(line)
 
+      # calculate progress
+      gcode = Gcode.new(line)
+      feedrate = gcode.f if gcode.f
+      if gcode.valid and gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
+        new_coord[0] = gcode.x if gcode.x
+        new_coord[1] = gcode.y if gcode.y
+        new_coord[2] = gcode.z if gcode.z
+
+        if last_coord
+          segment = Vector.elements([
+            new_coord[0] - last_coord[0],
+            new_coord[1] - last_coord[1],
+            new_coord[2] - last_coord[2]])
+       
+          segment_duration = segment.norm / (feedrate / 60)
+          @current_duration += segment_duration
+        end
+        last_coord = new_coord.dup
+      end
+
       # recalculate progress
-      @progress = ((@gcodefile.lineno.to_f / @lines.to_f) * 100).to_i      
+      if @duration_calculated and ( @print_duration > 0 )   
+        @progress = ((@current_duration / @print_duration) * 100).to_i
+      end
 
       if @preheating
         Thread.stop
@@ -505,7 +564,8 @@ class RepRapHost
 
       if @aborted
         @printing = false
-        @send_thread.run        
+        @send_thread.run    
+        @calc_duration_thread.kill    
         Thread.exit
       end
 
@@ -515,11 +575,10 @@ class RepRapHost
         Thread.stop
       end
       
-      # save time when actual printing started (after preheating etc)
-      # we asume after 30 lines of gcode the preheat should be done...
-      @timeprintstarted = Time.now if @gcodefile.lineno == 150
     end
     
+    @calc_duration_thread.kill
+    @duration_calculated = false
     @progress = 0
     @timeprintstarted = nil
     @printing = false
@@ -532,8 +591,8 @@ class RepRapHost
   end
   
   def time_remaining
-    if @printing and @timeprintstarted
-      ( Time.now - @timeprintstarted ) / ( @gcodefile.lineno - 150 ) * ( @lines - @gcodefile.lineno )
+    if @printing and @duration_calculated and ( @current_duration > 0 )
+      ( Time.now - @timeprintstarted ) / @current_duration * ( @print_duration - @current_duration )
     else
       nil
     end
