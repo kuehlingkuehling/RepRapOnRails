@@ -740,6 +740,7 @@ class RepRapHost
     @emergencystop = true
     @emergencystopcb.call if @emergencystopcb
     self.reset
+    @psuoffcb.call if @psuoffcb
     @emergencystop = false    
   end
 
