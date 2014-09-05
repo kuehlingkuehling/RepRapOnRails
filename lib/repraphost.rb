@@ -209,15 +209,28 @@ class RepRapHost
         # Temperature parsing and callback
         if line.start_with?('ok T:') or line.start_with?('T:')
           begin
-            t0 = line.scan(/T0:\-?\s*\d+\.\d+/)[0]
-            t1 = line.scan(/T1:\-?\s*\d+\.\d+/)[0]
-            t2 = line.scan(/T2:\-?\s*\d+\.\d+/)[0]
-            b = line.scan(/B:\-?\s*\d+\.\d+/)[0]
+            t0 = line.scan(/T0:\-?\s*\d+\.\d+\s\/\d+/)[0]
+            t1 = line.scan(/T1:\-?\s*\d+\.\d+\s\/\d+/)[0]
+            t2 = line.scan(/T2:\-?\s*\d+\.\d+\s\/\d+/)[0]
+            b = line.scan(/B:\-?\s*\d+\.\d+\s\/\d+/)[0]
+
+            t0_temps = t0.match(/T0:(?<temp>\-?\s*\d+\.\d+)\s\/(?<target>\d+)/)
+            t1_temps = t1.match(/T1:(?<temp>\-?\s*\d+\.\d+)\s\/(?<target>\d+)/)
+            t2_temps = t2.match(/T2:(?<temp>\-?\s*\d+\.\d+)\s\/(?<target>\d+)/)
+            b_temps = b.match(/B:(?<temp>\-?\s*\d+\.\d+)\s\/(?<target>\d+)/)
+
             @current_params[:current_temps] = {
-              :T0 => t0.match(/:(\-?\s*\d+\.\d+)/)[1].to_f,
-              :T1 => t1.match(/:(\-?\s*\d+\.\d+)/)[1].to_f,
-              :T2 => t2.match(/:(\-?\s*\d+\.\d+)/)[1].to_f,
-              :B => b.match(/:(\-?\s*\d+\.\d+)/)[1].to_f
+              :T0 => t0_temps[:temp].to_f,
+              :T1 => t1_temps[:temp].to_f,
+              :T2 => t2_temps[:temp].to_f,
+              :B => b_temps[:temp].to_f
+            }
+
+            @current_params[:target_temps] = {
+              :T0 => t0_temps[:target].to_i,
+              :T1 => t1_temps[:target].to_i,
+              :T2 => t2_temps[:target].to_i,
+              :B => b_temps[:target].to_i
             }
           rescue => e
             puts "Error in Temp-String RegEx"
@@ -226,21 +239,7 @@ class RepRapHost
 
           @tempcb.call(@current_params[:current_temps], @current_params[:target_temps]) if @tempcb
         end
-
-        # remember extruder target temperatures
-        if line.start_with?('TargetExtr')
-          result = /^TargetExtr(?<extruder>\d*):(?<temp>\d+)/.match(line)
-          heater = ( 'T' + result[:extruder] ).to_sym
-          @current_params[:target_temps][heater] = result[:temp].to_i
-        end
-
-        # remember bed target temperature
-        if line.start_with?('TargetBed')
-          result = /^TargetBed:(?<temp>\d+)/.match(line)
-          @current_params[:target_temps][:B] = result[:temp].to_i
-        end
        
-        
         # act on out-of-filament messages
         if line.start_with?('OutOfFilament')
           result = /^OutOfFilament:(?<spool>\w+)/.match(line)
