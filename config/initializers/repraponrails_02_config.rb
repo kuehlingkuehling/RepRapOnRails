@@ -7,6 +7,9 @@ RepRapOnRails::Application.configure do
 	  # hardware revision
 	  config.hardware_revision = "RepRap Industrial v1.0.0"
 
+    # compatible Arduino Firmware version
+    config.arduino_firmware_version = "Repetier Firmware v0.91-rri1.0.0-02"
+
 	  # chamber heater cooldown time (for safety) - in seconds
 	  config.chamber_heater_cooldown_time = 180
 	    
@@ -26,6 +29,9 @@ RepRapOnRails::Application.configure do
 
       # hardware revision
 	  config.hardware_revision = "RepRap Industrial v1.1.0"
+
+    # compatible Arduino Firmware version
+    config.arduino_firmware_version = "Repetier Firmware v0.91-rri1.1.0-01"
 
 	  # chamber heater cooldown time (for safety) - in seconds
 	  config.chamber_heater_cooldown_time = 10
