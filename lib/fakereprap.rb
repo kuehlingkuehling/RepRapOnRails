@@ -4,6 +4,12 @@ class FakeRepRap
     @response_queue = Array.new
     @dtr = 0
     @start_thread = nil
+    @targets = {
+      0 => 0,
+      1 => 0,
+      2 => 0,
+      :B => 0
+    }
  
     puts " "
     puts "    *********** WARNING *************"
@@ -20,15 +26,17 @@ class FakeRepRap
 
 
     if gcode.m?(105)
-      @response_queue.push("T:#{ randstr(19) } T0:#{ randstr(20) } T1:#{ randstr(21) } T2:#{ randstr(22) } B:#{ randstr(23) }") 
+      @response_queue.push("T:#{ randstr(19) } /#{ @targets[0] } B:23.89 /#{ @targets[:B] } B@:0 @:0 T0:#{ randstr(19) } /#{ @targets[0] } @0:0 T1:#{ randstr(20) } /#{ @targets[1] } @1:0 T2:#{ randstr(21) } /#{ @targets[2] } @2:0") 
     end
 
     if gcode.m?(104) and gcode.s and gcode.t
-      @response_queue.push("TargetExtr#{ gcode.t.to_i }:#{ gcode.s }")
+      #@response_queue.push("TargetExtr#{ gcode.t.to_i }:#{ gcode.s }")
+      @targets[gcode.t.to_i] = gcode.s.to_i
     end
 
     if gcode.m?(140) and gcode.s
-      @response_queue.push("TargetBed:#{ gcode.s }")
+      #@response_queue.push("TargetBed:#{ gcode.s }")
+      @targets[:B] = gcode.s.to_i
     end
 
     if gcode.m?(205)
@@ -155,6 +163,12 @@ class FakeRepRap
   def dtr=(newval)
     if @dtr == 1 and newval == 0
       @response_queue = Array.new
+      @targets = {
+        0 => 0,
+        1 => 0,
+        2 => 0,
+        :B => 0
+      }
       Thread.kill(@start_thread) if @start_thread
       @start_thread = Thread.new{
         sleep 1 
