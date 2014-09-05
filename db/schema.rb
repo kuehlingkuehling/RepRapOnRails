@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20140901084251) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "preheating_profile", force: true do |t|
+  create_table "preheating_profiles", force: true do |t|
     t.string   "name"
     t.integer  "chamber_temp"
     t.integer  "bed_temp"

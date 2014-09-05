@@ -1,6 +1,6 @@
-class CreatePreheatingProfile < ActiveRecord::Migration
+class CreatePreheatingProfiles < ActiveRecord::Migration
   def change
-    create_table :preheating_profile do |t|
+    create_table :preheating_profiles do |t|
       t.string :name
       t.integer :chamber_temp
       t.integer :bed_temp
