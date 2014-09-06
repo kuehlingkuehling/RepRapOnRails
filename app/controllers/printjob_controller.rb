@@ -6,7 +6,14 @@ class PrintjobController < WebsocketRails::BaseController
   end
   
   def all
-    trigger_success Printjob.all
+    # UsefulGlobalMethods.timespan_in_words( self.estimated_print_time )
+    Printjob.connection.clear_query_cache
+    all = Printjob.all.to_a.map {|p| 
+      result = p.attributes
+      result["estimated_print_time_in_words"] = result["estimated_print_time"] ? UsefulGlobalMethods.timespan_in_words(result["estimated_print_time"] ) : "processing..."
+      result
+    }
+    trigger_success all
   end
   
   def remove

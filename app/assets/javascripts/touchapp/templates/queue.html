@@ -7,9 +7,10 @@
         <tr>
           <th style="width:40px">&nbsp;</th>      
           <th>Print Job / Note</th>
-          <th style="width:160px">Modified</th>
+          <th style="width:180px">
+            Estimated Print Time
+          </th>
           <!--
-          <th>Estimated Print Time</th>
           <th>Filament used</th>
           -->
           <th style="width:200px">&nbsp;</th>
@@ -22,7 +23,7 @@
             <p>{{ p.name }}</p>
             <p class="muted">{{ p.note }}</p>
           </td>
-          <td>{{ p.updated_at | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ p.estimated_print_time_in_words }}</td>
           <!--
           <td>n/a</td>
           <td>n/a</td>
