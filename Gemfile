@@ -53,5 +53,6 @@ gem 'font-awesome-sass'
 gem 'protected_attributes' # use deprecated attr_accessible parameters
 
 gem 'yaml_db', :git => 'git://github.com/jetthoughts/yaml_db.git'
+gem 'delayed_job_active_record'
 
 
