@@ -16,7 +16,15 @@
           <th style="width:200px">&nbsp;</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody ng-show="!pagedPrintjobs.length">
+        <tr>
+          <td></td>
+          <td>No printjobs in queue.</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+      <tbody ng-show="pagedPrintjobs.length">
         <tr ng-repeat="p in pagedPrintjobs[currentPage - 1]">
           <td>{{ p.pos }}</td>
           <td>
@@ -40,7 +48,7 @@
           </td>                  
         </tr>
      </tbody>
-     <tfoot>
+     <tfoot ng-show="pagedPrintjobs.length">
         <td colspan="6">
             <pagination class="pull-right" total-items="numPrintjobs" items-per-page="itemsPerPage" page="currentPage"></pagination>
         </td>
