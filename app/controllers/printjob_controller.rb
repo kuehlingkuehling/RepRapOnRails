@@ -14,7 +14,6 @@ class PrintjobController < WebsocketRails::BaseController
       result["created_at_in_words"] = ActionController::Base.helpers.time_ago_in_words( p.created_at ) + " ago"
       result
     }
-puts ActionController::Base.helpers.time_ago_in_words( Time.now - 15.hours ) + " ago"    
     trigger_success all
   end
   
