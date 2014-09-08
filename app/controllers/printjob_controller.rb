@@ -11,8 +11,10 @@ class PrintjobController < WebsocketRails::BaseController
     all = Printjob.all.to_a.map {|p| 
       result = p.attributes
       result["estimated_print_time_in_words"] = result["estimated_print_time"] ? UsefulGlobalMethods.timespan_in_words(result["estimated_print_time"] ) : "processing..."
+      result["created_at_in_words"] = ActionController::Base.helpers.time_ago_in_words( p.created_at ) + " ago"
       result
     }
+puts ActionController::Base.helpers.time_ago_in_words( Time.now - 15.hours ) + " ago"    
     trigger_success all
   end
   
