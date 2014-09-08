@@ -55,16 +55,16 @@
         </button>
         <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'configuration' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('configuration')">
           Configuration
-        </button>         
+        </button>  
+        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'setup' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('setup')">
+          Setup
+        </button>          
         <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'manualcontrol' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('manualcontrol')">
           Expert Control
         </button> 
         <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'log' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('log')">
           Log
-        </button>        
-        <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'setup' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('setup')">
-          Setup
-        </button>         
+        </button>              
         <div class="pull-right">
           <button type="button" class="btn btn-warning btn-lg" ng-show="( print.state == 2 ) || ( print.state == 5 )" ng-click="pauseprint()">Pause Print</button>                
           <button type="button" class="btn btn-warning btn-lg" ng-show="print.state == 3" ng-click="resumeprint()">Resume Print</button>                          
