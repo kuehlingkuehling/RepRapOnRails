@@ -29,6 +29,10 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   // initial commands
   MyWebsocket.psu_on();
   MyWebsocket.macro('wizard_leveling_init');
+
+  $scope.move_up = function() {
+    MyWebsocket.macro('wizard_leveling_moveup');
+  };
   
   $scope.step1 = function() {
     $scope.step = 1;    
@@ -43,29 +47,20 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
     $scope.step = 3;    
   };
   
-  
-  $scope.step4 = function() {
-    $scope.step = 4;    
-  };  
-  
   $scope.step5 = function() {
     $scope.step = 5;    
+    MyWebsocket.macro('wizard_leveling_front');    
   };
   
   $scope.step6 = function() {
     $scope.step = 6;
-    MyWebsocket.macro('wizard_leveling_front');    
+    MyWebsocket.macro('wizard_leveling_right');    
   };
   
   $scope.step7 = function() {
     $scope.step = 7;  
-    MyWebsocket.macro('wizard_leveling_right');        
+    MyWebsocket.macro('wizard_leveling_left');         
   };  
-  
-  $scope.step8 = function() {
-    $scope.step = 8;  
-    MyWebsocket.macro('wizard_leveling_left');        
-  };    
 
   $scope.step9 = function() {
     $scope.step = 9;  

@@ -17,7 +17,7 @@
       <div class="col-md-12" ng-show="step == '1'">
         <p>The following steps will guide you through the process of leveling the
           print bed. This is necessary to achieve best print results and lay down a perfect
-          first layer that bonds firmly to the print surface</p>
+          first layer that bonds firmly to the print surface.</p>
         <p>Please confirm:</p>
         <ul>
           <li>A clean printbed is installed.</li>
@@ -44,7 +44,7 @@
       <!-- text contents step 3 -->
       <div class="col-md-12" ng-show="step == '3'"> 
         <p>Now loosen the two set screws on the <b>right</b> extruder barrel.</p>
-        <p><b>WARNING: Carefully check if extruder is still hot before touching the nozzle!.</b></p>
+        <p><b>ATTENTION: Carefully check if extruder is still hot before touching the nozzle!.</b></p>
         <p>Then slide the right extruder barrel up to make sure the right nozzle tip is a bit higher 
           than the left tip.</p>    
         <br/>
@@ -59,12 +59,16 @@
 
       <!-- text contents step 5 -->
       <div class="col-md-12" ng-show="step == '5'">
-        <p>Next, loosen all <b>three</b> print bed leveling thumb screws a bit (as shown to the right).</p>
-        <p>The print bed must be able to easily slide up and down against the spring suspension.</p>
-        <p>In the following the print head will move to three leveling positions one after another
-          and push the print bed down some millimeters.</p>
-        <br/>
-        <br/>  
+        <h4>Position 1:</h4>
+        <p>Loosen the print bed leveling thumb screw on the <b>front</b>.
+        <p>The print bed must be able to easily pivot up and down against the spring suspension of the front
+        leveling mechanism. Next, move the print bed up against the printhead:</p>
+        <p>
+        <button type="button" class="btn btn-primary btn-lg navigation" ng-click="move_up()">
+          Move Print Head up
+        </button>         
+        </p>
+        <p>After the movement gently refasten the bed leveling thumb screw.</p>
         <button type="button" class="btn btn-default btn-lg navigation" ng-click="step3()">
           Back
         </button>         
@@ -75,10 +79,16 @@
 
       <!-- text contents step 6 -->
       <div class="col-md-12" ng-show="step == '6'">
-        <p>Position 1:</p>
-        <p>After the movement gently fasten the bed leveling thumb screw on the <b>front</b>.</p>
-        <br/>
-        <br/>  
+        <h4>Position 2:</h4>
+        <p>Loosen the print bed leveling thumb screw on the <b>right</b>.
+        <p>The print bed must be able to easily pivot up and down against the spring suspension of the front
+        leveling mechanism. Next, move the print bed up against the printhead:</p>
+        <p>
+        <button type="button" class="btn btn-primary btn-lg navigation" ng-click="move_up()">
+          Move Print Head up
+        </button>         
+        </p>
+        <p>After the movement gently refasten the bed leveling thumb screw.</p>
         <button type="button" class="btn btn-default btn-lg navigation" ng-click="step5()">
           Back
         </button>         
@@ -89,25 +99,17 @@
 
       <!-- text contents step 7 -->
       <div class="col-md-12" ng-show="step == '7'">
-        <p>Position 2:</p>
-        <p>After the movement gently fasten the bed leveling thumb screw on the <b>right</b> side.</p>
-        <br/>
-        <br/>  
-        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step6()">
-          Back
+        <h4>Position 3:</h4>
+        <p>Loosen the print bed leveling thumb screw on the <b>left</b>.
+        <p>The print bed must be able to easily pivot up and down against the spring suspension of the front
+        leveling mechanism. Next, move the print bed up against the printhead:</p>
+        <p>
+        <button type="button" class="btn btn-primary btn-lg navigation" ng-click="move_up()">
+          Move Print Head up
         </button>         
-        <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step8()">
-          Next
-        </button>     
-      </div>
-
-      <!-- text contents step 8 -->
-      <div class="col-md-12" ng-show="step == '8'">
-        <p>Position 3:</p>
-        <p>After the movement gently fasten the bed leveling thumb screw on the <b>left</b> side.</p>
-        <br/>
-        <br/>  
-        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step7()">
+        </p>
+        <p>After the movement gently refasten the bed leveling thumb screw.</p>
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step6()">
           Back
         </button>         
         <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step9()">
@@ -123,7 +125,7 @@
         <p>That's it, you are done.</p>
         <br/>
         <br/>  
-        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step8()">
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step7()">
           Back
         </button>         
         <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="exit()">
@@ -149,37 +151,31 @@
   <!-- image step 3 -->
   <div class="col-md-5" ng-show="step == '3'">
     <!-- picture: barrel set screws-->
-    <img src="<%= asset_path("touchapp/images/wizard_leveling_barrelscrews.jpg") %>" class="img-responsive">    
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_nozzleup.jpg") %>" class="img-responsive">    
   </div>   
 
   <!-- image step 5 -->
   <div class="col-md-5" ng-show="step == '5'">
-    <!-- picture: unscrew leveling bolts -->
-    <img src="<%= asset_path("touchapp/images/wizard_leveling_thumbscrews.jpg") %>" class="img-responsive">    
+    <!-- picture: fasten front thumbscrew -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_pos1.jpg") %>" class="img-responsive">
   </div>   
 
   <!-- image step 6 -->
   <div class="col-md-5" ng-show="step == '6'">
-    <!-- picture: fasten front thumbscrew -->
-    <img src="<%= asset_path("touchapp/images/wizard_leveling_bedfront.jpg") %>" class="img-responsive">
+    <!-- picture: fasten right thumbscrew -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_pos2.jpg") %>" class="img-responsive">
   </div>   
 
   <!-- image step 7 -->
   <div class="col-md-5" ng-show="step == '7'">
-    <!-- picture: fasten right thumbscrew -->
-    <img src="<%= asset_path("touchapp/images/wizard_leveling_bedright.jpg") %>" class="img-responsive">
-  </div>   
-
-  <!-- image step 8 -->
-  <div class="col-md-5" ng-show="step == '8'">
     <!-- picture: fasten left thumbscrew -->
-    <img src="<%= asset_path("touchapp/images/wizard_leveling_bedleft.jpg") %>" class="img-responsive">
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_pos3.jpg") %>" class="img-responsive">
   </div>
 
   <!-- image step 9 -->
   <div class="col-md-5" ng-show="step == '9'">
     <!-- picture: fasten barrel -->
-    <img src="<%= asset_path("touchapp/images/wizard_leveling_rightnozzle.jpg") %>" class="img-responsive">
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_nozzledown.jpg") %>" class="img-responsive">
   </div> 
 
 </div>

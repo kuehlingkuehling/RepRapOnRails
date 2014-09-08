@@ -47,17 +47,15 @@ MACROS = {
   :wizard_leveling_init => [
     "T0",
     "G1 X%d Y%d Z100 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ] ],
-  :wizard_leveling_preheat => [
-    "M140 S100"],
+  :wizard_leveling_moveup => [
+    "G1 Z0 F6000"],
+  :wizard_leveling_preheat => [],    # deprecated - now managed by preheating profiles
   :wizard_leveling_front => [
-    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_front[0], Rails.application.config.leveling_point_front[1] ],
-    "G1 Z0 F6000"],
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_front[0], Rails.application.config.leveling_point_front[1] ] ],
   :wizard_leveling_right => [
-    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_right[0], Rails.application.config.leveling_point_right[1] ],
-    "G1 Z0 F6000"],
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_right[0], Rails.application.config.leveling_point_right[1] ] ],
   :wizard_leveling_left => [
-    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_left[0], Rails.application.config.leveling_point_left[1] ],
-    "G1 Z0 F6000"],
+    "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_left[0], Rails.application.config.leveling_point_left[1] ] ],
   :wizard_leveling_center => [
     "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ],
     "G1 Z0 F6000"],
