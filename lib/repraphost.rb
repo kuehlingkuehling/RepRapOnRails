@@ -511,12 +511,12 @@ class RepRapHost
             @print_duration += segment_duration
           end
           last_coord = new_coord.dup
+          Thread.pass
         end
       end
       file.close
       @duration_calculated = true
     end
-    @calc_duration_thread.priority = -1
 
     last_coord = nil
     new_coord = [0, 0, 0]
