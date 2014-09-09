@@ -469,7 +469,12 @@ class RepRapHost
     loop do
       @printqueue.push("M105") unless @printqueue.include?("M105")
       
-      sleep @temp_update_interval
+      if @printing
+        # reduce serial bandwidth usage during print - only update every 3 seconds
+        sleep 3
+      else
+        sleep @temp_update_interval
+      end
     end
   end
   
