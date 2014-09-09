@@ -60,7 +60,6 @@ MACROS = {
     "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ],
     "G1 Z0 F6000"],
   :wizard_leveling_exit => [
-    "M140 S0",
     "G28"],
   :wizard_unload_filament_exit => [
     "M104 S0 T0",

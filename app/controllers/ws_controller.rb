@@ -48,8 +48,8 @@ class WsController < WebsocketRails::BaseController
   def preheat
     chamber = message[0]
     bed = message[1]    
-    @@printer.send("M104 S" + chamber.to_s + " T2")
-    @@printer.send("M140 S" + bed.to_s)    
+    @@printer.send("M104 S" + chamber.to_s + " T2") if chamber >= 0  # so you can send "-1" if it should not be altered
+    @@printer.send("M140 S" + bed.to_s) if bed >= 0 # so you can send "-1" if it should not be altered
   end
   
   def extrude

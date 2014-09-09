@@ -10,6 +10,8 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
     $scope.bed_target = MyWebsocket.preheatingProfile.bed_temp;
   },true);
+
+  $scope.temps_to_restore = angular.copy(MyWebsocket.temp);
   
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
     $scope.temp = MyWebsocket.temp;
@@ -40,7 +42,7 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   
   $scope.step2 = function() {
     $scope.step = 2;
-    MyWebsocket.preheat(0, $scope.bed_target);
+    MyWebsocket.preheat(-1, $scope.bed_target);
   };
   
   $scope.step3 = function() {
@@ -69,6 +71,8 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   
   $scope.exit = function() {
     MyWebsocket.macro('wizard_leveling_exit');
+    // restore chamber/bed settings as they were before starting wizard
+    MyWebsocket.preheat($scope.temps_to_restore.chamber.target, $scope.temps_to_restore.bed.target);
     MyWebsocket.menuDisabled = false;
     $location.path( "/setup" );
   };        
