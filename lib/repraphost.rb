@@ -736,14 +736,10 @@ class RepRapHost
       # home all axes
       self.send("G28")
       
-      # disable all extruders and bed
-      @current_params[:target_temps].each do |heater, temp| 
-        if heater == :B
-          self.send("M140 S0")
-        else
-          self.send("M104 S0 #{ heater.to_s }")
-        end
-      end      
+      # disable extruders
+      self.send("M104 S0 T0")
+      self.send("M104 S0 T1")
+          
     else
       @errorcb.call("Cannot abort print - not printing right now!") if @errorcb
     end
