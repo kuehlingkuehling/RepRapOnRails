@@ -529,7 +529,6 @@ class RepRapHost
     @g1count = 0
     
  
-
     # the actual loop
     while line = @gcodefile.gets
 
@@ -754,6 +753,7 @@ class RepRapHost
     @emergencystop = true
     @emergencystopcb.call if @emergencystopcb
     self.reset
+    @current_params[:psu_on] = false
     @psuoffcb.call if @psuoffcb
     @emergencystop = false    
   end
