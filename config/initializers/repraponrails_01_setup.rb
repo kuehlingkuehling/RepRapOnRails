@@ -192,19 +192,19 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       # assign emergency stop callback
       printer.emergencystopcb = Proc.new do |line| 
                             WebsocketRails[:print].trigger(:state, printer.status)                          
-                            LogEntry.create(level: 2, line: 'Emergency Stop triggered!')                            
+                            log_queue.push({:level => 2, :line => "Emergency Stop triggered!"})
                         end  
 
       # assign psu ON callback
       printer.psuoncb = Proc.new do |line| 
                             WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
-                            LogEntry.create(level: 1, line: 'Build Chamber activated')                            
+                            log_queue.push({:level => 1, :line => "Build Chamber activated"})
                         end
 
       # assign psu OFF callback
       printer.psuoffcb = Proc.new do |line| 
                             WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
-                            LogEntry.create(level: 1, line: 'Build Chamber deactivated')                            
+                            log_queue.push({:level => 1, :line => "Build Chamber deactivated"})
                         end
 
       # assign EEPROM value callback
