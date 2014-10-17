@@ -33,7 +33,7 @@ class WsController < WebsocketRails::BaseController
     MACROS[:relative_positioning].each do |m|
       @@printer.send(m)
     end
-    @@printer.send("G1 " + coord)
+    @@printer.send("G1 " + coord + " F12000")
     MACROS[:absolute_positioning].each do |m|
       @@printer.send(m)
     end
