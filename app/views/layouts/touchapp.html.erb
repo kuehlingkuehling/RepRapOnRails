@@ -24,7 +24,7 @@
         <h1>     
            
           <span class="pull-right">
-            <button type="button" class="btn btn-warning btn-lg"  ng-click="shutdown()" style="margin-top:-40px;margin-left:30px;height:80px;width:80px;">
+            <button type="button" class="btn btn-warning btn-lg {{ (( print.state == 2 ) || (print.state == 3) || (print.state == 5)) && 'disabled' }}"  ng-click="shutdown()" style="margin-top:-40px;margin-left:30px;height:80px;width:80px;">
               <i class="fa fa-power-off fa-2x"></i>
             </button>      
           </span>        
