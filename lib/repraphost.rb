@@ -542,7 +542,7 @@ class RepRapHost
       end
 
       # then continue with next line from gcode file
-      self.write(line)
+      self.write(line) unless line.start_with?("M206")  # NEVER set M206 EEPROM values from within print job!
 
       # calculate progress
       gcode = Gcode.new(line)
