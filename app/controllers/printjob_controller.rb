@@ -14,7 +14,7 @@ class PrintjobController < WebsocketRails::BaseController
       result["created_at_in_words"] = ActionController::Base.helpers.time_ago_in_words( p.created_at ) + " ago"
       result
     }
-    trigger_success all
+    trigger_success all.reverse
   end
   
   def remove
