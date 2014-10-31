@@ -495,31 +495,35 @@ class RepRapHost
       new_coord = [0, 0, 0]
       feedrate = nil
       g1_count = 0
-      file = File.open(@gcodefile.path,'r')# @gcodefile.dup
-      file.each_line do |line|
-        gcode = Gcode.new(line)
-        feedrate = gcode.f if gcode.f
-      
-        if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
-          g1_count += 1
-          new_coord[0] = gcode.x if gcode.x
-          new_coord[1] = gcode.y if gcode.y
-          new_coord[2] = gcode.z if gcode.z
+      begin
+        file = File.open(@gcodefile.path,'r')# @gcodefile.dup
+        file.each_line do |line|
+          gcode = Gcode.new(line)
+          feedrate = gcode.f if gcode.f
+        
+          if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
+            g1_count += 1
+            new_coord[0] = gcode.x if gcode.x
+            new_coord[1] = gcode.y if gcode.y
+            new_coord[2] = gcode.z if gcode.z
 
-          if last_coord and g1_count > @g1_to_skip_for_time_estimate
-            segment = Vector.elements([
-              new_coord[0] - last_coord[0],
-              new_coord[1] - last_coord[1],
-              new_coord[2] - last_coord[2]])
-         
-            segment_duration = segment.norm / (feedrate / 60)
-            @print_duration += segment_duration
+            if last_coord and g1_count > @g1_to_skip_for_time_estimate
+              segment = Vector.elements([
+                new_coord[0] - last_coord[0],
+                new_coord[1] - last_coord[1],
+                new_coord[2] - last_coord[2]])
+           
+              segment_duration = segment.norm / (feedrate / 60)
+              @print_duration += segment_duration
+            end
+            last_coord = new_coord.dup
+            Thread.pass
           end
-          last_coord = new_coord.dup
-          Thread.pass
         end
+        file.close
+      rescue
+        return nil #do nothing - just rescueing in case file is deleted before calculation is finished
       end
-      file.close
       @duration_calculated = true
     end
 
@@ -752,6 +756,7 @@ class RepRapHost
   def emergencystop
     @emergencystop = true
     @emergencystopcb.call if @emergencystopcb
+    sleep 1
     self.reset
     @current_params[:psu_on] = false
     @psuoffcb.call if @psuoffcb

@@ -18,30 +18,34 @@ class Printjob < ActiveRecord::Base
       new_coord = [0, 0, 0]
       feedrate = nil
       print_duration = 0
-      file = File.open(self.gcodefile.current_path,'r')
-      file.each_line do |line|
-        gcode = Gcode.new(line)
-        feedrate = gcode.f if gcode.f
-      
-        if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
-          new_coord[0] = gcode.x if gcode.x
-          new_coord[1] = gcode.y if gcode.y
-          new_coord[2] = gcode.z if gcode.z
+      begin
+        file = File.open(self.gcodefile.current_path,'r')
+        file.each_line do |line|
+          gcode = Gcode.new(line)
+          feedrate = gcode.f if gcode.f
+        
+          if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
+            new_coord[0] = gcode.x if gcode.x
+            new_coord[1] = gcode.y if gcode.y
+            new_coord[2] = gcode.z if gcode.z
 
-          if last_coord
-            segment = Vector.elements([
-              new_coord[0] - last_coord[0],
-              new_coord[1] - last_coord[1],
-              new_coord[2] - last_coord[2]])
-         
-            segment_duration = segment.norm / (feedrate / 60)
-            print_duration += segment_duration
+            if last_coord
+              segment = Vector.elements([
+                new_coord[0] - last_coord[0],
+                new_coord[1] - last_coord[1],
+                new_coord[2] - last_coord[2]])
+           
+              segment_duration = segment.norm / (feedrate / 60)
+              print_duration += segment_duration
+            end
+            last_coord = new_coord.dup
           end
-          last_coord = new_coord.dup
+          Thread.pass
         end
-        Thread.pass
+        file.close
+      rescue
+        return nil # do nothing - rescueing in case file is deleted before calculation finished
       end
-      file.close
       self.estimated_print_time = print_duration * 1.2
       self.save
     end
