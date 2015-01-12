@@ -2,8 +2,9 @@ class BackendappController < ApplicationController
   
   # Serve backendapp layout html for angularJS app
   def index
-    if params[:togglelock]
+    if lockscreen_params.has_key? :togglelock
       WebsocketRails[:lockscreen].trigger(:toggle, true)
+      puts "TOGGLING LOCK SCREEN!"
     end
     
     render :layout => 'backendapp'
@@ -24,7 +25,7 @@ class BackendappController < ApplicationController
     if @printjob.save
       render json: @printjob, status: :created, location: @printjob
     else
-      render json: @printjob.errors, status: :unprocessable_entity 
+      render json: @printjob.errors.full_messages, status: :unprocessable_entity       
     end
   end
   
@@ -48,5 +49,9 @@ private
     
     def firmware_params
       params.permit(:hexfile)
+    end
+
+    def lockscreen_params
+      params.permit(:togglelock)
     end
 end
