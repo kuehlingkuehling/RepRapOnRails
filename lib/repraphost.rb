@@ -22,7 +22,7 @@ class RepRapHost
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
-                :psuoncb, :psuoffcb, :eepromcb
+                :psuoncb, :psuoffcb, :eepromcb, :fwcb
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
               :current_params
   alias :online? :online
@@ -99,6 +99,7 @@ class RepRapHost
     @psuoncb = nil # on M80 power supply on
     @psuoffcb = nil # on M81 power supply off
     @eepromcb = nil # on response lines to M205 (show eeprom values)
+    @fwcb = nil # on response to M115 (capabilities string including firmware version)
     
     # thread sync
     @printer_lock = Mutex.new
@@ -263,6 +264,14 @@ class RepRapHost
               :name => result[:name]
             }
             @eepromcb.call(config) if @eepromcb
+          end
+        end
+
+        # check if firmware capabilities string was sent (response to M115)
+        if line.start_with?('FIRMWARE_NAME')
+          result = /REPRAPINDUSTRIAL_FIRMWARE_VERSION:(?<version>\S*)/.match(line)
+          if result[:version]
+            @fwcb.call(result[:version]) if @fwcb
           end
         end
       rescue EOFError => e

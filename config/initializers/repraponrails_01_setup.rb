@@ -74,6 +74,11 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
   printer = ApplicationController.printer
   printjob = ApplicationController.printjob
 
+  Settings.filament_left = nil if not Settings.all.has_key?("filament_left")
+  Settings.filament_right = nil if not Settings.all.has_key?("filament_right")
+  Settings.preheating_profile = nil if not Settings.all.has_key?("preheating_profile")
+  Settings.firmware_version = nil if not Settings.all.has_key?("firmware_version")
+
   begin
     if printer.is_a?(RepRapHost) and not printer.online?
       # assign online callback
@@ -169,7 +174,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                             WebsocketRails[:temp].trigger(:new, message)
                          end  
                         
-      # assign error callback                      
+      # assign out of filament callback                      
       printer.reloadcb = Proc.new do |spool|
                            if printer.printing?
                              printer.pause_print
@@ -212,6 +217,11 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
                             WebsocketRails[:eeprom].trigger(:line, config)                          
                         end 
 
+      # assign Firmware version callback
+      printer.fwcb = Proc.new do |version|
+                       Settings.firmware_version = version
+                     end
+
 
       # debugging in development environment
       if Rails.env.development?
@@ -231,16 +241,15 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
         printer.send("M502") # load settings from firmware config
         printer.send("M500") # store loaded values in EEPROM
       end
+
+      # request firmware version capabilities string from Arduino
+      printer.send("M115")
     end
   rescue => error
     puts 'Could not connect to RepRap Controller: ' + error.message
     LogEntry.create(level: 3, line: 'ERROR: Could not connect to RepRap Controller: ' + error.message)
     printer.close unless printer.nil? or not printer.online?
   end
-  
-  Settings.filament_left = nil if not Settings.all.has_key?("filament_left")
-  Settings.filament_right = nil if not Settings.all.has_key?("filament_right")
-  Settings.preheating_profile = nil if not Settings.all.has_key?("preheating_profile")
 
 end #unless  
 

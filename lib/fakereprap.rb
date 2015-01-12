@@ -53,6 +53,10 @@ class FakeRepRap
       @response_queue.push("T:#{ randstr(19) } /#{ @targets[0] } B:23.89 /#{ @targets[:B] } B@:0 @:0 T0:#{ randstr(19) } /#{ @targets[0] } @0:0 T1:#{ randstr(20) } /#{ @targets[1] } @1:0 T2:#{ randstr(21) } /#{ @targets[2] } @2:0") 
     end
 
+    if gcode.m?(115)
+      @response_queue.push("FIRMWARE_NAME:Repetier_0.91 FIRMWARE_URL:https://github.com/repetier/Repetier-Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:3 REPETIER_PROTOCOL:2 REPRAPINDUSTRIAL_FIRMWARE_VERSION:0.91-rri1.0.0-02")
+    end
+
     if gcode.m?(104) and gcode.s and gcode.t
       #@response_queue.push("TargetExtr#{ gcode.t.to_i }:#{ gcode.s }")
       @targets[gcode.t.to_i] = gcode.s.to_i
