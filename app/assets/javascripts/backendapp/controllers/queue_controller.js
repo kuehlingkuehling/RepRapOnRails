@@ -22,46 +22,54 @@ backendApp.controller('QueueController', function($scope, MyWebsocket, CommonCod
     $scope.file = $files[0];
   };  
   
+  $scope.submitted_but_invalid = false;
   $scope.uploadPrintjob = function() {
-    $scope.upload = $upload.upload({
-      url: 'upload', //upload.php script, node.js route, or servlet url
-      method: 'POST', //or PUT,
-      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-      // withCredential: true,
-      data: {
-        name: $scope.newPrintjob.name,
-        note: $scope.newPrintjob.note     
-      },
-      file: $scope.file,
-      fileFormDataName: 'gcodefile'
-    }).progress(function (evt) {
-        // get upload percentage
-        console.log("uploaded percent: " + parseInt(100.0 * evt.loaded / evt.total));
-        $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total); 
-    }).success(function (data, status, headers, config) {
-        // file is uploaded successfully      
-        console.log("Succesfully uploaded.");
-        $scope.toggleForm(); 
-    }).error(function (data, status, headers, config) {
-        // file failed to upload
-        console.log(data);
-        $scope.uploadProgress = 0;        
-        $scope.error = "Error: Failed to upload data."
-    });
+    if ($scope.addPrintjobForm.name.$invalid || $scope.addPrintjobForm.file.$invalid) {
+      $scope.submitted_but_invalid = true;
+      console.log("Form invalid!");
+    } else {
+      $scope.upload = $upload.upload({
+        url: 'upload', //upload.php script, node.js route, or servlet url
+        method: 'POST', //or PUT,
+        headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+        // withCredential: true,
+        data: {
+          name: $scope.newPrintjob.name,
+          note: $scope.newPrintjob.note     
+        },
+        file: $scope.file,
+        fileFormDataName: 'gcodefile'
+      }).progress(function (evt) {
+          // get upload percentage
+          console.log("uploaded percent: " + parseInt(100.0 * evt.loaded / evt.total));
+          $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total); 
+      }).success(function (data, status, headers, config) {
+          // file is uploaded successfully      
+          console.log("Succesfully uploaded.");
+          $scope.toggleForm(); 
+      }).error(function (data, status, headers, config) {
+          // file failed to upload
+          console.log(data);
+          $scope.uploadProgress = 0;        
+          $scope.error = "Error: " + data.join(', ');
+      });
+    };
   };  
   
   $scope.toggleForm = function() {
-    $scope.resetForm();    
     $scope.isCollapsed = !$scope.isCollapsed;
+    $scope.resetForm();    
   };
   
   $scope.resetForm = function() {
     $scope.file = false;
-    $scope.fileInput = '';      
+    $scope.fileInput = '';  
+    document.getElementById('file').value = null;    
     $scope.newPrintjob.name = '';
     $scope.newPrintjob.note = '';
     $scope.uploadProgress = 0;                 
-    $scope.error = '';        
+    $scope.error = '';
+    $scope.submitted_but_invalid = false;       
   };
   
   $scope.removePrintjob = function(id) {

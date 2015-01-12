@@ -1,4 +1,5 @@
 class Printjob < ActiveRecord::Base
+  validates :name, presence: true
   attr_accessible :gcodefile, :name, :note
   mount_uploader :gcodefile, GcodefileUploader
 
@@ -43,11 +44,12 @@ class Printjob < ActiveRecord::Base
           Thread.pass
         end
         file.close
+        self.estimated_print_time = print_duration * 1.2
+        self.save        
       rescue
-        return nil # do nothing - rescueing in case file is deleted before calculation finished
+        # do nothing - rescueing in case file is deleted before calculation finished
+        #  (or non-text/ non-gcode file was uploaded for whatever reason)
       end
-      self.estimated_print_time = print_duration * 1.2
-      self.save
     end
     calc_thread.priority = -2
   end

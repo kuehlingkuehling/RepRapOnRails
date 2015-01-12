@@ -6,23 +6,23 @@
 <div collapse="isCollapsed">
 		<div class="well well-lg">
       <h4>Add new Printjob</h4>
-        <form role="form">
+        <form role="form" name="addPrintjobForm">
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" ng-model="newPrintjob.name" class="form-control" id="name" placeholder="Enter a Name">
+            <input type="text" ng-model="newPrintjob.name" class="form-control" name="name" required placeholder="Enter a Name">
           </div>
           <div class="form-group">
             <label for="note">Note</label>
-            <input type="text" ng-model="newPrintjob.note" class="form-control" id="note" placeholder="Additional notes (optional)">
+            <input type="text" ng-model="newPrintjob.note" class="form-control" name="note" placeholder="Additional notes (optional)">
           </div>
           <div class="form-group">
             <label for="file">GCODE File</label>
-            <input type="file" ng-model="fileInput" ng-file-select="onFileSelect($files)" id="file">
+            <input type="file" ng-model="fileInput" ng-file-select="onFileSelect($files)" valid-file required name="file" id="file" ng-multiple="false">
           </div>
           <p ng-show="uploadProgress > 0">
             <progressbar value="uploadProgress" type="success"><b>{{ uploadProgress }}%</b></progressbar>
           </p>          
-          <button class="btn btn-default {{ file == false && 'disabled' || '' }}" ng-click="uploadPrintjob()">Add</button>
+          <button class="btn btn-default" ng-click="uploadPrintjob()">Add</button>
           <button class="btn btn-default" ng-show="uploadProgress > 0" ng-click="upload.abort()">Cancel Upload</button>
           <button class="btn btn-default" ng-show="uploadProgress == 0" ng-click="toggleForm()">Cancel</button>          
           <span class="text-danger"> {{ error }}</span>
