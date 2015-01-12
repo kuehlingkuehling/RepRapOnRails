@@ -55,8 +55,8 @@ RAILS_ENV=production rake db:seed
 # Assets frisch kompilieren
 echo "rm -r public/assets"
 rm -r public/assets
-echo "rake assets:precompile"
-rake assets:precompile
+echo "RAILS_ENV=production rake assets:precompile"
+RAILS_ENV=production rake assets:precompile
 
 echo "DONE."
 
