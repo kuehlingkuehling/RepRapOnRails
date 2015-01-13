@@ -158,7 +158,6 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       # assign out of filament callback                      
       printer.reloadcb = Proc.new do |spool|
         if printer.printing?
-          printer.pause_print
           WebsocketRails[:print].trigger(:state, printer.status)  # paused
           WebsocketRails[:print].trigger(:out_of_filament, spool)
           log_queue.push({:level => 2, :line => "Out of Filament: Please reload #{ spool } spool!"})

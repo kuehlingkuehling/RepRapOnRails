@@ -249,14 +249,21 @@ class RepRapHost
         # act on out-of-filament messages
         if line.start_with?('OutOfFilament')
           result = /^OutOfFilament:(?<spool>\w+)/.match(line)
-          @reloadcb.call(result[:spool]) if @reloadcb and @printing
+          if @reloadcb and @printing and result
+            # initiate pause_print from within its own thread to keep the read_thread spinning
+            # (otherwise the reactivated send_thread will stall, naturally)
+            outoffilament_pause_thread = Thread.new do
+              self.pause_print
+            end
+            @reloadcb.call(result[:spool])
+          end
         end
 
         # check for responses containing EEPROM config values
         if line.start_with?('EPR:')
           result = /^EPR:(?<type>\d) (?<pos>\d+) (?<val>-?\d+(\.\d+)?) (?<name>.+)/.match(line)
 
-          if result[:type] and result[:pos] and result[:val] and result[:name]
+          if result and result[:type] and result[:pos] and result[:val] and result[:name]
             config = {
               :type => result[:type].to_i,
               :pos => result[:pos].to_i,
@@ -270,7 +277,7 @@ class RepRapHost
         # check if firmware capabilities string was sent (response to M115)
         if line.start_with?('FIRMWARE_NAME')
           result = /REPRAPINDUSTRIAL_FIRMWARE_VERSION:(?<version>\S*)/.match(line)
-          if result[:version]
+          if result and result[:version]
             @fwcb.call(result[:version]) if @fwcb
           end
         end
@@ -677,8 +684,10 @@ class RepRapHost
       self.send("M400")
       self.send("M401")
 
-      # home all axes and turn off both extruders, bed and chamber stay untouched
-      self.send("G28")
+      # move print bed away from nozzle, print head to [0,0] position,
+      #  and turn off both extruders, bed and chamber stay untouched
+      self.send("G1 Z10000 F12000.0")
+      self.send("G1 X0 Y0 F12000.0")
       self.send("M104 S0 T0")
       self.send("M104 S0 T1")            
     else
@@ -693,9 +702,6 @@ class RepRapHost
       sleep 0.1 until @send_thread.stop?
 
       @resumecb.call if @resumecb
-
-      # home all axes
-      self.send("G28")
       
       # reset all extruder temperatures and bed temp to stored values 
       @params_for_resume[:target_temps].each do |heater, temp| 
@@ -722,6 +728,7 @@ class RepRapHost
       self.send("G92 E#{ @params_for_resume[:e_position] }")
       
       # move to last stored printing position
+      self.send("G1 F12000.0")
       self.send("M402")
 
       # restore feedrate last used
@@ -788,10 +795,10 @@ class RepRapHost
     elsif @online
       if @preheating    
         status = 5 # preheating      
-      elsif @printing
-        status = 2 # printing
       elsif @paused
         status = 3 # paused
+      elsif @printing
+        status = 2 # printing        
       else
         status = 1 # idle
       end
