@@ -7,6 +7,11 @@ touchApp.controller('SetupController', function($scope, MyWebsocket){
   MyWebsocket.get('hostname').then(function(data){
     $scope.backendurl = 'http://' + data + '/';
   });   
+
+  $scope.firmware_version = 'n/a';
+  MyWebsocket.get('firmware_version').then(function(data){
+    $scope.firmware_version = data;
+  });   
   
   $scope.idle = false;
   $scope.paused = false;

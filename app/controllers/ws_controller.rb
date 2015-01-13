@@ -14,6 +14,10 @@ class WsController < WebsocketRails::BaseController
     trigger_success Rails.application.config.hostname
   end
 
+  def firmware_version
+    trigger_success "Repetier Firmware v" + Settings.firmware_version
+  end
+
   def status
     status = { :state => @@printer.status,
                :job => @@printjob[:title],

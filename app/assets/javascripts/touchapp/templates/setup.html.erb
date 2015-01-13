@@ -52,7 +52,7 @@
     <p class="text-right">
       Microcontroller Firmware version:<br />
       <kbd><b><%= Rails.application.config.arduino_firmware_version %></b></kbd><br />(compatible)<br />
-      <kbd><b>Repetier Firmware v<%= Settings.firmware_version ? Settings.firmware_version : "n/a" %></b></kbd><br />(currently installed)
+      <kbd><b>{{ firmware_version }}</b></kbd><br />(currently installed)
     </p>
 
 <!--    
