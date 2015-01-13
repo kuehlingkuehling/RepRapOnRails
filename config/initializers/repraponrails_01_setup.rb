@@ -36,7 +36,7 @@ end
 
 # moving log database writing to queued background job - this task is too slow
 # to execute in callbacks
-log_queue = []
+log_queue = ApplicationController.log_queue
 log_thread = Thread.new do
   loop do
     if log_queue.size > 0

@@ -3,6 +3,7 @@ class WsController < WebsocketRails::BaseController
     # perform application setup here
     @@printer = ApplicationController.printer
     @@printjob = ApplicationController.printjob    
+    @@log_queue = ApplicationController.log_queue
   end
 
   def logfile
@@ -142,6 +143,7 @@ class WsController < WebsocketRails::BaseController
   
   def shutdown
     unless @@printer.printing?
+      @@log_queue.push({:level => 1, :line => 'System is shutting down.'})
       system('sudo /sbin/shutdown -h now')
     end
   end
