@@ -81,146 +81,127 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
 
   begin
     if printer.is_a?(RepRapHost) and not printer.online?
+
       # assign online callback
       printer.onlinecb = Proc.new do
-                             WebsocketRails[:print].trigger(:state, printer.status)                              
-                             #LogEntry.create(level: 1, line: 'RepRap Controller is online!')                            
-                             log_queue.push({:level => 1, :line => 'RepRap Controller is online!'})
-                           end
+        WebsocketRails[:print].trigger(:state, printer.status)                              
+        log_queue.push({:level => 1, :line => 'RepRap Controller is online!'})
+      end
   
       # assign receive callback
       printer.recvcb = Proc.new do |line| 
-                           #LogEntry.create(level: 0, line: 'RECV: ' + line.delete("\n"))
-                          log_queue.push({:level => 0, :line => 'RECV: ' + line.delete("\n")})
-                           #WebsocketRails[:log].trigger(:new, 'RECV: ' + line.delete("\n"))
-                        end                                        
+        log_queue.push({:level => 0, :line => 'RECV: ' + line.delete("\n")})
+      end                                        
       
       # assign send callback
       printer.sendcb = Proc.new do |line| 
-                           #LogEntry.create(level: 0, line: 'SENT: ' + line.delete("\n"))
-                          log_queue.push({:level => 0, :line => 'SENT: ' + line.delete("\n")})
-                           #WebsocketRails[:log].trigger(:new, 'SENT: ' + line.delete("\n"))
-                         end
+       log_queue.push({:level => 0, :line => 'SENT: ' + line.delete("\n")})
+      end
                         
       # assign start callback
       printer.startcb = Proc.new do |line|
-                             WebsocketRails[:print].trigger(:state, printer.status)
-                             WebsocketRails[:print].trigger(:job, { :name => printjob[:title], :job_id => printjob[:id] })
-                             log_queue.push({:level => 1, :line => "Printjob started: \"#{printjob[:title]}\""})
-                             #LogEntry.create(level: 1, line: 'Printjob started')
-                         end
+        WebsocketRails[:print].trigger(:state, printer.status)
+        WebsocketRails[:print].trigger(:job, { :name => printjob[:title], :job_id => printjob[:id] })
+        log_queue.push({:level => 1, :line => "Printjob started: \"#{printjob[:title]}\""})
+      end
                         
       # assign pause callback                      
       printer.pausecb = Proc.new do |line|
-                            WebsocketRails[:print].trigger(:state, printer.status) # paused
-                            log_queue.push({:level => 1, :line => 'Printjob paused'})
-                            #LogEntry.create(level: 1, line: 'Printjob paused')
-                        end  
+        WebsocketRails[:print].trigger(:state, printer.status) # paused
+        log_queue.push({:level => 1, :line => 'Printjob paused'})
+      end  
                         
       # assign pause callback                      
       printer.resumecb = Proc.new do |line| 
-                            WebsocketRails[:print].trigger(:state, printer.status) # printing
-                            log_queue.push({:level => 1, :line => 'Printjob resumed'})
-                            #LogEntry.create(level: 1, line: 'Printjob resumed')                            
-                        end                      
+        WebsocketRails[:print].trigger(:state, printer.status) # printing
+        log_queue.push({:level => 1, :line => 'Printjob resumed'})                      
+      end                      
   
       # assign end callback
       printer.endcb = Proc.new do |elapsed|
-                          WebsocketRails[:print].trigger(:state, printer.status)        
-                          WebsocketRails[:print].trigger(:job, { :name => "", :job_id => 0 })
-                          WebsocketRails[:print].trigger(:finished, {:id => printjob[:id], :elapsed => UsefulGlobalMethods.timespan_in_words( elapsed )})
-                          log_queue.push({:level => 1, :line => "Printjob \"#{printjob[:title]}\" finished after " + UsefulGlobalMethods.timespan_in_words( elapsed )})
-                          printjob[:id] = nil
-                          printjob[:title] = ""
-                          #LogEntry.create(level: 1, line: 'Printjob finished after ' + UsefulGlobalMethods.timespan_in_words( elapsed ))
-                      end  
+        WebsocketRails[:print].trigger(:state, printer.status)        
+        WebsocketRails[:print].trigger(:job, { :name => "", :job_id => 0 })
+        WebsocketRails[:print].trigger(:finished, {:id => printjob[:id], :elapsed => UsefulGlobalMethods.timespan_in_words( elapsed )})
+        log_queue.push({:level => 1, :line => "Printjob \"#{printjob[:title]}\" finished after " + UsefulGlobalMethods.timespan_in_words( elapsed )})
+        printjob[:id] = nil
+        printjob[:title] = ""
+      end  
 
       # assign abort callback
       printer.abortcb = Proc.new do 
-                          log_queue.push({:level => 2, :line => 'Printjob aborted!'})
-                      end                        
+        log_queue.push({:level => 2, :line => 'Printjob aborted!'})
+      end                        
       
       # assign error callback                      
       printer.errorcb = Proc.new do |line|
-                          if line
-                            log_queue.push({:level => 3, :line => 'ERROR: ' + line.delete("\n")})
-                            #LogEntry.create(level: 3, line: 'ERROR: ' + line.delete("\n"))
-                          end
-                           #WebsocketRails[:log].trigger(:new, 'ERROR: ' + line.delete("\n"))
-                         end         
+        if line
+          log_queue.push({:level => 3, :line => 'ERROR: ' + line.delete("\n")})
+        end
+      end         
   
       # assign temp callback                      
       printer.tempcb = Proc.new do |temps, targets| 
-                            # marlin temp string parser
-                            #temps = line.scan(/T\d:\s*\d+\.\d+\s*\/\s*\d+\.\d+/)
-                            #temps += line.scan(/B:\s*\d+\.\d+\s*\/\s*\d+\.\d+/)
-                            #temps.map! do |t|
-                            #  { :name => t.match(/(T\d):/) ? t.match(/(T\d):/)[1] : t.match(/(B):/)[1],
-                            #    :current => t.match(/:\s*(\d+\.\d+)/)[1],
-                            #    :target => t.match(/\/\s*(\d+\.\d+)/)[1] }
-                            #end
-                        
-                            message = { 
-                              :left_extruder  => { :temp   => temps[:T0],
-                                                   :target => targets[:T0] },
-                              :right_extruder => { :temp   => temps[:T1],
-                                                   :target => targets[:T1] },
-                              :chamber        => { :temp   => temps[:T2],
-                                                   :target => targets[:T2] },
-                              :bed            => { :temp   => temps[:B],
-                                                   :target => targets[:B] }
-                            }
-   
-                            WebsocketRails[:temp].trigger(:new, message)
-                         end  
+        message = { 
+          :left_extruder  => { :temp   => temps[:T0],
+                               :target => targets[:T0] },
+          :right_extruder => { :temp   => temps[:T1],
+                               :target => targets[:T1] },
+          :chamber        => { :temp   => temps[:T2],
+                               :target => targets[:T2] },
+          :bed            => { :temp   => temps[:B],
+                               :target => targets[:B] }
+        }
+
+        WebsocketRails[:temp].trigger(:new, message)
+      end  
                         
       # assign out of filament callback                      
       printer.reloadcb = Proc.new do |spool|
-                           if printer.printing?
-                             printer.pause_print
-                             WebsocketRails[:print].trigger(:state, printer.status)  # paused
-                             WebsocketRails[:print].trigger(:out_of_filament, spool)
-                             log_queue.push({:level => 2, :line => "Out of Filament: Please reload #{ spool } spool!"})
-                           end
-                         end   
+        if printer.printing?
+          printer.pause_print
+          WebsocketRails[:print].trigger(:state, printer.status)  # paused
+          WebsocketRails[:print].trigger(:out_of_filament, spool)
+          log_queue.push({:level => 2, :line => "Out of Filament: Please reload #{ spool } spool!"})
+        end
+      end   
 
       # assign preheating start callback                      
       printer.preheatcb = Proc.new do |line|
-                            WebsocketRails[:print].trigger(:state, printer.status) # preheating
-                        end  
+        WebsocketRails[:print].trigger(:state, printer.status) # preheating
+      end  
                         
       # assign preheating done callback                      
       printer.preheatedcb = Proc.new do |line| 
-                            WebsocketRails[:print].trigger(:state, printer.status)                          
-                        end
+        WebsocketRails[:print].trigger(:state, printer.status)                          
+      end
 
       # assign emergency stop callback
       printer.emergencystopcb = Proc.new do |line| 
-                            WebsocketRails[:print].trigger(:state, printer.status)                          
-                            log_queue.push({:level => 2, :line => "Emergency Stop triggered!"})
-                        end  
+        WebsocketRails[:print].trigger(:state, printer.status)                          
+        log_queue.push({:level => 2, :line => "Emergency Stop triggered!"})
+      end  
 
       # assign psu ON callback
       printer.psuoncb = Proc.new do |line| 
-                            WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
-                            log_queue.push({:level => 1, :line => "Build Chamber activated"})
-                        end
+        WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
+        log_queue.push({:level => 1, :line => "Build Chamber activated"})
+      end
 
       # assign psu OFF callback
       printer.psuoffcb = Proc.new do |line| 
-                            WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
-                            log_queue.push({:level => 1, :line => "Build Chamber deactivated"})
-                        end
+        WebsocketRails[:print].trigger(:psu, printer.current_params[:psu_on])                          
+        log_queue.push({:level => 1, :line => "Build Chamber deactivated"})
+      end
 
       # assign EEPROM value callback
       printer.eepromcb = Proc.new do |config| 
-                            WebsocketRails[:eeprom].trigger(:line, config)                          
-                        end 
+        WebsocketRails[:eeprom].trigger(:line, config)                          
+      end 
 
       # assign Firmware version callback
       printer.fwcb = Proc.new do |version|
-                       Settings.firmware_version = version
-                     end
+        Settings.firmware_version = version
+      end
 
 
       # debugging in development environment
