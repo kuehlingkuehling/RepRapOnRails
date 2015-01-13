@@ -4,7 +4,7 @@ touchApp.controller('QueueController', function($scope, $modal, MyWebsocket, Com
   MyWebsocket.menuDisabled = false; 
 
  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 5 )) {
+    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 3 ) || ( MyWebsocket.print.state == 5 )) {
       $scope.printing = true;
     } else {
       $scope.printing = false;      
