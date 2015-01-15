@@ -772,11 +772,11 @@ class RepRapHost
   def emergencystop
     @emergencystop = true
     @emergencystopcb.call if @emergencystopcb
+    @emergencystop = false    
     sleep 1
     self.reset
     @current_params[:psu_on] = false
-    @psuoffcb.call if @psuoffcb
-    @emergencystop = false    
+    @psuoffcb.call if @psuoffcb    
   end
 
   def status
