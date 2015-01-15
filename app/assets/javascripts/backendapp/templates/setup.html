@@ -34,14 +34,14 @@
     <tr ng-repeat="p in presets">
       <td>
         <p ng-show="edit[p.id]">
-          <input type="text" ng-model="presets[$index].name"><br/>
+          <input type="text" ng-model="presets[$index].name" ng-enter="updatePreset($index)"><br/>
         </p>
         <p ng-show="!edit[p.id]">{{ p.name }}</p>
         <p ng-show="!edit[p.id]" class="text-muted">{{ p.note }}</p>
       </td>
       <td>
         <p ng-show="edit[p.id]">
-          <input type="text" ng-model="presets[$index].extrusion_temp">                
+          <input type="text" ng-model="presets[$index].extrusion_temp" ng-enter="updatePreset($index)">                
         </p>        
         <span ng-show="!edit[p.id]">{{ p.extrusion_temp }}°C</span></td>
       <td>
@@ -99,20 +99,20 @@
     <tr ng-repeat="p in preheatingProfiles">
       <td>
         <p ng-show="editPreheating[p.id]">
-          <input type="text" ng-model="preheatingProfiles[$index].name"><br/>
+          <input type="text" ng-model="preheatingProfiles[$index].name" ng-enter="updatePreheatingProfile($index)"><br/>
         </p>
         <p ng-show="!editPreheating[p.id]">{{ p.name }}</p>
         <p ng-show="!editPreheating[p.id]" class="text-muted">{{ p.note }}</p>
       </td>
       <td>
         <p ng-show="editPreheating[p.id]">
-          <input type="text" ng-model="preheatingProfiles[$index].chamber_temp">                
+          <input type="text" ng-model="preheatingProfiles[$index].chamber_temp" ng-enter="updatePreheatingProfile($index)">                
         </p>        
         <span ng-show="!editPreheating[p.id]">{{ p.chamber_temp }}°C</span>
       </td>
       <td>
         <p ng-show="editPreheating[p.id]">
-          <input type="text" ng-model="preheatingProfiles[$index].bed_temp">                
+          <input type="text" ng-model="preheatingProfiles[$index].bed_temp" ng-enter="updatePreheatingProfile($index)">                
         </p>        
         <span ng-show="!editPreheating[p.id]">{{ p.bed_temp }}°C</span>
       </td>
@@ -175,7 +175,7 @@
       </td>
       <td>
         <p ng-show="edit_eeprom[e.$key]">
-          <input type="text" ng-model="eeprom[e.$key].val">                
+          <input type="text" ng-model="eeprom[e.$key].val" ng-enter="updateEEPROM(e.$key)">                
         </p>        
         <span ng-show="!edit_eeprom[e.$key]">{{ e.val }}</span>
       </td>

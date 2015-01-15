@@ -45,8 +45,8 @@
       <td>{{ $index + 1 }}</td>
       <td>
         <p ng-show="edit[p.id]">
-          <input type="text" ng-model="printjobs[$index].name"><br/>
-          <input type="text" ng-model="printjobs[$index].note">        
+          <input type="text" ng-model="printjobs[$index].name" ng-enter="updatePrintjob($index)"><br/>
+          <input type="text" ng-model="printjobs[$index].note" ng-enter="updatePrintjob($index)">        
         </p>
         <p ng-show="!edit[p.id]">{{ p.name }}</p>
         <p ng-show="!edit[p.id]" class="text-muted">{{ p.note }}</p>
