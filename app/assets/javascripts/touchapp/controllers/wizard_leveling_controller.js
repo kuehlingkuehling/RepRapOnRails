@@ -9,6 +9,11 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
 
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
     $scope.bed_target = MyWebsocket.preheatingProfile.bed_temp;
+    if (typeof $scope.bed_target === 'undefined') {
+      $scope.noPreheatingProfileSelected = true;
+    } else {
+      $scope.noPreheatingProfileSelected = false;
+    }
   },true);
 
   $scope.temps_to_restore = angular.copy(MyWebsocket.temp);
@@ -17,7 +22,7 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
     $scope.temp = MyWebsocket.temp;
     if (MyWebsocket.temp.bed) {
       $scope.bed_temp = MyWebsocket.temp.bed.temp;
-      if (($scope.bed_temp > ($scope.bed_target - $scope.deviation)) && ($scope.bed_temp < ($scope.bed_target + $scope.deviation))) {
+      if ((($scope.bed_temp > ($scope.bed_target - $scope.deviation)) && ($scope.bed_temp < ($scope.bed_target + $scope.deviation))) || ($scope.bed_target == 0)) {
         $scope.bed_preheated = true;
         if ($scope.step == 2) {
           $scope.step = 3;
@@ -42,7 +47,10 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   
   $scope.step2 = function() {
     $scope.step = 2;
-    MyWebsocket.preheat(-1, $scope.bed_target);
+    if ($scope.noPreheatingProfileSelected == false) {
+      MyWebsocket.preheat(-1, $scope.bed_target);
+    }
+
   };
   
   $scope.step3 = function() {
@@ -72,7 +80,9 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   $scope.exit = function() {
     MyWebsocket.macro('wizard_leveling_exit');
     // restore chamber/bed settings as they were before starting wizard
-    MyWebsocket.preheat($scope.temps_to_restore.chamber.target, $scope.temps_to_restore.bed.target);
+    if ($scope.noPreheatingProfileSelected == false) {
+      MyWebsocket.preheat($scope.temps_to_restore.chamber.target, $scope.temps_to_restore.bed.target);
+    }
     MyWebsocket.menuDisabled = false;
     $location.path( "/setup" );
   };        

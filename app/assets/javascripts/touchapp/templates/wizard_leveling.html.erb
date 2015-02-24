@@ -32,8 +32,9 @@
 
       <!-- text contents step 2 -->
       <div class="col-md-12" ng-show="step == '2'">
-        <p>Please wait while the print bed is beeing preheated. This may take a couple of minutes.</p>
-        <p>Current/ Target print bed temperature: <b>{{ bed_temp }} / {{ temp.bed.target }} °C</b></p>
+        <p ng-show="noPreheatingProfileSelected"><b>Error: No preheating profile is configured.</b> Check [Configuration] tab first!</p>
+        <p ng-show="!noPreheatingProfileSelected">Please wait while the print bed is beeing preheated. This may take a couple of minutes.</p>
+        <p ng-show="!noPreheatingProfileSelected">Current/ Target print bed temperature: <b>{{ bed_temp }} / {{ temp.bed.target }} °C</b></p>
         <br/>
         <br/>  
         <button type="button" class="btn btn-default btn-lg navigation" ng-click="step1()">
