@@ -123,10 +123,8 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     console.log('New Log Message: ' + message);
     $timeout(function(){
       Service.log.unshift(message);
-      //make sure we only keep a maximum of 100 lines in log   
-      while (Service.log.length > 100) {
-        Service.log.pop(); 
-      }
+      //make sure we only keep a maximum of 100 lines in log  
+      Service.log = Service.log.slice(0,100); 
     });
   });
 

@@ -11,10 +11,11 @@ touchApp.controller('LogController', function($scope, MyWebsocket, CommonCode){
 
   // process list to pages  
   $scope.$watch(function(){ return MyWebsocket.log; }, function(newValue){
-    $scope.log = MyWebsocket.log;      
-    $scope.pagedLog = CommonCode.groupToPages($scope.log, $scope.itemsPerPage);
+    $scope.log_length = MyWebsocket.log.length;      
+    $scope.log = MyWebsocket.log;
+    //$scope.pagedLog = CommonCode.groupToPages(MyWebsocket.log, $scope.itemsPerPage);
   }, true);
-  
+
   $scope.send = function(){
     MyWebsocket.sendgcode($scope.gcode);
     $scope.lastcommand = $scope.gcode;     

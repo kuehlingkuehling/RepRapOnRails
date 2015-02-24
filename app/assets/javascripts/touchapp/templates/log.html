@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-md-8">
     
-    <h3 ng-show="log.length == 0">No messages recorded yet.</h3>
-      <p ng-show="log.length">
+    <h3 ng-show="log_length == 0">No messages recorded yet.</h3>
+      <p ng-show="log_length">
         
           <small>
-            <span ng-repeat="message in pagedLog[currentPage - 1]">
+            <span ng-repeat="message in log | startFrom: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
             <span class="log-timestamp">
               [{{ message.created_at | date:'yyyy-MM-dd HH:mm:ss' }} UTC]               
             </span> 
@@ -15,8 +15,7 @@
             <br/></span>
           </small>
           
-          <pagination class="pull-right" total-items="log.length" items-per-page="itemsPerPage" page="currentPage"></pagination>
-          
+          <pagination class="pull-right" total-items="log_length" items-per-page="itemsPerPage" page="currentPage"></pagination>
       </p>    
   </div>
   <div class="col-md-4">
