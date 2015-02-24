@@ -129,6 +129,32 @@
 </table>
 <br/><br/>
 
+<h4>System Information</h4>  
+
+<table class="table table-striped clearfix" ng-show="presets.length">
+  <tbody>
+    <tr>
+      <td>Hostname</td>
+      <td><kbd>{{ hostname }}</kbd></td>         
+    </tr>
+    <tr>
+      <td>Hardware Revision</td>
+      <td><kbd><%= Rails.application.config.hardware_revision %></kbd></td>         
+    </tr>
+    <tr>
+      <td>Software Version</td>
+      <td><kbd><%= Rails.application.config.software_version %></kbd></td>         
+    </tr>
+    <tr>
+      <td>Microcontroller Firmware Version</td>
+      <td>
+        <kbd><%= Rails.application.config.arduino_firmware_version %></kbd> (compatible)<br />
+        <kbd>{{ firmware_version }}</kbd> (currently installed)
+      </td>         
+    </tr>
+ </tbody>
+</table>
+<br/><br/>
 
 <h4>Upload Arduino Firmware Update</h4> 
 <p>To update the Arduino Firmware on this printer, please upload the new .hex

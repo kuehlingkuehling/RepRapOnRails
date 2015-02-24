@@ -18,6 +18,16 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   }, true); 
   $scope.edit_eeprom = {};
 
+  $scope.hostname = ' ';
+  MyWebsocket.get('hostname').then(function(data){
+    $scope.hostname = data;
+  });   
+
+  $scope.firmware_version = 'n/a';
+  MyWebsocket.get('firmware_version').then(function(data){
+    $scope.firmware_version = data;
+  });  
+
   // firmware upload form
   $scope.uploadProgress = 0;
   $scope.file = false;  
