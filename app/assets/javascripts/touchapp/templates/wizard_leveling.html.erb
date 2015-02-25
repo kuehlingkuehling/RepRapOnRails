@@ -23,7 +23,7 @@
           <li>A clean printbed is installed.</li>
           <li>The nozzle tips are cleaned from any print material residue
             (gently remove any material with tweezers).</li>
-          <li>No Filament is loaded in the right extruder.</li>        
+          <li>No Filament is loaded in the extruder that you do not level the print bed with in the first place.</li>        
         </ul>
         <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step2()">
           OK, continue
@@ -42,12 +42,30 @@
         </button>            
       </div>
 
+      <!-- text contents step 21 -->
+      <div class="col-md-12" ng-show="step == '21'">
+        <p>Select the extruder used as height reference for leveling the print bed:</p>
+        <div class="btn-group text-center">
+            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'left_extruder'">Left</button>
+            <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'right_extruder'">Right</button>
+        </div>
+        <br/>
+        <br/>
+        <br/>  
+        <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
+          Back
+        </button>         
+        <button ng-show="(extruder == 'left_extruder') || (extruder == 'right_extruder')" type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="step3()">
+          Next
+        </button>    
+      </div>
+
       <!-- text contents step 3 -->
       <div class="col-md-12" ng-show="step == '3'"> 
-        <p>Now loosen the two set screws on the <b>right</b> extruder barrel.</p>
+        <p>Now loosen the two set screws on the <b>{{ secondary_extruder_name }}</b> extruder barrel.</p>
         <p><b>ATTENTION: Carefully check if extruder is still hot before touching the nozzle!.</b></p>
-        <p>Then slide the right extruder barrel up to make sure the right nozzle tip is a bit higher 
-          than the left tip.</p>    
+        <p>Then slide the {{ secondary_extruder_name }} extruder barrel up to make sure the {{ secondary_extruder_name }} nozzle tip is a bit higher 
+          than the {{ primary_extruder_name }} tip.</p>    
         <br/>
         <br/>    
         <button type="button" class="btn btn-default btn-lg navigation" ng-click="step2()">
@@ -121,7 +139,7 @@
       <!-- text contents step 9 -->
       <div class="col-md-12" ng-show="step == '9'">
         <p>The print bed is leveled now.</p>
-        <p>Finally, slide the <b>right</b> extruder barrel back down until it just
+        <p>Finally, slide the <b>{{ secondary_extruder_name }}</b> extruder barrel back down until it just
           touches the print bed and gently tighten the two set screws again.</p>
         <p>That's it, you are done.</p>
         <br/>
@@ -145,6 +163,12 @@
 
   <!-- image step 2 -->
   <div class="col-md-5" ng-show="step == '2'">
+    <!-- picture: printbed in preheat-position -->
+    <img src="<%= asset_path("touchapp/images/wizard_leveling_preheat.jpg") %>" class="img-responsive">    
+  </div> 
+
+  <!-- image step 21 -->
+  <div class="col-md-5" ng-show="step == '21'">
     <!-- picture: printbed in preheat-position -->
     <img src="<%= asset_path("touchapp/images/wizard_leveling_preheat.jpg") %>" class="img-responsive">    
   </div> 

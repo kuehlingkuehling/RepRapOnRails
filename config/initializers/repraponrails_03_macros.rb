@@ -45,7 +45,6 @@ MACROS = {
   :get_temp => [],                # deprecated - repraphost has an internal temp refresh loop running now
   :motors_off => [],               # deprecated - never ever used anymore to prevent damage from positioning misalignments
   :wizard_leveling_init => [
-    "T0",
     "G28 Z0",
     "G1 X%d Y%d Z100 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ] ],
   :wizard_leveling_moveup => [
