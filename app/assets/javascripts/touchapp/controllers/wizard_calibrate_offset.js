@@ -27,7 +27,7 @@ touchApp.controller('WizardCalibrateOffsetController', function($scope, CommonCo
 
   $scope.generate_printjob = function() {
     MyWebsocket.calibrateOffsetPrintjob();
-    MyWebsocket.menuDisabled = true;    
+    MyWebsocket.menuDisabled = false;    
     $location.path( "/queue" );    
   };
   

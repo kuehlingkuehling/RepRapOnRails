@@ -94,6 +94,11 @@ touchApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
       templateUrl: '<%= asset_path("touchapp/templates/wizard_nozzle_change.html") %>',
       controller: 'WizardNozzleChangeController',
       resolve: resolve_websocket
+    }).  
+    when('/wizard_calibrate_backlash', {
+      templateUrl: '<%= asset_path("touchapp/templates/wizard_calibrate_backlash.html") %>',
+      controller: 'WizardCalibrateBacklashController',
+      resolve: resolve_websocket
     }).      
     otherwise({
       redirectTo: '/queue'

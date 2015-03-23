@@ -24,7 +24,7 @@ class RepRapHost
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
                 :psuoncb, :psuoffcb, :eepromcb, :fwcb
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
-              :current_params
+              :current_params, :endstopstatus
   alias :online? :online
   alias :printing? :printing
   alias :paused? :paused
@@ -81,6 +81,9 @@ class RepRapHost
 
     # snapshot of current params for resume
     @params_for_resume = nil  
+
+    # enstop status from last M119 response. Is set to after sending M119 while waiting for new response
+    @endstopstatus = nil
                  
     # callbacks
     @tempcb = nil
@@ -100,7 +103,7 @@ class RepRapHost
     @psuoffcb = nil # on M81 power supply off
     @eepromcb = nil # on response lines to M205 (show eeprom values)
     @fwcb = nil # on response to M115 (capabilities string including firmware version)
-    
+
     # thread sync
     @printer_lock = Mutex.new
     @ok_lock = Mutex.new    
@@ -118,7 +121,7 @@ class RepRapHost
     @port = port unless port.nil?
     @baud = baud unless baud.nil?
     
-    puts 'Connecting to RepRap Controller' if @verbose
+    puts 'Connecting to RepRap Controller (' + @port + ')' if @verbose
     @errorcb.call("Could not connect to RepRap Controller - no port defined!") if @errorcb and @port.nil?
     @errorcb.call("Could not connect to RepRap Controller - no baudrate defined!") if @errorcb and @baud.nil?    
     unless @port.nil? or @baud.nil?
@@ -281,6 +284,16 @@ class RepRapHost
             @fwcb.call(result[:version]) if @fwcb
           end
         end
+
+        # parse for M119 Endstop status response
+        if line.start_with?('x_min')
+          result = /^x_min:(?<x>[LH]).*y_max:(?<y>[LH]).*z_max:(?<z>[LH])/.match(line)
+          if result and result[:x] and result[:y] and result[:z]
+            @endstopstatus = {:x => result[:x],
+                              :y => result[:y],
+                              :z => result[:z]}
+          end
+        end
       rescue EOFError => e
         puts "DEBUG: EOF from serialport readline"
         # do nothing - sometimes serialport sends EOF when done sending stuff
@@ -390,6 +403,10 @@ class RepRapHost
           end        
         end
 
+        if line.start_with?("M119")
+          @endstopstatus = nil # to indicate that we are waiting for a new response
+        end
+
         unless line.start_with?("M105")
           puts ">>> " + line if @verbose and @echoreadwrite
           @sendcb.call(line) if @sendcb and execsendcb
@@ -452,6 +469,9 @@ class RepRapHost
     # Send a single gcode command to the @printqueue
 
     if @online
+        if line.start_with?("M119")
+          @endstopstatus = nil # to indicate that we are waiting for a new response
+        end      
       @printqueue.push(line)
     else
       @errorcb.call("Cannot send command - RepRap Controller not online!") if @errorcb      

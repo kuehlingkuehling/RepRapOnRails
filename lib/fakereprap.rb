@@ -57,6 +57,10 @@ class FakeRepRap
       @response_queue.push("FIRMWARE_NAME:Repetier_0.91 FIRMWARE_URL:https://github.com/repetier/Repetier-Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:3 REPETIER_PROTOCOL:2 REPRAPINDUSTRIAL_FIRMWARE_VERSION:0.91-rri1.0.0-02")
     end
 
+    if gcode.m?(119)
+      @response_queue.push("x_min:H y_max:H z_max:L")
+    end    
+
     if gcode.m?(104) and gcode.s and gcode.t
       #@response_queue.push("TargetExtr#{ gcode.t.to_i }:#{ gcode.s }")
       @targets[gcode.t.to_i] = gcode.s.to_i
@@ -138,8 +142,8 @@ class FakeRepRap
       @response_queue.push("EPR:3 55 200.000 Y-axis acceleration [mm/s^2]")
       @response_queue.push("EPR:3 51 200.000 X-axis acceleration [mm/s^2]")
       @response_queue.push("EPR:3 165 0.000 Z backlash [mm]")
-      @response_queue.push("EPR:3 161 0.000 Y backlash [mm]")
-      @response_queue.push("EPR:3 157 0.000 X backlash [mm]")
+      @response_queue.push("EPR:3 161 0.270 Y backlash [mm]")
+      @response_queue.push("EPR:3 157 0.120 X backlash [mm]")
       @response_queue.push("EPR:3 153 288.000 Z max length [mm]")
       @response_queue.push("EPR:3 149 305.000 Y max length [mm]")
       @response_queue.push("EPR:3 145 300.000 X max length [mm]")

@@ -61,5 +61,6 @@ WebsocketRails::EventMap.describe do
   subscribe :psu_on, :to => WsController, :with_method => :psu_on
   subscribe :extrude, :to => WsController, :with_method => :extrude 
   subscribe :set_eeprom, :to => WsController, :with_method => :set_eeprom
+  subscribe :measure_backlash, :to => WsController, :with_method => :measure_backlash
  
 end

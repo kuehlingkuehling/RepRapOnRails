@@ -67,7 +67,7 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   
   Service.online = deferred.promise;
   
-  Service.get = function(event) {
+  Service.get = function(event, arguments = '') {
     var d = $q.defer();    
 
     //console.log("Fetching Event \"" + event + "\" through WebSocket");
@@ -78,11 +78,11 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     };
     
     var failure = function(response) {
-      console.log("Query failed: "+response.message);
+      console.log("Query failed: "+response);
       d.reject(response);
     };
     
-    dispatcher.trigger(event, '', success, failure);
+    dispatcher.trigger(event, arguments, success, failure);
     //console.log("returning promise");
     return d.promise;
   };

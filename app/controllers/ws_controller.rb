@@ -97,6 +97,107 @@ class WsController < WebsocketRails::BaseController
     end
     @@printer.send("M206 T#{ type } P#{ pos } #{ char }#{ val }")    
   end
+
+  def measure_backlash
+    # assuming all is already set up for this task:
+    # - backlash compensation deactivated on x/y axis)
+    # - extruder 2 offset (x/y) set to 0
+    axis = message[0].to_sym
+    stepsize = message[1]        # can be positive or negative
+    measurements = []
+    steps = message[2]           # e.g. 100 x 0.01mm = 1mm
+    repeat = 3                   # number of measurements taken
+    retries = 3                  # number of retries for homing
+
+    # select left extruder
+    @@printer.send("T0")
+
+    repeat.times do 
+      backlash = 0
+
+      retries.times do
+        # home the axis to be measured
+        @@printer.send("G28 #{ axis.to_s.upcase }0")
+        # ẃait until all movements done
+        @@printer.send("M400")
+        # wait one second to debounce endstop
+        @@printer.send("G4 P1000")
+        # query endstop status after
+        @@printer.send("M119")
+        # wait for enstop status response
+        begin
+          Timeout::timeout(10) do
+            while not @@printer.endstopstatus
+              sleep 0.1
+            end
+          end
+          if @@printer.endstopstatus[axis] == "H"
+            break
+          end
+        rescue Timeout::Error
+          trigger_failure "Measurement initialisation failed (Timeout)"
+          return
+        end
+      end
+
+      if not @@printer.endstopstatus[axis] == "H"
+        trigger_failure "Measurement initialisation failed (unexpected endstop status)"
+        return
+      end
+
+
+      # switch to relative positioning
+      @@printer.send("G91")
+
+      # measure backlash (move axis until endstop status changes = print head moved)
+      steps.times do |step|
+        # move motor a little step (in relative positioning mode)
+        @@printer.send("G1 #{ axis.to_s.upcase }#{ stepsize }")
+        
+        # query endstop status after all movements done
+        @@printer.send("M400")  
+        @@printer.send("M119")
+
+        # wait for endstop status response
+        begin
+          Timeout::timeout(3) do
+            while not @@printer.endstopstatus
+              sleep 0.1
+            end
+          end
+        rescue Timeout::Error
+          trigger_failure "Measurement failed (Timeout)"
+          @@printer.send("G90")
+          return
+        end
+        
+        if @@printer.endstopstatus[axis] == "L"
+          break
+        else
+          backlash += stepsize.abs
+        end
+      end
+
+      measurements.push(backlash)
+    end
+
+    # calculate median of measurements
+    sorted = measurements.sort
+    mid = (sorted.length - 1) / 2.0
+    median = (sorted[mid.floor] + sorted[mid.ceil]) / 2.0
+
+    # back to absolute positioning
+    @@printer.send("G90")
+
+    # home the axis
+    @@printer.send("G28 #{ axis.to_s.upcase }0")
+    
+    if median < (steps * stepsize.abs)
+      trigger_success median 
+    else
+      trigger_failure "Measurement failed (backlash possibly outside measurement range)"
+    end
+  end
   
   def emergencystop
     @@printjob[:id] = nil
