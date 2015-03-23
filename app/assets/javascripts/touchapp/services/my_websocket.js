@@ -67,7 +67,10 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   
   Service.online = deferred.promise;
   
-  Service.get = function(event, arguments = '') {
+  Service.get = function(event, arguments) {
+    if (typeof arguments == "undefined") {
+        arguments = '';
+    }
     var d = $q.defer();    
 
     //console.log("Fetching Event \"" + event + "\" through WebSocket");
