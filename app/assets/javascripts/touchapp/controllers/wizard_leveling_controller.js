@@ -105,7 +105,7 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
 
   $scope.step9 = function() {
     $scope.step = 9;  
-    MyWebsocket.macro('select_left_extruder');
+    // select left extruder and go to bed center
     MyWebsocket.macro('wizard_leveling_center');        
   };      
   

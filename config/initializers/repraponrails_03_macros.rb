@@ -57,6 +57,8 @@ MACROS = {
   :wizard_leveling_left => [
     "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_left[0], Rails.application.config.leveling_point_left[1] ] ],
   :wizard_leveling_center => [
+    "G1 Z20 F6000",
+    "T0",
     "G1 X%d Y%d Z20 F12000" % [ Rails.application.config.leveling_point_center[0], Rails.application.config.leveling_point_center[1] ],
     "G1 Z0 F6000"],
   :wizard_leveling_exit => [
