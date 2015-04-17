@@ -45,7 +45,7 @@ $brand-primary: #7FFF00;
 
 // override all css styles below here
 body { 
-  padding-top: 330px; 
+  padding-top: 300px; 
   -webkit-user-select: none;
      -moz-user-select: -moz-none;
       -ms-user-select: none;
@@ -102,12 +102,13 @@ textarea {
 
 .header-background {
   background-image: image-url('blurry-autumn-background.jpg');
+  background-size: 1366px 960px;
   background-position: 0px -400px;  
   background-repeat: repeat-x;
-  padding-bottom: 30px;
-  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-top: 10px;
   margin-bottom: 0px;
-
+  line-height: 1.5;
 }
 
 .transparent {
@@ -143,4 +144,11 @@ textarea {
 
 .wizard-title {
   margin-top: 0px;
+}
+
+.wizard-image {
+    display: block;
+    max-height:365px;
+    width: auto;
+    height: auto;
 }
