@@ -36,7 +36,7 @@ class PrintjobController < WebsocketRails::BaseController
       Thread.new do
         p = Printjob.new
         p.name = "Extrusion Calibration (Left Extruder)"
-        p.note = "WARNING: ONLY PRINT WITH ABS PLASTIC (EXTRUSION TEMPERATURE = 260\u00B0C)!"
+        p.note = "NOTICE: Use ABS plastic only (260\u00B0C), nozzle 0.35mm!"
         p.gcodefile = File.open(Rails.application.config.gcode_calibrate_extrusion_left)
         p.save
       end
@@ -45,7 +45,7 @@ class PrintjobController < WebsocketRails::BaseController
       Thread.new do
         p = Printjob.new
         p.name = "Extrusion Calibration (Right Extruder)"
-        p.note = "WARNING: ONLY PRINT WITH ABS PLASTIC (EXTRUSION TEMPERATURE = 260\u00B0C)!"
+        p.note = "NOTICE: Use ABS plastic only (260\u00B0C), nozzle 0.35mm!"
         p.gcodefile = File.open(Rails.application.config.gcode_calibrate_extrusion_right)
         p.save      
       end
@@ -57,7 +57,7 @@ class PrintjobController < WebsocketRails::BaseController
     Thread.new do
       p = Printjob.new
       p.name = "Extruder Offset Calibration"
-      p.note = "WARNING: ONLY PRINT WITH ABS PLASTIC (EXTRUSION TEMPERATURE = 260\u00B0C)!"
+      p.note = "NOTICE: Use ABS plastic only (260\u00B0C), nozzle 0.35mm!"
       p.gcodefile = File.open(Rails.application.config.gcode_calibrate_offset)
       p.save    
     end
