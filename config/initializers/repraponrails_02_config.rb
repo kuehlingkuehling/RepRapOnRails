@@ -94,8 +94,6 @@ RepRapOnRails::Application.configure do
     # print head maintenance position
     config.maintenance_position = [ -29, -30 ]
 
-  end
-
   when "v1.3.1"
 
       # hardware revision
