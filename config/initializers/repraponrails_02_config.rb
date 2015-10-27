@@ -23,7 +23,7 @@ RepRapOnRails::Application.configure do
     config.leveling_point_center = [  71,  90 ]
 
 	  # print head maintenance position
-	  config.maintenance_position = [ 71, -30 ] 
+	  config.maintenance_position = [ -29, -30 ] 
 
   when "v1.1.0"
 
@@ -46,7 +46,7 @@ RepRapOnRails::Application.configure do
 	  config.leveling_point_center = [  71,  90 ]
 
 	  # print head maintenance position
-	  config.maintenance_position = [ 71, -30 ] 
+	  config.maintenance_position = [ -29, -30 ] 
 
   when "v1.2.0"
 
@@ -69,7 +69,7 @@ RepRapOnRails::Application.configure do
     config.leveling_point_center = [  71,  90 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 71, -30 ] 
+    config.maintenance_position = [ -29, -30 ] 
 
   when "v1.3.0"
 
@@ -92,7 +92,7 @@ RepRapOnRails::Application.configure do
     config.leveling_point_center = [  71,  90 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 71, -30 ]
+    config.maintenance_position = [ -29, -30 ]
 
   end
   	
