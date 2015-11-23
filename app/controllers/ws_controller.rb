@@ -15,6 +15,10 @@ class WsController < WebsocketRails::BaseController
     trigger_success Rails.application.config.hostname
   end
 
+  def is_dual_extruder
+    trigger_success Rails.application.config.is_dual_extruder
+  end  
+
   def firmware_version
     trigger_success "Repetier Firmware v" + Settings.firmware_version
   end

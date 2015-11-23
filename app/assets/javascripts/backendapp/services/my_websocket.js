@@ -10,6 +10,7 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
   Service.printjobs = [];
   Service.filamentPresets = [];
   Service.preheatingProfiles = [];
+  Service.isDualExtruder = false;
   Service.eeprom = {};
   var deferred = $q.defer();  
   var dispatcher = new WebSocketRails(WEBSOCKET_URL);
@@ -23,6 +24,11 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
     Service.get('logfile').then(function(data){
       Service.log = data;
     });  
+    Service.get('is_dual_extruder').then(function(data){
+      $timeout(function(){
+        Service.isDualExtruder = data;
+      });
+    });
     Service.get('status').then(function(data){
       console.log(data)
       $timeout(function(){      

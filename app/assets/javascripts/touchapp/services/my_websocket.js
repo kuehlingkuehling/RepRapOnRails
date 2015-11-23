@@ -13,7 +13,8 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   Service.filamentsLoaded = {};
   Service.preheatingProfiles = [];
   Service.preheatingProfile = 0;
-  Service.menuDisabled = false;  
+  Service.menuDisabled = false;
+  Service.isDualExtruder = false;
   Service.eeprom = {};
   var deferred = $q.defer();  
   var dispatcher = new WebSocketRails(WEBSOCKET_URL);
@@ -35,6 +36,11 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
         Service.log = data;
       });
     });  
+    Service.get('is_dual_extruder').then(function(data){
+      $timeout(function(){
+        Service.isDualExtruder = data;
+      });
+    }); 
     Service.get('printjob.all').then(function(data){
       $timeout(function(){      
         Service.printjobs = data;
