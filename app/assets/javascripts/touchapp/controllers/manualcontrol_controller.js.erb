@@ -59,6 +59,13 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
       $scope.disable_buttons = true;      
     }    
   }, true);  
+
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+    if (!$scope.isDualExtruder) {
+      $scope.ext_name = 'left_extruder'
+    } 
+  },true); 
   
 
   $scope.getExtId = function(){

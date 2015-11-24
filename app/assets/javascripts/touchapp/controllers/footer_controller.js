@@ -5,6 +5,10 @@ touchApp.controller('FooterController', function($scope, $location, $timeout, My
     $scope.filaments = MyWebsocket.filamentsLoaded;
   },true);  
 
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  },true);  
+
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
     $scope.preheatingProfile = MyWebsocket.preheatingProfile;
   },true);    

@@ -13,6 +13,13 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
     $scope.filaments_loaded = MyWebsocket.filamentsLoaded;
   }, true);
 
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+    if (!$scope.isDualExtruder) {
+      $scope.extruder = 'left_extruder';
+    }
+  },true);
+
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
     $scope.temp = MyWebsocket.temp;
   }, true);

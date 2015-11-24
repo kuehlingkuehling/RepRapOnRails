@@ -19,8 +19,12 @@ class WsController < WebsocketRails::BaseController
     trigger_success Rails.application.config.is_dual_extruder
   end  
 
-  def firmware_version
-    trigger_success "Repetier Firmware v" + Settings.firmware_version
+  def versions
+    versions = { :firmware_version_compatible => Rails.application.config.arduino_firmware_version,
+                 :firmware_version_installed => "Repetier Firmware v" + Settings.firmware_version,
+                 :hardware_revision => Rails.application.config.hardware_revision,
+                 :software_version => Rails.application.config.software_version}
+    trigger_success versions
   end
 
   def status

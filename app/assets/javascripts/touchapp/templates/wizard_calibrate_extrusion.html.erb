@@ -16,11 +16,11 @@
       <!-- text contents -->
       <div class="col-md-12">
         <p>To precisely calibrate the extrusion multiplier for the slicing software
-          a calibration print is necessary. Select one extruder to add a printjob to the queue:</p>
+          a calibration print is necessary. <span ng-if="isDualExtruder">Select one extruder</span><span ng-if="!isDualExtruder">Use the button</span> to add a printjob to the queue:</p>
         <button type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('left')">
-          <b>Left</b> Extruder Calibration
+          <b ng-if="isDualExtruder">Left </b>Extruder Calibration
         </button>
-        <button type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('right')">
+        <button ng-if="isDualExtruder" type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('right')">
           <b>Right</b> Extruder Calibration
         </button>    
         <br/>

@@ -30,7 +30,11 @@ touchApp.controller('ConfigurationController', function($scope, $location, Commo
   
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
     $scope.preheatingProfile = MyWebsocket.preheatingProfile;
-  },true);      
+  },true);   
+
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  },true);     
 
     
   $scope.setLeft = function(id) {

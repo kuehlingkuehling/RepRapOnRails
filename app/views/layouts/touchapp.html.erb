@@ -89,13 +89,13 @@
         <ul class="nav navbar-nav">
           <li>
             <p class="navbar-text">
-              <b>Left Extruder:</b> <span class="{{ ( temp.left_extruder.target > 0 ) && 'text-danger' }}">{{ temp.left_extruder.temp | number:2 }} / {{ temp.left_extruder.target | number:0 }}</span>
+              <b><span ng-if="isDualExtruder">Left </span>Extruder:</b> <span class="{{ ( temp.left_extruder.target > 0 ) && 'text-danger' }}">{{ temp.left_extruder.temp | number:2 }} / {{ temp.left_extruder.target | number:0 }}</span>
               <br/>
               <small ng-show="filaments.left">{{ filaments.left.name | limitTo:40 }}</small>
               <small ng-show="!filaments.left" class="text-muted">No material loaded</small>
             </p>
           </li>
-          <li>
+          <li ng-if="isDualExtruder">
             <p class="navbar-text">
               <b>Right Extruder:</b> <span class="{{ ( temp.right_extruder.target > 0 ) && 'text-danger' }}">{{ temp.right_extruder.temp | number:2 }} / {{ temp.right_extruder.target | number:0 }}</span>
               <br/>

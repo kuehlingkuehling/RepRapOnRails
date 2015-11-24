@@ -6,6 +6,10 @@ touchApp.controller('WizardCalibrateExtrusionController', function($scope, Commo
   $scope.measurement = 0.5;
   $scope.extrusion_width = 0.5;
 
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  },true);
+
   $scope.calculate = function() {
     $scope.multiplier = ( $scope.extrusion_width / parseFloat($scope.measurement) ).toFixed(2);
   };      

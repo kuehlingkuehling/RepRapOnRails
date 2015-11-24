@@ -38,6 +38,7 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     });  
     Service.get('is_dual_extruder').then(function(data){
       $timeout(function(){
+        console.log("Fetched Dual Extruder state");
         Service.isDualExtruder = data;
       });
     }); 

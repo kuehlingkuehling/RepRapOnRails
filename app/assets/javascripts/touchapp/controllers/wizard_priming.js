@@ -23,7 +23,14 @@ touchApp.controller('WizardPrimingController', function($scope, $location, $time
         $scope.extruder_preheated = false;      
       };
     };
-  }, true);   
+  }, true);  
+
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+    if (!$scope.isDualExtruder) {
+      $scope.extruder = 'left_extruder';
+    }
+  },true); 
     
   // initial commands
   MyWebsocket.psu_on();

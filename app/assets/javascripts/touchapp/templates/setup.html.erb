@@ -31,7 +31,7 @@
     <a href="#/wizard_calibrate_extrusion" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Calibrate Extrusion
     </a>
-    <a href="#/wizard_calibrate_offset" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
+    <a href="#/wizard_calibrate_offset" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}" ng-if="isDualExtruder">
       Calibrate Extruder Offset
     </a> 
     <a href="#/wizard_calibrate_backlash" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
@@ -46,16 +46,16 @@
     <br/>
     <p class="text-right">
       Software Version:<br />
-      <kbd><b><%= Rails.application.config.software_version %></b></kbd>
+      <kbd><b>{{ software_version }}</b></kbd>
     </p>
     <p class="text-right">
       Hardware Revision:<br />
-      <kbd><b><%= Rails.application.config.hardware_revision %></b></kbd>
+      <kbd><b>{{ hardware_revision }}</b></kbd>
     </p>
     <p class="text-right">
       Microcontroller Firmware Version:<br />
-      <kbd><b><%= Rails.application.config.arduino_firmware_version %></b></kbd><br />(compatible)<br />
-      <kbd><b>{{ firmware_version }}</b></kbd><br />(currently installed)
+      <kbd><b>{{ firmware_version_compatible }}</b></kbd> (compatible)<br />
+      <kbd><b>{{ firmware_version_installed }}</b></kbd> (currently installed)
     </p>
 
 <!--    

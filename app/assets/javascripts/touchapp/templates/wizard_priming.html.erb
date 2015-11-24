@@ -16,12 +16,12 @@
       <!-- text step 1 -->
       <div class="col-md-12" ng-show="step == '1'">
         <p><b>Important:</b><br/>
-          Make sure you selected the correct filament settings for each extruder!<br/>
+          Make sure you selected the correct filament settings for <span ng-if="isDualExtruder">each</span><span ng-if="!isDualExtruder">the</span> extruder!<br/>
           See <i>Configuration</i> tab.
         <p>
         <br/>
-        <p>Select your extruder:</p>
-        <div class="btn-group text-center">
+        <p ng-if="isDualExtruder">Select your extruder:</p>
+        <div ng-if="isDualExtruder" class="btn-group text-center">
             <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'left_extruder'">Left</button>
             <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'right_extruder'">Right</button>
         </div>
@@ -45,7 +45,7 @@
 
       <!-- text step 2 -->
       <div class="col-md-12" ng-show="step == '2'">
-        <p>Please wait while the <b>{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
+        <p>Please wait while the <b ng-if="isDualExtruder">{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
         <p>Current/ Target extruder temperature: <b>{{ extruder_temp }} / {{ temp[extruder].target }}°C</b></p>
         <p>When extrusion temperature is reached, manually extrude some filament until a string
           of molten filament comes out of the nozzle (compare with picture!):</p>

@@ -7,6 +7,10 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
   $scope.bed_temp = 0;
   $scope.bed_preheated = false;
 
+  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
+    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  },true);
+
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
     $scope.bed_target = MyWebsocket.preheatingProfile.bed_temp;
     if (typeof $scope.bed_target === 'undefined') {
@@ -29,7 +33,11 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
       if ((($scope.bed_temp > ($scope.bed_target - $scope.deviation)) && ($scope.bed_temp < ($scope.bed_target + $scope.deviation))) || ($scope.bed_target == 0)) {
         $scope.bed_preheated = true;
         if ($scope.step == 2) {
-          $scope.step = 21;
+          if ($scope.isDualExtruder) {
+            $scope.step = 21;  
+          } else {
+            $scope.step = 5;
+          };
         }
       } else {
         $scope.bed_preheated = false;      

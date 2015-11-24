@@ -2,7 +2,7 @@
 
   <!-- Left Extruder -->
   <div class="col-md-4"> 
-    <h4>Left Extruder Filament Profile</h4>
+    <h4><span ng-if="isDualExtruder">Left </span>Extruder Filament Profile</h4>
     <p ng-show="filaments.left">
       <b>{{ filaments.left.name }}</b><br/>
       {{ filaments.left.extrusion_temp }}°C Extrusion Temperature
@@ -13,7 +13,7 @@
   </div>
 
   <!-- Right Extruder -->
-  <div class="col-md-4"> 
+  <div class="col-md-4" ng-if="isDualExtruder"> 
     <h4>Right Extruder Filament Profile</h4>
     <p ng-show="filaments.right">
       <b>{{ filaments.right.name }}</b><br/>
@@ -54,7 +54,7 @@
   </div>
 
   <!-- right extruder buttons -->
-  <div class="col-md-4">
+  <div class="col-md-4" ng-if="isDualExtruder">
     <p>
       <button class="btn btn-primary btn-lg" ng-click="selectRight = true">
         Select
@@ -86,7 +86,7 @@
     <button class="pull-right btn btn-danger btn-lg" ng-click="selectLeft = false">
       Cancel
     </button>
-    <h4>Select Left Extruder Filament Profile</h4>
+    <h4>Select <span ng-if="isDualExtruder">Left </span>Extruder Filament Profile</h4>
     <p ng-show="!pagedFilaments.length">No Filament Profiles configured.</p>
     <table class="table table-striped" ng-show="pagedFilaments.length">
       <thead>
@@ -118,7 +118,7 @@
   </div>
 </div>
 
-<div class="row" ng-show="selectRight">
+<div class="row" ng-show="selectRight" ng-if="isDualExtruder">
   <div class="col-md-12">
     <button class="pull-right btn btn-danger btn-lg" ng-click="selectRight = false">
       Cancel

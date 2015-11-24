@@ -51,8 +51,9 @@ WebsocketRails::EventMap.describe do
   subscribe :resumeprint, :to => WsController, :with_method => :resumeprint 
   subscribe :shutdown, :to => WsController, :with_method => :shutdown  
   subscribe :hostname, :to => WsController, :with_method => :hostname
-  subscribe :firmware_version, :to => WsController, :with_method => :firmware_version
+  subscribe :versions, :to => WsController, :with_method => :versions
   subscribe :logfile, :to => WsController, :with_method => :logfile  
+  subscribe :is_dual_extruder, :to => WsController, :with_method => :is_dual_extruder
   subscribe :status, :to => WsController, :with_method => :status
   subscribe :macro, :to => WsController, :with_method => :macro  
   subscribe :move, :to => WsController, :with_method => :move    
