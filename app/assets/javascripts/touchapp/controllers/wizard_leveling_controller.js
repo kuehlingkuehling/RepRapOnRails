@@ -36,7 +36,7 @@ touchApp.controller('WizardLevelingController', function($scope, $location, $tim
           if ($scope.isDualExtruder) {
             $scope.step = 21;  
           } else {
-            $scope.step = 5;
+            $scope.step5();
           };
         }
       } else {
