@@ -21,7 +21,7 @@ class WsController < WebsocketRails::BaseController
 
   def versions
     versions = { :firmware_version_compatible => Rails.application.config.arduino_firmware_version,
-                 :firmware_version_installed => "Repetier Firmware v" + Settings.firmware_version,
+                 :firmware_version_installed => "Repetier Firmware v" + ( Settings.firmware_version ? Settings.firmware_version : "n/a" ),
                  :hardware_revision => Rails.application.config.hardware_revision,
                  :software_version => Rails.application.config.software_version}
     trigger_success versions
