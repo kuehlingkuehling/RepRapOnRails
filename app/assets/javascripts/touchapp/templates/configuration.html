@@ -54,7 +54,7 @@
   </div>
 
   <!-- right extruder buttons -->
-  <div class="col-md-4" ng-if="isDualExtruder">
+  <div class="col-md-4" ng-show="isDualExtruder">
     <p>
       <button class="btn btn-primary btn-lg" ng-click="selectRight = true">
         Select
@@ -118,7 +118,7 @@
   </div>
 </div>
 
-<div class="row" ng-show="selectRight" ng-if="isDualExtruder">
+<div class="row" ng-show="selectRight" ng-show="isDualExtruder">
   <div class="col-md-12">
     <button class="pull-right btn btn-danger btn-lg" ng-click="selectRight = false">
       Cancel
