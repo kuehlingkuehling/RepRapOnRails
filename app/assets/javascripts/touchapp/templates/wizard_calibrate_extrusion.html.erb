@@ -20,7 +20,7 @@
         <button type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('left')">
           <b ng-if="isDualExtruder">Left </b>Extruder Calibration
         </button>
-        <button ng-if="isDualExtruder" type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('right')">
+        <button ng-show="isDualExtruder" type="button" class="btn btn-default btn-lg" ng-click="generate_printjob('right')">
           <b>Right</b> Extruder Calibration
         </button>    
         <br/>

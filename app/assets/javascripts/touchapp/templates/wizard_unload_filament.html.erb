@@ -18,7 +18,7 @@
         <p>Prior to unloading the filament from an extruder, the nozzle needs to preheat up to
           extrusion temperature.</p>
         <p ng-if="isDualExtruder">Select your extruder:</p>
-        <div  ng-if="isDualExtruder" class="btn-group text-center">
+        <div  ng-show="isDualExtruder" class="btn-group text-center">
             <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'left_extruder'">Left</button>
             <button type="button" class="btn btn-primary btn-lg" ng-model="extruder" btn-radio="'right_extruder'">Right</button>
         </div>
@@ -43,7 +43,7 @@
 
       <!-- text step 2 -->
       <div class="col-md-12" ng-show="step == '2'">
-        <p>Please wait while the <b ng-if="isDualExtruder">{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
+        <p>Please wait while the <b ng-show="isDualExtruder">{{ extruder_name }}</b> extruder is beeing preheated. This may take a couple of minutes.</p>
         <p>Current/ Target extruder temperature: <b>{{ extruder_temp }}/ {{ temp[extruder].target }}°C</b></p>
         <br/>
         <br/>
