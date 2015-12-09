@@ -121,7 +121,7 @@ class RepRapHost
     @port = port unless port.nil?
     @baud = baud unless baud.nil?
     
-    puts 'Connecting to RepRap Controller (' + @port + ')' if @verbose
+    puts "Connecting to RepRap Controller (#{@port})" if @verbose
     @errorcb.call("Could not connect to RepRap Controller - no port defined!") if @errorcb and @port.nil?
     @errorcb.call("Could not connect to RepRap Controller - no baudrate defined!") if @errorcb and @baud.nil?    
     unless @port.nil? or @baud.nil?
