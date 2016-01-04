@@ -139,17 +139,17 @@
     </tr>
     <tr>
       <td>Hardware Revision</td>
-      <td><kbd><%= Rails.application.config.hardware_revision %></kbd></td>         
+      <td><kbd>{{ hardware_revision }}</kbd></td>         
     </tr>
     <tr>
       <td>Software Version</td>
-      <td><kbd><%= Rails.application.config.software_version %></kbd></td>         
+      <td><kbd>{{ software_version }}</kbd></td>         
     </tr>
     <tr>
       <td>Microcontroller Firmware Version</td>
       <td>
-        <kbd><%= Rails.application.config.arduino_firmware_version %></kbd> (compatible)<br />
-        <kbd>{{ firmware_version }}</kbd> (currently installed)
+        <kbd>{{ firmware_version_compatible }}</kbd> (compatible)<br />
+        <kbd>{{ firmware_version_installed }}</kbd> (currently installed)
       </td>         
     </tr>
  </tbody>
