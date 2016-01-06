@@ -88,6 +88,10 @@ class WsController < WebsocketRails::BaseController
       @@printer.send("M80")
       @@printer.send("G28")
       @@printer.send("T0")
+      # workaround for PID parameters not beeing loaded until first activation
+      # of an extruder
+      @@printer.send("T1")
+      @@printer.send("T0")
     end
   end
   
