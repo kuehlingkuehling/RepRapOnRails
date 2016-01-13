@@ -15,6 +15,7 @@ G90                                  ; use absolute coordinates
 G28                                  ; home all axes
 G1 F12000                            ; set move speed to suit XY-axes
 G92 E0                               ; reset extrusion distance
+M107                                 ; disable fan
 
 ; PREHEAT BED AND CHAMBER
 M104 S70 T2                          ; set recirculating air heater to 70 degree celcius target temperature
@@ -45,7 +46,6 @@ M82                                  ; use absolute distances for extrusion
 G90 ; use absolute coordinates
 G92 E0 ; reset extrusion distance
 M82 ; use absolute distances for extrusion
-M106 S255 ; enable fan
 G1 F1440.000 E-1.50000 ; retract
 G1 Z0.850 F12000.000 ; move to next layer (0) and lift
 G92 E0 ; reset extrusion distance
