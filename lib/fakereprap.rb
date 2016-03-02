@@ -54,7 +54,7 @@ class FakeRepRap
     end
 
     if gcode.m?(115)
-      @response_queue.push("FIRMWARE_NAME:Repetier_0.91 FIRMWARE_URL:https://github.com/repetier/Repetier-Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:3 REPETIER_PROTOCOL:2 REPRAPINDUSTRIAL_FIRMWARE_VERSION:0.91-rri1.0.0-02")
+      @response_queue.push("FIRMWARE_NAME:Repetier_0.91 FIRMWARE_URL:https://github.com/repetier/Repetier-Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:3 REPETIER_PROTOCOL:2 KUEHLINGKUEHLING_FIRMWARE_VERSION:0.92-ht500-1.4.0-01")
     end
 
     if gcode.m?(119)
