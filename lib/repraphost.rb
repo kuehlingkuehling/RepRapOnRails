@@ -50,6 +50,7 @@ class RepRapHost
     @current_duration = 0 # calculated duration the print must have elapsed
     @print_duration = 0 # calculated duration the print will take
     @duration_calculated = false
+    @serialport_read_timeout = 0
     
     # hide print time estimate until a sufficient number of G1 commands were taken into account
     # --> to prevent large estimate deviations at the beginning of a print
@@ -128,14 +129,21 @@ class RepRapHost
       begin
         #@printer = FakeRepRap.new(@port, @baud, 8, 1, SerialPort::NONE)
         @printer = SerialPort.new(@port, @baud, 8, 1, SerialPort::NONE)
+        @printer.read_timeout= @serialport_read_timeout
         
+        tries = 0
         while not @online
           # start read loop in seperate thread
           @read_thread.kill if @read_thread
           @read_thread = Thread.new { self.read_loop }
 
           # reset firmware
-          self.reset
+          if tries < 5
+            tries += 1
+            self.reset
+          else
+            raise "Could not connect, Firmware not responding"
+          end
           
           # wait for successful reset
           10.times do
@@ -177,11 +185,15 @@ class RepRapHost
     self.abort_print if @printing
     @online = false
   
-    # setting DTR line high to initiate a firmware reboot
+    # send M112 to initiate a firmware reboot
     puts 'resetting firmware' if @verbose
-    @printer.dtr = 1
-    sleep 1
-    @printer.dtr = 0    
+    begin
+      @printer.write("M112\n") if @printer
+    rescue => e
+      puts "failed to reset firmware:"
+      puts e
+    end
+
   end
   
   def read_loop
@@ -279,7 +291,7 @@ class RepRapHost
 
         # check if firmware capabilities string was sent (response to M115)
         if line.start_with?('FIRMWARE_NAME')
-          result = /REPRAPINDUSTRIAL_FIRMWARE_VERSION:(?<version>\S*)/.match(line)
+          result = /KUEHLINGKUEHLING_FIRMWARE_VERSION:(?<version>\S*)/.match(line)
           if result and result[:version]
             @fwcb.call(result[:version]) if @fwcb
           end
