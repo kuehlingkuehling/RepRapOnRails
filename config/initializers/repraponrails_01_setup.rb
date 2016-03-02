@@ -22,7 +22,7 @@ RepRapOnRails::Application.configure do
   config.gcode_calibrate_offset = File.join(Rails.root, "calibration", "calibration_offset.gcode")  
   
   # location of a new arduino firmware hexfile if available
-  config.arduino_hexfile = File.join( Rails.root, "arduino-firmware-update", "arduino-firmware.hex" )
+  config.arduino_hexfile = File.join( Rails.root, "arduino-firmware-update", "arduino-firmware.bin" )
 
   # RepRapOnRails software version string
   config.software_version = "RepRapOnRails " + File.open(File.join(Rails.root, "VERSION"), &:readline).strip
@@ -54,7 +54,11 @@ end
 # we will upload the new hex file via avrdude and delete the file on success.
 if File.exist?( Rails.application.config.arduino_hexfile )
   log_queue.push({:level => 1, :line => 'New Arduino Firmware update available - installing...'})
-  arduino_log = `udoo-arduino-build --flash-sam #{ Rails.application.config.arduino_hexfile } 2>&1`
+  #arduino_log = `udoo-arduino-build --flash-sam #{ Rails.application.config.arduino_hexfile } 2>&1`
+
+  # Erase flash, write flash with arduino-firmware.bin, verify the write, and set boot from flash
+  arduino_log = `bossac --port=ttymxc3 -U false -e -w -v -b #{ Rails.application.config.arduino_hexfile } -R 2>&1`
+  
   exit_status = $?.to_i
 
   arduino_log.each_line do |logline|
