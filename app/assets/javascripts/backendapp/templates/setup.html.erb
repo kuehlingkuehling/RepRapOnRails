@@ -157,14 +157,14 @@
 <br/><br/>
 
 <h4>Upload Arduino Firmware Update</h4> 
-<p>To update the Arduino Firmware on this printer, please upload the new .hex
-  file through the following form. Next, properly shut down the printer through the
-  touchscreen menu ("Manual Control" &rarr; "Shutdown"). During the next boot the
-  Arduino will be automatically reprogrammed with the new firmware file.</p>
+<p>To update the Arduino Firmware on this printer, please upload the new firmware
+  binary through the following form. Next, properly shut down the printer through the
+  touchscreen menu. During the next boot the Arduino will be automatically reprogrammed
+  with the new firmware file.</p>
 <p>Take a look at the log for a note if the programming was succesful.</p>
 <form role="form">
   <div class="form-group">
-    <label for="file">Select Firmware .hex file</label>
+    <label for="file">Select Firmware file</label>
     <input type="file" ng-model="fileInput" ng-file-select="onFileSelect($files)" id="file">
   </div>
   <p ng-show="uploadProgress > 0">
