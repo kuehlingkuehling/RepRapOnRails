@@ -14,7 +14,7 @@ RepRapOnRails::Application.configure do
   config.hostname = `hostname`.strip
   
   # logfile configuration
-  config.log_max_shown_in_touchapp = 100
+  config.log_max_shown_in_touchapp = 150
   
   # static calibration gcode files
   config.gcode_calibrate_extrusion_left = File.join(Rails.root, "calibration", "calibration_extrusion_left.gcode")
