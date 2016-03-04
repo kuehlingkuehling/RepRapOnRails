@@ -87,8 +87,8 @@
       Cancel
     </button>
     <h4>Select <span ng-if="isDualExtruder">Left </span>Extruder Filament Profile</h4>
-    <p ng-show="!pagedFilaments.length">No Filament Profiles configured.</p>
-    <table class="table table-striped" ng-show="pagedFilaments.length">
+    <p ng-show="!filamentPresets.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="filamentPresets.length">
       <thead>
         <tr>     
           <th style="width:45%;">Filament Profile</th>
@@ -97,7 +97,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="f in pagedFilaments[currentPageRight - 1]">
+        <tr ng-repeat="f in filamentPresets">
           <td>{{ f.name }}</td>
           <td>{{ f.extrusion_temp }}°C</td>
           <td>
@@ -109,11 +109,6 @@
           </td>                  
         </tr>
      </tbody>
-     <tfoot>
-        <td colspan="3">
-            <pagination class="pull-right" total-items="numFilaments" items-per-page="itemsPerPage" page="currentPageRight"></pagination>
-        </td>
-     </tfoot>
     </table>      
   </div>
 </div>
@@ -124,8 +119,8 @@
       Cancel
     </button> 
     <h4>Select Right Extruder Filament Profile</h4>
-    <p ng-show="!pagedFilaments.length">No Filament Profiles configured.</p>
-    <table class="table table-striped" ng-show="pagedFilaments.length">
+    <p ng-show="!filamentPresets.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="filamentPresets.length">
       <thead>
         <tr>     
           <th style="width:45%;">Filament Profile</th>
@@ -134,7 +129,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="f in pagedFilaments[currentPageRight - 1]">
+        <tr ng-repeat="f in filamentPresets">
           <td>{{ f.name }}</td>
           <td>{{ f.extrusion_temp }}°C</td>
           <td>
@@ -146,11 +141,6 @@
           </td>                  
         </tr>
      </tbody>
-     <tfoot>
-        <td colspan="3">
-            <pagination class="pull-right" total-items="numFilaments" items-per-page="itemsPerPage" page="currentPageRight"></pagination>
-        </td>
-     </tfoot>
     </table>      
   </div>
 </div>
@@ -161,8 +151,8 @@
       Cancel
     </button>
     <h4>Select Chamber/Bed Preheating Profile</h4>
-    <p ng-show="!pagedPreheatingProfiles.length">No Filament Profiles configured.</p>
-    <table class="table table-striped" ng-show="pagedPreheatingProfiles.length">
+    <p ng-show="!preheatingProfiles.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="preheatingProfiles.length">
       <thead>
         <tr>     
           <th style="width:45%;">Preheating Profile</th>
@@ -171,7 +161,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="f in pagedPreheatingProfiles[currentPageRight - 1]">
+        <tr ng-repeat="f in preheatingProfiles">
           <td>{{ f.name }}</td>
           <td>
             Chamber: {{ f.chamber_temp }}°C<br/>
@@ -186,11 +176,6 @@
           </td>                  
         </tr>
      </tbody>
-     <tfoot>
-        <td colspan="3">
-            <pagination class="pull-right" total-items="numProfiles" items-per-page="itemsPerPage" page="currentPageRight"></pagination>
-        </td>
-     </tfoot>
     </table>      
   </div>
 </div>

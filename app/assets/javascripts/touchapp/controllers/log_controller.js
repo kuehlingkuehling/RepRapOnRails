@@ -5,9 +5,9 @@ touchApp.controller('LogController', function($scope, MyWebsocket, CommonCode){
   $scope.lastcommand = '';  
   
   // init pagination
-  $scope.itemsPerPage = 13;
-  $scope.currentPage = 1;
-  $scope.pagedLog = [];
+  //$scope.itemsPerPage = 13;
+  //$scope.currentPage = 1;
+  //$scope.pagedLog = [];
 
   // process list to pages  
   $scope.$watch(function(){ return MyWebsocket.log; }, function(newValue){

@@ -5,7 +5,7 @@
       <p ng-show="log_length">
         
           <small>
-            <span ng-repeat="message in log | startFrom: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+            <span ng-repeat="message in log">
             <span class="log-timestamp">
               [{{ message.created_at | date:'yyyy-MM-dd HH:mm:ss' }} UTC]               
             </span> 
@@ -14,11 +14,10 @@
             </span>
             <br/></span>
           </small>
-          
-          <pagination class="pull-right" total-items="log_length" items-per-page="itemsPerPage" page="currentPage"></pagination>
+
       </p>    
   </div>
-  <div class="col-md-4">
+  <div sticky offset="300" style="padding-right:30px;">
     <form role="form" class="pull-right">
       <p>      
         <div class="form-group">

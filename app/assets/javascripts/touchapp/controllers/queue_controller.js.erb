@@ -11,12 +11,6 @@ touchApp.controller('QueueController', function($scope, $modal, MyWebsocket, Com
     }    
   }, true);    
   
-  // init pagination
-  $scope.itemsPerPage = 3;
-  $scope.currentPage = 1;
-  $scope.pagedPrintjobs = [];
-  $scope.numPrintjobs = 0;
-  
   $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
     $scope.print = MyWebsocket.print;
     if (MyWebsocket.print.state == 1) {
@@ -28,9 +22,7 @@ touchApp.controller('QueueController', function($scope, $modal, MyWebsocket, Com
   
 
   $scope.$watch(function(){ return MyWebsocket.printjobs; }, function(){
-    // process list to pages
-    $scope.numPrintjobs = MyWebsocket.printjobs.length;    
-    $scope.pagedPrintjobs = CommonCode.groupToPages(MyWebsocket.printjobs, $scope.itemsPerPage);
+    $scope.printjobs = MyWebsocket.printjobs;
   },true);  
 
 

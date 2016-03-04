@@ -5,17 +5,15 @@ touchApp.controller('ConfigurationController', function($scope, $location, Commo
   $scope.itemsPerPage = 3;
   $scope.currentPageLeft = 1;
   $scope.currentPageRight = 1;  
-  $scope.pagedFilaments = [];
-  $scope.pagedPreheatingProfiles = [];
+  $scope.filamentPresets = [];
+  $scope.preheatingProfiles = [];
   $scope.numFilaments = 0;
   $scope.numProfiles = 0;  
   $scope.filaments = false;
   $scope.preheatingProfile = false;
 
   $scope.$watch(function(){ return MyWebsocket.filamentPresets; }, function(){
-    // process list to pages
-    $scope.numFilaments = MyWebsocket.filamentPresets.length;    
-    $scope.pagedFilaments = CommonCode.groupToPages(MyWebsocket.filamentPresets, $scope.itemsPerPage);
+    $scope.filamentPresets = MyWebsocket.filamentPresets;
   },true); 
   
   $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(){
@@ -23,9 +21,7 @@ touchApp.controller('ConfigurationController', function($scope, $location, Commo
   },true);
 
   $scope.$watch(function(){ return MyWebsocket.preheatingProfiles; }, function(){
-    // process list to pages
-    $scope.numProfiles = MyWebsocket.preheatingProfiles.length;    
-    $scope.pagedPreheatingProfiles = CommonCode.groupToPages(MyWebsocket.preheatingProfiles, $scope.itemsPerPage);
+    $scope.preheatingProfiles = MyWebsocket.preheatingProfiles;
   },true); 
   
   $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){

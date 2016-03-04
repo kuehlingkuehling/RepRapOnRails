@@ -16,7 +16,7 @@
           <th style="width:200px">&nbsp;</th>
         </tr>
       </thead>
-      <tbody ng-show="!pagedPrintjobs.length">
+      <tbody ng-show="!printjobs.length">
         <tr>
           <td></td>
           <td>No printjobs in queue.</td>
@@ -24,8 +24,8 @@
           <td></td>
         </tr>
       </tbody>
-      <tbody ng-show="pagedPrintjobs.length">
-        <tr ng-repeat="p in pagedPrintjobs[currentPage - 1]">
+      <tbody ng-show="printjobs.length">
+        <tr ng-repeat="p in printjobs">
           <td>{{ p.pos }}</td>
           <td>
             <p>{{ p.name }}</p>
@@ -48,15 +48,10 @@
           </td>                  
         </tr>
      </tbody>
-     <tfoot ng-show="pagedPrintjobs.length">
-        <td colspan="6">
-            <pagination class="pull-right" total-items="numPrintjobs" items-per-page="itemsPerPage" page="currentPage"></pagination>
-        </td>
-    </tfoot>
     </table>
 
   </div>
-  <div class="col-md-3">
+  <div  sticky offset="300" style="padding-right:30px;">
     <p class="text-right">
       <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_on()" ng-show="!print.psu_on">
         Build Chamber ON
