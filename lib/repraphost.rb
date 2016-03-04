@@ -127,9 +127,14 @@ class RepRapHost
     @errorcb.call("Could not connect to RepRap Controller - no baudrate defined!") if @errorcb and @baud.nil?    
     unless @port.nil? or @baud.nil?
       begin
-        #@printer = FakeRepRap.new(@port, @baud, 8, 1, SerialPort::NONE)
-        @printer = SerialPort.new(@port, @baud, 8, 1, SerialPort::NONE)
-        @printer.read_timeout= @serialport_read_timeout
+        # export "SIMULATE=true" as ENV variable to the rails server in order to start the simulated
+        # serial link - otherwise connect via serial as usual
+        if ENV['SIMULATE']
+          @printer = FakeRepRap.new(@port, @baud, 8, 1, SerialPort::NONE)
+        else
+          @printer = SerialPort.new(@port, @baud, 8, 1, SerialPort::NONE)
+          @printer.read_timeout= @serialport_read_timeout
+        end
         
         tries = 0
         while not @online

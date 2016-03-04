@@ -24,6 +24,11 @@ class FakeRepRap
     puts "    ***                           ***"
     puts "    *********************************"
     puts " "
+
+    @start_thread = Thread.new{
+      sleep 1 
+      @response_queue.push("start")
+    }
   end
 
   def write(line)
@@ -166,6 +171,22 @@ class FakeRepRap
       @response_queue.push("EPR:2 125 0 Printer active [s]")
       @response_queue.push("EPR:3 129 0.000 Filament printed [m]")
       @response_queue.push("EPR:2 75 115200 Baudrate ")
+
+      # software reset
+      if gcode.m?(112)
+        @response_queue = Array.new
+        @targets = {
+          0 => 0,
+          1 => 0,
+          2 => 0,
+          :B => 0
+        }
+        Thread.kill(@start_thread) if @start_thread
+        @start_thread = Thread.new{
+          sleep 1 
+          @response_queue.push("start")
+        }
+      end
     end
   end
 
@@ -210,4 +231,5 @@ class FakeRepRap
     end
     @dtr = newval
   end
+
 end
