@@ -19,4 +19,5 @@
 //= require angular
 //= require angular-touch
 //= require angular-route
+//= require ./sticky.js
 
