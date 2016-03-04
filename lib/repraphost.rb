@@ -298,8 +298,8 @@ class RepRapHost
         end
 
         # parse for M119 Endstop status response
-        if line.start_with?('x_min')
-          result = /^x_min:(?<x>[LH]).*y_max:(?<y>[LH]).*z_max:(?<z>[LH])/.match(line)
+        if line.start_with?('endstops hit:')
+          result = /^endstops hit: x_min:(?<x>[LH]).*y_max:(?<y>[LH]).*z_max:(?<z>[LH])/.match(line)
           if result and result[:x] and result[:y] and result[:z]
             @endstopstatus = {:x => result[:x],
                               :y => result[:y],
