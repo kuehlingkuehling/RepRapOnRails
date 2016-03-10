@@ -236,13 +236,13 @@ RepRapOnRails::Application.configure do
     # print head maintenance position
     config.maintenance_position = [ 150, -30 ]  
 
-  when "v1.4.0"
+  when "v1.4.1"
 
       # hardware revision
-    config.hardware_revision = "HT500 v1.4.0"
+    config.hardware_revision = "HT500 v1.4.1"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-ht500-1.4.0-01"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-ht500-1.4.1-01"
 
     # is dual extruder?
     config.is_dual_extruder = true
