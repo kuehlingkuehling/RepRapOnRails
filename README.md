@@ -1,17 +1,22 @@
 # RepRapOnRails - a stand-alone, touch-based RepRap host controller
 
-Developed for the Kühling&Kühling RepRap Industrial 3D printer, this is the
+Developed for Kühling&Kühling 3D printers, this is the
 system that provides both its integrated touchscreen interface as well as a backend
-browser-access via ethernet to upload printjobs to the machine.
+browser-access via ethernet to upload printjobs to the machines.
 
-All information about the machine, build instructions and such will be published at
+All information about the machines are available at
 [http://kuehlingkuehling.de](http://kuehlingkuehling.de).
 
 ## Target Hardware
 
+### v1.x.x (RepRap Industrial 3D printers)
 This Ruby-on-Rails app is meant to run on a BeagleBone Black (BBB) minicomputer with Debian
 Wheezy operating system and 10inch touchscreen attached. A RUMBA RepRap microcontroller-
 board is connected via USB and the BBB connects to your local network via wired ethernet.
+
+### v2.x.x (HT500 3D printers)
+This Ruby-on-Rails app is meant to run on a UDOO Quad minicomputer with Ubuntu 14.04 operating
+system and 10inch touchscreen attached. A RADDS electronics shield is mounted on top through the Arduino Pin Headers and the UDOO connects to your local network via wired ethernet.
 
 ## RepRap Microcontroller Firmware
 
@@ -19,8 +24,8 @@ The app makes use of some features only provided by the [Repetier Firmware](http
 
 ## Software Layout
 
-Upon start of the rails server, a persistent serial connection is established to the RepRap
-microcontroller through a RepRapHost instance (`lib/repraphost.rb`).
+Upon start of the rails server, a persistent serial connection is established to the Microcontroller
+through a RepRapHost instance (`lib/repraphost.rb`).
 Additionally two AngularJS web apps are provided:
 
 * http://localhost/touchapp
@@ -28,7 +33,7 @@ Additionally two AngularJS web apps are provided:
   The touchscreen interface  - only accessible from localhost (via chromium browser in
 kiosk mode)
 
-* http://YOUR-BBB-HOSTNAME/
+* http://YOUR-PRINTER-HOSTNAME/
 
   A backend interface available from the network to upload and manage printjobs
 
@@ -83,7 +88,7 @@ Under the umbrella of Kühling&Kühling GbR this software was developed by
 
 ## License
 
-Copyright 2013,2014 Jonas Kühling, Simon Kühling
+Copyright 2013-2016 Jonas Kühling, Simon Kühling
 
 This file is part of RepRapOnRails.
 
