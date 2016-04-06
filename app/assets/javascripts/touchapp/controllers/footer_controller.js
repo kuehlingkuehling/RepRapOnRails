@@ -1,4 +1,4 @@
-touchApp.controller('FooterController', function($scope, $location, $timeout, MyWebsocket){
+touchApp.controller('FooterController', function($scope, $location, $timeout, MyWebsocket, $interval){
   console.log("Running FooterController");
  
   $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(){
@@ -17,4 +17,7 @@ touchApp.controller('FooterController', function($scope, $location, $timeout, My
     $scope.temp = MyWebsocket.temp;
   },true); 
   
+  // show system clock in Footer
+  $scope.clock = Date.now();$interval(function () { $scope.clock = Date.now(); }, 1000);
+
 });
