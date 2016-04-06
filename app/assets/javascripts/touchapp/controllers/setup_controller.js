@@ -12,11 +12,13 @@ touchApp.controller('SetupController', function($scope, MyWebsocket){
   $scope.firmware_version_compatible = 'n/a';
   $scope.hardware_revision = 'n/a';
   $scope.software_version = 'n/a';
+  $scope.ip_address = 'n/a';
   MyWebsocket.get('versions').then(function(data){
     $scope.firmware_version_installed = data.firmware_version_installed;
     $scope.firmware_version_compatible = data.firmware_version_compatible;
     $scope.hardware_revision = data.hardware_revision;
     $scope.software_version = data.software_version;
+    $scope.ip_address = data.ip_address;
   });   
 
   // some wizards are only available on dual extruder setups  

@@ -23,4 +23,11 @@ module UsefulGlobalMethods
     end
   end
 
+  # return ip address of network interface
+  # or nil if not available
+  def self.ip_address
+    ip = Socket.ip_address_list.detect{|intf| intf.ipv4? and !intf.ipv4_loopback? and !intf.ipv4_multicast?}
+    ( ip == nil ? nil : ip.ip_address )
+  end
+
 end
