@@ -129,13 +129,19 @@ class RepRapHost
         #@printer = FakeRepRap.new(@port, @baud, 8, 1, SerialPort::NONE)
         @printer = SerialPort.new(@port, @baud, 8, 1, SerialPort::NONE)
         
+        tries = 0
         while not @online
           # start read loop in seperate thread
           @read_thread.kill if @read_thread
           @read_thread = Thread.new { self.read_loop }
 
           # reset firmware
-          self.reset
+          if tries < 5
+            tries += 1
+            self.reset
+          else
+            raise "Could not connect, Firmware not responding"
+          end
           
           # wait for successful reset
           10.times do
@@ -177,11 +183,14 @@ class RepRapHost
     self.abort_print if @printing
     @online = false
   
-    # setting DTR line high to initiate a firmware reboot
+    # send M112 to initiate a firmware reboot
     puts 'resetting firmware' if @verbose
-    @printer.dtr = 1
-    sleep 1
-    @printer.dtr = 0    
+    begin
+      @printer.write("M112\n") if @printer
+    rescue => e
+      puts "failed to reset firmware:"
+      puts e
+    end    
   end
   
   def read_loop

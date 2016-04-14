@@ -5,8 +5,7 @@ RepRapOnRails::Application.configure do
   # Configuring all the general RepRapOnRails-specific parameters
   
   # Autodetect USB Port on which the RepRap Arduino is connected
-  ports = Dir['/dev/ttyUSB*'] + Dir['/dev/ttyACM*']
-  config.reprap_usb_port = ports.first
+  config.reprap_usb_port = '/dev/ttyO1'
   config.reprap_usb_baudrate = 115200
   
   # get hostname of this machine for showing backend-URL in touchapp
@@ -53,7 +52,7 @@ end
 # we will upload the new hex file via avrdude and delete the file on success.
 if File.exist?( Rails.application.config.arduino_hexfile )
   log_queue.push({:level => 1, :line => 'New Arduino Firmware update available - installing...'})
-  avrdude_log = `avrdude -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i 2>&1`
+  avrdude_log = `sudo avrdude -patmega2560 -cwiring -P#{ Rails.application.config.reprap_usb_port } -b115200 -D -Uflash:w:#{ Rails.application.config.arduino_hexfile }:i 2>&1`
   exit_status = $?.to_i
 
   avrdude_log.each_line do |logline|
