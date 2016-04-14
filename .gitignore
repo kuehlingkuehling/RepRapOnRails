@@ -8,8 +8,9 @@
 /lib/dev-experiments
 /_dev
 
-# do not publish precompiled assets
+# do not publish precompiled assets and specific settings
 /public/assets/
+HARDWARE_REVISION
 
 # do not publish uploaded gcode files
 /gcodefiles/*
