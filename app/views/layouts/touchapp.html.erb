@@ -9,7 +9,7 @@
     <%= javascript_include_tag "application" %>   
     <%= csrf_meta_tags %>
   </head>
-  <body>
+  <body prevent-right-click>
 
     <script type="text/javascript">
       var WEBSOCKET_URL = "<%= request.host_with_port %>/websocket"
