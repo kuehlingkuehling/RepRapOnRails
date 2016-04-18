@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="touchApp">
+<html ng-app="touchApp" prevent-right-click>
   <head>
     <title>RepRapOnRails</title>
     <meta name="description" content="RepRapOnRails">
@@ -9,7 +9,7 @@
     <%= javascript_include_tag "application" %>   
     <%= csrf_meta_tags %>
   </head>
-  <body prevent-right-click>
+  <body>
 
     <script type="text/javascript">
       var WEBSOCKET_URL = "<%= request.host_with_port %>/websocket"
