@@ -214,6 +214,9 @@ class RepRapHost
           self.abort_print if @printing              
           @online = true             
           @onlinecb.call if @onlinecb
+
+          # make sure build chamber is deactivated after a reset
+          self.send("M81\n")        
         end
   
         if line.start_with?('ok') or line.start_with?('wait')
