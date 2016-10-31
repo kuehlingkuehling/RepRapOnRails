@@ -55,7 +55,7 @@ class FakeRepRap
     
 
     if gcode.m?(105)
-      @response_queue.push("T:#{ randstr(19) } /#{ @targets[0] } B:23.89 /#{ @targets[:B] } B@:0 @:0 T0:#{ randstr(19) } /#{ @targets[0] } @0:0 T1:#{ randstr(20) } /#{ @targets[1] } @1:0 T2:#{ randstr(21) } /#{ @targets[2] } @2:0") 
+      @response_queue.push("T:#{ randstr(19) } /#{ @targets[0] } B:#{ randstr(@targets[:B]) } /#{ @targets[:B] } B@:0 @:0 T0:#{ randstr(@targets[0]) } /#{ @targets[0] } @0:0 T1:#{ randstr(20) } /#{ @targets[1] } @1:0 T2:#{ randstr(21) } /#{ @targets[2] } @2:0") 
     end
 
     if gcode.m?(115)
@@ -64,6 +64,10 @@ class FakeRepRap
 
     if gcode.m?(119)
       @response_queue.push("x_min:H y_max:H z_max:L")
+    end  
+
+    if gcode.g?(999)
+      @response_queue.push("RequestPause:Extruder Jam Detected!")
     end    
 
     if gcode.m?(104) and gcode.s and gcode.t
