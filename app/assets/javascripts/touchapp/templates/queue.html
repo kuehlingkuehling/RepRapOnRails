@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-12">
 
     <!-- QUEUE -->
     <table class="table table-striped">
@@ -41,7 +41,7 @@
             <a class="btn btn-primary btn-lg {{ !idle && 'disabled' }}" href="#/print_check/{{ p.id }}">
               print
             </a>
-            <a class="btn btn-danger btn-lg {{ !idle && 'disabled' }}" href="#/print_delete/{{ p.id }}">
+            <a class="btn btn-default btn-lg {{ !idle && 'disabled' }}" href="#/print_delete/{{ p.id }}">
               delete
             </a>
             </p>
@@ -50,23 +50,5 @@
      </tbody>
     </table>
 
-  </div>
-  <div  sticky offset="300" style="padding-right:30px;">
-    <p class="text-right">
-      <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_on()" ng-show="!print.psu_on">
-        Build Chamber ON
-      </button>   
-      <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_off()" ng-show="print.psu_on">
-        Build Chamber OFF
-      </button> 
-    </p>
-    <p class="text-right">
-      <button type="button" class="btn btn-primary btn-lg navigation {{ ( printing || !preheatingProfile || !print.psu_on ) && 'disabled' }}" ng-click="preheat_on()" ng-show="( temp.chamber.target == 0 ) && ( temp.bed.target == 0 )">
-        Preheat Chamber/Bed ON
-      </button> 
-      <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="preheat_off()" ng-show="!(( temp.chamber.target == 0 ) && ( temp.bed.target == 0 ))">
-        Preheat Chamber/Bed OFF
-      </button>
-    </p>
   </div>
 </div>

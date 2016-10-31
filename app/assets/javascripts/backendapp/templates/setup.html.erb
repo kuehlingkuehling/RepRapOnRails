@@ -138,8 +138,8 @@
       <td><kbd>{{ hostname }}</kbd></td>         
     </tr>
     <tr>
-      <td>Hardware Revision</td>
-      <td><kbd>{{ hardware_revision }}</kbd></td>         
+      <td>Model/Hardware Revision</td>
+      <td><kbd>{{ model }} Rev. {{ hardware_revision }}</kbd></td>         
     </tr>
     <tr>
       <td>Software Version</td>
@@ -156,9 +156,9 @@
 </table>
 <br/><br/>
 
-<h4>Upload Arduino Firmware Update</h4> 
-<p>To update the Arduino Firmware on this printer, please upload the new firmware
-  binary through the following form. Next, properly shut down the printer through the
+<h4>Upload Firmware Update</h4> 
+<p>To update the controller Firmware on this machine, please upload the new firmware
+  binary through the following form. Next, properly shut down the machine through the
   touchscreen menu. During the next boot the Arduino will be automatically reprogrammed
   with the new firmware file.</p>
 <p>Take a look at the log for a note if the programming was succesful.</p>
@@ -182,9 +182,8 @@
   Reload List
 </a>
 <h4>EEPROM Editor</h4>
-<p>The RUMBA board inside this printer is an Arduino compatible microcontroller board that controls all processes of the printing process, i.e. the motors, the heating resistors, heating fans and the temperature sensors</p>
-<p>A number of configuration settings for the microcontroller are stored in its integrated EEPROM memory and can be altered at runtime.</p>
-<p><b>ATTENTION: Do not change any of these unless you know exactly what you are doing. Wrong settings can result in severe damage of the printer!</b></p>
+<p>A number of configuration settings for the machine controller are stored in its integrated EEPROM memory and can be altered at runtime.</p>
+<p><b>ATTENTION: Do not change any of these unless you know exactly what you are doing. Wrong settings can result in severe damage of the machine!</b></p>
 
 <table class="table table-striped clearfix">
   <thead>

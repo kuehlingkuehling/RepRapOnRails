@@ -31,9 +31,14 @@ touchApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
       controller: 'PrintDeleteController',
       resolve: resolve_websocket
     }). 
-    when('/out_of_filament/:spool', {
-      templateUrl: '<%= asset_path("touchapp/templates/out_of_filament.html") %>',
-      controller: 'OutOfFilamentController',
+    when('/paused/:message', {
+      templateUrl: '<%= asset_path("touchapp/templates/paused.html") %>',
+      controller: 'PausedController',
+      resolve: resolve_websocket
+    }).
+    when('/autolevel_fail', {
+      templateUrl: '<%= asset_path("touchapp/templates/autolevel_fail.html") %>',
+      controller: 'AutolevelFailController',
       resolve: resolve_websocket
     }).    
     when('/manualcontrol', {

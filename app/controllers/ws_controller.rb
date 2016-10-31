@@ -22,6 +22,7 @@ class WsController < WebsocketRails::BaseController
   def versions
     versions = { :firmware_version_compatible => Rails.application.config.arduino_firmware_version,
                  :firmware_version_installed => "Repetier Firmware " + ( Settings.firmware_version ? ("v" + Settings.firmware_version) : "n/a" ),
+                 :model => Rails.application.config.model_name,
                  :hardware_revision => Rails.application.config.hardware_revision,
                  :software_version => Rails.application.config.software_version,
                  :ip_address => ( UsefulGlobalMethods.ip_address ? UsefulGlobalMethods.ip_address : "n/a" ) }
@@ -71,7 +72,8 @@ class WsController < WebsocketRails::BaseController
     length = message[1]
     @@printer.send("T" + extruder.to_s);        
     @@printer.send("G91");    # relative positioning
-    @@printer.send("G1 E" + length.to_s + " F30");  # extrude <length> mm of filament
+    @@printer.send("G1 X0 Y0 Z0 F30");    # workaround for weird bug in Repetier Firmware (extruder moving during E-only command)
+    @@printer.send("G1 E" + length.to_s + " F80");  # extrude <length> mm of filament
     @@printer.send("G90");    # back to absolute positioning    
   end  
   
@@ -87,6 +89,7 @@ class WsController < WebsocketRails::BaseController
   def psu_on
     if not @@printer.current_params[:psu_on]
       @@printer.send("M80")
+      @@printer.send("M42 P48 S255")  # lights on      
       @@printer.send("G28")
       @@printer.send("T0")
       # workaround for PID parameters not beeing loaded until first activation

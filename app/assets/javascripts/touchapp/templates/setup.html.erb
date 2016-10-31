@@ -1,8 +1,8 @@
-<h3 class="wizard-title">Wizards</h3>
+<!--<h3 class="wizard-title">Wizards</h3>
 <div class="clearfix"><br/></div>
 
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-xs-4">
     <a href="#/wizard_leveling" class="btn btn-primary btn-lg btn-block {{ !idle && 'disabled' }}">
       Print Bed Leveling
     </a>    
@@ -16,8 +16,8 @@
       Prime Extruders
     </a>
   </div>
-  <div class="col-md-4">
- <!-- 
+  <div class="col-xs-4">
+  
     <a href="#/wizard_nozzle_change" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Nozzle Change
     </a>    
@@ -27,7 +27,7 @@
     <button class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Service Air Filter
     </button>    
--->
+
     <a href="#/wizard_calibrate_extrusion" class="btn btn-default btn-lg btn-block {{ !idle && 'disabled' }}">
       Calibrate Extrusion
     </a>
@@ -38,7 +38,8 @@
       Calibrate Axes Backlash
     </a>    
   </div>
-  <div class="col-md-4">
+  -->
+  <div class="col-xs-12">
     <p class="text-right">
       Web Interface URL:<br />
       <kbd><b>{{ backendurl }}</b></kbd>
@@ -53,13 +54,17 @@
       <kbd><b>{{ software_version }}</b></kbd>
     </p>
     <p class="text-right">
-      Hardware Revision:<br />
-      <kbd><b>{{ hardware_revision }}</b></kbd>
+      Model/Hardware Revision:<br />
+      <kbd><b>{{ model }} Rev. {{ hardware_revision }}</b></kbd>
     </p>
     <p class="text-right">
       Microcontroller Firmware Version:<br />
       <kbd><b>{{ firmware_version_compatible }}</b></kbd> (compatible)<br />
       <kbd><b>{{ firmware_version_installed }}</b></kbd> (currently installed)
+    </p>
+    <p class="text-right">
+              System Time:<br/ >
+              <kbd><b>{{ clock | date:'HH:mm'}} UTC</b></kbd>
     </p>
 
 <!--    

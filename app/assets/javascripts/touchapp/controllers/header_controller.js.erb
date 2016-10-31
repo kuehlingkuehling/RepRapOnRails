@@ -54,6 +54,51 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
       controller: 'DialogShutdownController',
       backdrop: 'static'
     });    
-
   };     
+
+  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
+    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 3 ) || ( MyWebsocket.print.state == 5 )) {
+      $scope.printing = true;
+    } else {
+      $scope.printing = false;      
+    }    
+  }, true);    
+  
+  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
+    $scope.print = MyWebsocket.print;
+    if (MyWebsocket.print.state == 1) {
+      $scope.idle = true;
+    } else {
+      $scope.idle = false;      
+    }    
+  }, true);   
+
+  $scope.psu_on = function(){
+    MyWebsocket.psu_on();    
+  };   
+  
+  $scope.psu_off = function(state){
+    // open cooldown dialog
+    var cooldownModal = $modal.open({
+      templateUrl: '<%= asset_path("touchapp/templates/dialog_cooldown.html") %>', // statically included in backendapp.html.erb
+      controller: 'DialogCooldownController',
+      backdrop: 'static'
+    });       
+  };
+
+  $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
+    $scope.preheatingProfile = MyWebsocket.preheatingProfile;
+  },true);  
+
+  $scope.preheat_on = function(){
+    MyWebsocket.preheat($scope.preheatingProfile.chamber_temp, $scope.preheatingProfile.bed_temp);    
+  };  
+
+  $scope.preheat_off = function(){
+    MyWebsocket.preheat(0,0);    
+  };  
+
+  $scope.$watch(function(){ return MyWebsocket.temp; }, function(){
+    $scope.temp = MyWebsocket.temp;
+  },true);     
 });

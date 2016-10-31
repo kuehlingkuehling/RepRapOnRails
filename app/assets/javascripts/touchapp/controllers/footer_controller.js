@@ -16,8 +16,6 @@ touchApp.controller('FooterController', function($scope, $location, $timeout, My
   $scope.$watch(function(){ return MyWebsocket.temp; }, function(){
     $scope.temp = MyWebsocket.temp;
   },true); 
-  
-  // show system clock in Footer
-  $scope.clock = Date.now();$interval(function () { $scope.clock = Date.now(); }, 1000);
+
 
 });

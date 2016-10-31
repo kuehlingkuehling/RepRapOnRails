@@ -25,11 +25,13 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
 
   $scope.firmware_version_installed = 'n/a';
   $scope.firmware_version_compatible = 'n/a';
+  $scope.model = 'n/a';
   $scope.hardware_revision = 'n/a';
   $scope.software_version = 'n/a';
   MyWebsocket.get('versions').then(function(data){
     $scope.firmware_version_installed = data.firmware_version_installed;
     $scope.firmware_version_compatible = data.firmware_version_compatible;
+    $scope.model = data.model;
     $scope.hardware_revision = data.hardware_revision;
     $scope.software_version = data.software_version;
   });  

@@ -20,9 +20,9 @@ Thread.abort_on_exception = true
 class RepRapHost
   attr_accessor :verbose, :echoreadwrite, :temp_deviation, :temp_stabilize_time,
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
-                :pausecb, :resumecb, :endcb, :onlinecb, :reloadcb,
+                :pausecb, :resumecb, :endcb, :onlinecb,
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
-                :psuoncb, :psuoffcb, :eepromcb, :fwcb
+                :psuoncb, :psuoffcb, :eepromcb, :fwcb, :autolevelfailcb
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
               :current_params, :endstopstatus
   alias :online? :online
@@ -95,7 +95,6 @@ class RepRapHost
     @endcb = nil
     @onlinecb = nil
     @pausecb = nil
-    @reloadcb = nil # on filament empty, deliveres :left or :right as parameter
     @abortcb = nil
     @preheatcb = nil # on M109/M190 start
     @preheatedcb = nil # on M109/M190 target temp reached
@@ -104,6 +103,7 @@ class RepRapHost
     @psuoffcb = nil # on M81 power supply off
     @eepromcb = nil # on response lines to M205 (show eeprom values)
     @fwcb = nil # on response to M115 (capabilities string including firmware version)
+    @autolevelfailcb = nil # on G32 autolevel errors
 
     # thread sync
     @printer_lock = Mutex.new
@@ -192,12 +192,17 @@ class RepRapHost
   
     # send M112 to initiate a firmware reboot
     puts 'resetting firmware' if @verbose
-    begin
-      @printer.write("M112\n") if @printer
-    rescue => e
-      puts "failed to reset firmware:"
-      puts e
-    end
+#    begin
+#      @printer.write("M112\n") if @printer
+#    rescue => e
+#      puts "failed to reset firmware:"
+#      puts e
+#    end
+
+    # Toggle KILL pin on Repetier Firmware via shared GPIO (gpio32 <--> pin 40)
+    output = `echo 0 > /sys/class/gpio/gpio32/value`
+    sleep 0.1
+    output = `echo 1 > /sys/class/gpio/gpio32/value`
 
   end
   
@@ -211,8 +216,13 @@ class RepRapHost
         line.lstrip!
 
         if line.start_with?('start')
-          self.abort_print if @printing              
-          @online = true             
+          if @printing
+            abort_on_reset_thread = Thread.new do
+                self.abort_print
+            end
+          end              
+          @online = true   
+          sleep 1 if @emergencystop                 # ensure a minimum pause before reactivating firmware after emergency stop
           @onlinecb.call if @onlinecb
 
           # make sure build chamber is deactivated after a reset
@@ -232,6 +242,28 @@ class RepRapHost
           
           unless line.start_with?('Resend') or line.start_with?('ok') or line.start_with?('ok T:') or line.start_with?('T:')
             @recvcb.call(line) if @recvcb            
+          end
+        end
+
+        if line.start_with?('fatal:G32 leveling failed!')
+          if @printing
+            autolevelfail_abort_thread = Thread.new do
+                self.abort_print
+            end
+          end
+          
+          @autolevelfailcb.call if @autolevelfailcb
+
+          # unlock fatal state with M999
+          self.send("M999\n")
+        end
+
+        # trigger emergency stop if door is opened during print!
+        if line.start_with?('DoorSwitch:open')
+          if @printing
+            emergency_stop_thread = Thread.new do
+                self.emergencystop
+            end
           end
         end
 
@@ -269,16 +301,15 @@ class RepRapHost
           @tempcb.call(@current_params[:current_temps], @current_params[:target_temps]) if @tempcb
         end
        
-        # act on out-of-filament messages
-        if line.start_with?('OutOfFilament')
-          result = /^OutOfFilament:(?<spool>\w+)/.match(line)
-          if @reloadcb and @printing and result
+        # act on firmware initiated pause requests (like filament jam messages)
+        if line.start_with?('RequestPause:')
+          result = /^RequestPause:(?<message>.*)/.match(line)
+          if @printing and result
             # initiate pause_print from within its own thread to keep the read_thread spinning
             # (otherwise the reactivated send_thread will stall, naturally)
-            outoffilament_pause_thread = Thread.new do
-              self.pause_print
+            initiate_pause_thread = Thread.new do
+              self.pause_print(result[:message])
             end
-            @reloadcb.call(result[:spool])
           end
         end
 
@@ -710,7 +741,7 @@ class RepRapHost
     end
   end
   
-  def pause_print
+  def pause_print(message="")
     if @printing and not @paused
       # invoke a thread stop inside @print_thread
       @paused = true 
@@ -718,7 +749,7 @@ class RepRapHost
 
       # deep-copy printer parameters for resume
       @params_for_resume = Marshal.load(Marshal.dump(@current_params))
-      @pausecb.call if @pausecb
+      @pausecb.call(message) if @pausecb
       
       # store last printing position
       self.send("M400")
@@ -803,6 +834,9 @@ class RepRapHost
       # disable extruders
       self.send("M104 S0 T0")
       self.send("M104 S0 T1")
+
+      # disable vacuum
+      self.send("M42 P35 S0")      
           
     else
       @errorcb.call("Cannot abort print - not printing right now!") if @errorcb
@@ -813,8 +847,9 @@ class RepRapHost
     @emergencystop = true
     @emergencystopcb.call if @emergencystopcb
     @emergencystop = false    
-    sleep 1
+
     self.reset
+    
     @current_params[:psu_on] = false
     @psuoffcb.call if @psuoffcb    
   end

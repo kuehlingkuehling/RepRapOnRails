@@ -191,9 +191,13 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
     });
     $location.path( "/print_finished/" + message.id );
   });   
-  printchannel.bind('out_of_filament', function(spool){
-    console.log('Out-of-Filament Message received: ' + spool);
-    $location.path( "/out_of_filament/" + spool );
+  printchannel.bind('pause_message', function(message){
+    console.log('Pause Message received: ' + message);
+    $location.path( "/paused/" + message );
+  });
+  printchannel.bind('autolevel_fail', function(){
+    console.log('Autolevel-Failure Message received');
+    $location.path( "/autolevel_fail/" );
   });     
   
   Service.lockscreen = {locked:false};

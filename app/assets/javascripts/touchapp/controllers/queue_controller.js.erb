@@ -18,41 +18,15 @@ touchApp.controller('QueueController', function($scope, $modal, MyWebsocket, Com
     } else {
       $scope.idle = false;      
     }    
-  }, true);   
-  
+  }, true);    
 
   $scope.$watch(function(){ return MyWebsocket.printjobs; }, function(){
     $scope.printjobs = MyWebsocket.printjobs;
   },true);  
 
 
-  $scope.psu_on = function(){
-    MyWebsocket.psu_on();    
-  };   
+
+
   
-  $scope.psu_off = function(state){
-    // open cooldown dialog
-    var cooldownModal = $modal.open({
-      templateUrl: '<%= asset_path("touchapp/templates/dialog_cooldown.html") %>', // statically included in backendapp.html.erb
-      controller: 'DialogCooldownController',
-      backdrop: 'static'
-    });       
-  };
-
-  $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
-    $scope.preheatingProfile = MyWebsocket.preheatingProfile;
-  },true);  
-
-  $scope.preheat_on = function(){
-    MyWebsocket.preheat($scope.preheatingProfile.chamber_temp, $scope.preheatingProfile.bed_temp);    
-  };  
-
-  $scope.preheat_off = function(){
-    MyWebsocket.preheat(0,0);    
-  };  
-
-  $scope.$watch(function(){ return MyWebsocket.temp; }, function(){
-    $scope.temp = MyWebsocket.temp;
-  },true);   
      
 });

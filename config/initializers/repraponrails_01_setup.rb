@@ -111,12 +111,13 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       end
                         
       # assign pause callback                      
-      printer.pausecb = Proc.new do |line|
+      printer.pausecb = Proc.new do |message|
         WebsocketRails[:print].trigger(:state, printer.status) # paused
-        log_queue.push({:level => 1, :line => 'Printjob paused'})
+        WebsocketRails[:print].trigger(:pause_message, message)
+        log_queue.push({:level => 2, :line => "Printjob paused: #{ message }"})
       end  
-                        
-      # assign pause callback                      
+
+      # assign resume callback                      
       printer.resumecb = Proc.new do |line| 
         WebsocketRails[:print].trigger(:state, printer.status) # printing
         log_queue.push({:level => 1, :line => 'Printjob resumed'})                      
@@ -159,15 +160,13 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
 
         WebsocketRails[:temp].trigger(:new, message)
       end  
-                        
-      # assign out of filament callback                      
-      printer.reloadcb = Proc.new do |spool|
-        if printer.printing?
-          WebsocketRails[:print].trigger(:state, printer.status)  # paused
-          WebsocketRails[:print].trigger(:out_of_filament, spool)
-          log_queue.push({:level => 2, :line => "Out of Filament: Please reload #{ spool } spool!"})
-        end
-      end   
+
+      # assign autolevel failure callback                      
+      printer.autolevelfailcb = Proc.new do
+        WebsocketRails[:print].trigger(:state, printer.status)  # abort
+        WebsocketRails[:print].trigger(:autolevel_fail)
+        log_queue.push({:level => 2, :line => "Autolevel Procedure Failed: Please check and try again!"})
+      end 
 
       # assign preheating start callback                      
       printer.preheatcb = Proc.new do |line|

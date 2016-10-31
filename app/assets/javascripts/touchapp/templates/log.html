@@ -1,6 +1,51 @@
 <div class="row">
-  <div class="col-md-8">
-    
+  <div class="col-md-12" >
+<div class="text-center" style="padding-bottom: 10px; background-color: #fff">
+    <form role="form">
+      <p>      
+        <div class="form-group">
+          <div class="input-group" style="margin: 0 auto">
+            <input type="text" ng-model="gcode" class="form-control input-lg" id="gcode" placeholder="Enter GCODE commands" style="width:280px;">&nbsp;
+            <button type="submit" ng-click="send()" class="btn btn-lg btn-primary keypad">Send</button>&nbsp;
+            <button ng-click="backspace()" class="btn btn-lg btn-default keypad">&larr;</button>
+          </div>
+        </div>
+      </p>
+      <p>
+        <button ng-click="add('7')" class="btn btn-lg btn-default keypad">7</button>
+        <button ng-click="add('8')" class="btn btn-lg btn-default keypad">8</button>
+        <button ng-click="add('9')" class="btn btn-lg btn-default keypad">9</button>
+        <button ng-click="add('G')" class="btn btn-lg btn-info keypad">G</button>
+        <button ng-click="add('F')" class="btn btn-lg btn-warning keypad">F</button>      
+        <button ng-click="add('X')" class="btn btn-lg btn-warning keypad">X</button>
+      </p>
+      <p>
+        <button ng-click="add('4')" class="btn btn-lg btn-default keypad">4</button>
+        <button ng-click="add('5')" class="btn btn-lg btn-default keypad">5</button>
+        <button ng-click="add('6')" class="btn btn-lg btn-default keypad">6</button>
+        <button ng-click="add('M')" class="btn btn-lg btn-info keypad">M</button>
+        <button ng-click="add('P')" class="btn btn-lg btn-warning keypad">P</button>   
+        <button ng-click="add('Y')" class="btn btn-lg btn-warning keypad">Y</button>
+      </p>
+      <p>
+        <button ng-click="add('1')" class="btn btn-lg btn-default keypad">1</button>
+        <button ng-click="add('2')" class="btn btn-lg btn-default keypad">2</button>
+        <button ng-click="add('3')" class="btn btn-lg btn-default keypad">3</button>
+        <button ng-click="last()" class="btn btn-lg btn-default keypad">last</button>        
+        <button ng-click="add('S')" class="btn btn-lg btn-warning keypad">S</button>         
+        <button ng-click="add('Z')" class="btn btn-lg btn-warning keypad">Z</button>
+      </p>
+      <p>
+        <button ng-click="add('-')" class="btn btn-lg btn-default keypad">-</button>
+        <button ng-click="add('0')" class="btn btn-lg btn-default keypad">0</button>
+        <button ng-click="add('.')" class="btn btn-lg btn-default keypad">.</button>
+        <button ng-click="add(' ')" class="btn btn-lg btn-default keypad">_</button>        
+        <button ng-click="add('T')" class="btn btn-lg btn-warning keypad">T</button>         
+        <button ng-click="add('E')" class="btn btn-lg btn-warning keypad">E</button>      
+      </p>
+ 
+    </form>  
+  </div>    
     <h3 ng-show="log_length == 0">No messages recorded yet.</h3>
       <p ng-show="log_length">
         
@@ -17,56 +62,5 @@
 
       </p>    
   </div>
-  <div sticky offset="300" style="padding-right:30px;">
-    <form role="form" class="pull-right">
-      <p>      
-        <div class="form-group">
-          <div class="input-group">
-            <input type="text" ng-model="gcode" class="form-control input-lg" id="gcode" placeholder="Enter GCODE commands" style="width:280px;">&nbsp;
-            <button type="submit" ng-click="send()" class="btn btn-lg btn-primary keypad">Send</button>
-          </div>
-        </div>
-      </p>
-      <p>
-        <button ng-click="add('G')" class="btn btn-lg btn-info keypad">G</button>
-        <button ng-click="add('M')" class="btn btn-lg btn-info keypad">M</button>
-        <button ng-click="last()" class="btn btn-lg btn-default keypad">last</button>        
-        <button ng-click="add('F')" class="btn btn-lg btn-warning keypad">F</button>      
-        <button ng-click="add('X')" class="btn btn-lg btn-warning keypad">X</button>        
-      </p>
-      <p>
-        <button ng-click="add('1')" class="btn btn-lg btn-default keypad">1</button>
-        <button ng-click="add('2')" class="btn btn-lg btn-default keypad">2</button>
-        <button ng-click="add('3')" class="btn btn-lg btn-default keypad">3</button>
-        <button ng-click="add('P')" class="btn btn-lg btn-warning keypad">P</button>   
-        <button ng-click="add('Y')" class="btn btn-lg btn-warning keypad">Y</button>        
-      </p>
-      <p>
-        <button ng-click="add('4')" class="btn btn-lg btn-default keypad">4</button>
-        <button ng-click="add('5')" class="btn btn-lg btn-default keypad">5</button>
-        <button ng-click="add('6')" class="btn btn-lg btn-default keypad">6</button>
-        <button ng-click="add('S')" class="btn btn-lg btn-warning keypad">S</button>         
-        <button ng-click="add('Z')" class="btn btn-lg btn-warning keypad">Z</button>
-      </p>
-      <p>
-        <button ng-click="add('7')" class="btn btn-lg btn-default keypad">7</button>
-        <button ng-click="add('8')" class="btn btn-lg btn-default keypad">8</button>
-        <button ng-click="add('9')" class="btn btn-lg btn-default keypad">9</button>
-        <button ng-click="add('T')" class="btn btn-lg btn-warning keypad">T</button>         
-        <button ng-click="add('E')" class="btn btn-lg btn-warning keypad">E</button>
-      </p>
-      <p>
-        <button ng-click="add('-')" class="btn btn-lg btn-default keypad">-</button>
-        <button ng-click="add('0')" class="btn btn-lg btn-default keypad">0</button>
-        <button ng-click="add('.')" class="btn btn-lg btn-default keypad">.</button>
-        <button ng-click="add(' ')" class="btn btn-lg btn-default keypad">_</button>        
-        <button ng-click="backspace()" class="btn btn-lg btn-default keypad">&larr;</button>      
-      </p>
- 
-    </form>  
-
-
-
-    
-  </div>
+  
 </div>
