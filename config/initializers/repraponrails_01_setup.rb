@@ -181,6 +181,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       # assign emergency stop callback
       printer.emergencystopcb = Proc.new do |line| 
         WebsocketRails[:print].trigger(:state, printer.status)                          
+        WebsocketRails[:print].trigger(:emergency_stop)  
         log_queue.push({:level => 2, :line => "Emergency Stop triggered!"})
       end  
 

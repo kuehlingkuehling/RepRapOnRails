@@ -222,7 +222,6 @@ class RepRapHost
             end
           end              
           @online = true   
-          sleep 1 if @emergencystop                 # ensure a minimum pause before reactivating firmware after emergency stop
           @onlinecb.call if @onlinecb
 
           # make sure build chamber is deactivated after a reset
@@ -844,14 +843,16 @@ class RepRapHost
   end
 
   def emergencystop
-    @emergencystop = true
-    @emergencystopcb.call if @emergencystopcb
-    @emergencystop = false    
+    if not @emergencystop
+      @emergencystop = true
+      @emergencystopcb.call if @emergencystopcb
+      @emergencystop = false    
 
-    self.reset
-    
-    @current_params[:psu_on] = false
-    @psuoffcb.call if @psuoffcb    
+      self.reset
+      
+      @current_params[:psu_on] = false
+      @psuoffcb.call if @psuoffcb
+    end
   end
 
   def status

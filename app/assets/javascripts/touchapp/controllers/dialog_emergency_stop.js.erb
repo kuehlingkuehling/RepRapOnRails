@@ -1,0 +1,8 @@
+touchApp.controller('DialogEmergencyStopController', function($scope, $timeout, $modalInstance, CommonCode, MyWebsocket){
+  console.log("Running DialogEmergencyStopController");  
+
+  $scope.continue = function() {
+    $modalInstance.close();
+  };
+
+});

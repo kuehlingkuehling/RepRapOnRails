@@ -1,4 +1,4 @@
-touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
+touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope, $modal) {
   var Service = {};  
   Service.log = [];
   Service.print = {
@@ -198,7 +198,16 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope) {
   printchannel.bind('autolevel_fail', function(){
     console.log('Autolevel-Failure Message received');
     $location.path( "/autolevel_fail/" );
-  });     
+  }); 
+  printchannel.bind('emergency_stop', function(){
+    console.log('Emergency Stop Message received');
+    var shutdownModal = $modal.open({
+      templateUrl: '<%= asset_path("touchapp/templates/dialog_emergency_stop.html") %>', 
+      controller: 'DialogEmergencyStopController',
+      backdrop: 'static'
+    }); 
+  }); 
+
   
   Service.lockscreen = {locked:false};
   lockscreenchannel = dispatcher.subscribe('lockscreen');
