@@ -198,6 +198,21 @@ class FakeRepRap
     ( val + rand() ).round(2)
   end
 
+  def reset
+       @response_queue = Array.new
+        @targets = {
+          0 => 0,
+          1 => 0,
+          2 => 0,
+          :B => 0
+        }
+        Thread.kill(@start_thread) if @start_thread
+        @start_thread = Thread.new{
+          sleep 1 
+          @response_queue.push("start")
+        }
+  end
+
   def readline 
     count = 0
     while @response_queue.empty?
