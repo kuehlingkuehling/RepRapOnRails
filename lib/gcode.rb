@@ -25,15 +25,15 @@ class Gcode
     line.sub!(/^[MTG]\d+\s*/, "")
 
     # scan for coordinates
-    @x = line.scan(/X(\d+(\.\d+)?)/).first
-    @y = line.scan(/Y(\d+(\.\d+)?)/).first
-    @z = line.scan(/Z(\d+(\.\d+)?)/).first
-    @e = line.scan(/E(\d+(\.\d+)?)/).first
+    @x = line.scan(/X([-]?\d+(\.\d+)?)/).first
+    @y = line.scan(/Y([-]?\d+(\.\d+)?)/).first
+    @z = line.scan(/Z([-]?\d+(\.\d+)?)/).first
+    @e = line.scan(/E([-]?\d+(\.\d+)?)/).first
 
     # scan for additional parameters
-    @f = line.scan(/F(\d+(\.\d+)?)/).first
-    @p = line.scan(/P(\d+(\.\d+)?)/).first
-    @s = line.scan(/S(\d+(\.\d+)?)/).first
+    @f = line.scan(/F([-]?\d+(\.\d+)?)/).first
+    @p = line.scan(/P([-]?\d+(\.\d+)?)/).first
+    @s = line.scan(/S([-]?\d+(\.\d+)?)/).first
     @t = line.scan(/T(\d+(\.\d+)?)/).first
 
 
