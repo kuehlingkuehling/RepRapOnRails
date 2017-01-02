@@ -22,7 +22,7 @@ class RepRapHost
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb,
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
-                :psuoncb, :psuoffcb, :eepromcb, :fwcb, :autolevelfailcb
+                :psuoncb, :psuoffcb, :eepromcb, :fwcb, :autolevelfailcb, :maintenance_position
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
               :current_params, :endstopstatus
   alias :online? :online
@@ -51,7 +51,7 @@ class RepRapHost
     @print_duration = 0 # calculated duration the print will take
     @duration_calculated = false
     @serialport_read_timeout = 0
-    
+
     # hide print time estimate until a sufficient number of G1 commands were taken into account
     # --> to prevent large estimate deviations at the beginning of a print
     @g1_to_skip_for_time_estimate = 30               
@@ -61,6 +61,11 @@ class RepRapHost
     @temp_deviation = 2           # in +/- °C
     @temp_update_interval = 1     # in sec
     @temp_stabilize_time = 3      # in sec, temp needs to stay withing deviation for this time
+
+    @maintenance_position = { :x => 0,
+                              :y => 0,
+                              :z => 10000 }  # just a large number in case this value is not set
+                                             # during initialization (it should!)
     
     # current parameters of printer 
     @current_params = Hash.new   
@@ -754,12 +759,12 @@ class RepRapHost
       self.send("M400")
       self.send("M401")
 
-      # move print bed away from nozzle, print head to [0,0] position,
-      #  and turn off both extruders, bed and chamber stay untouched
-      self.send("G1 Z10000 F12000.0")
-      self.send("G1 X0 Y0 F12000.0")
+      # move print head away from object, print head to maintenance position,
+      #  and turn off extruders, bed and chamber stay untouched
+      self.send("G1 Z#{@maintenance_position[:z]} F12000.0")
+      self.send("G1 X#{@maintenance_position[:x]} Y#{@maintenance_position[:y]} F12000.0")
       self.send("M104 S0 T0")
-      self.send("M104 S0 T1")            
+      self.send("M104 S0 T1")
     else
       errorcb.call("Nothing to pause, printer isn't printing right now!") if @errorcb
     end

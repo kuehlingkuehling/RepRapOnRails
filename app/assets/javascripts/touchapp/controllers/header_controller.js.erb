@@ -39,7 +39,6 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
   
   $scope.pauseprint = function() {
     MyWebsocket.pauseprint();    
-    MyWebsocket.macro("maintenance_position");    
   };    
   
   $scope.resumeprint = function() {

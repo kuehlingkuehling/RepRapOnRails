@@ -1,6 +1,9 @@
 RepRapOnRails::Application.configure do
   # Configuring all the hardware revision specific parameters
 
+  # Get hardware revision string to define which machine specific config set to load
+  config.hardware_revision_number = File.open(File.join(Rails.root, "HARDWARE_REVISION"), &:readline).strip
+  
   case config.hardware_revision_number
   
   when "vp75-op-1.0.0"
@@ -29,7 +32,7 @@ RepRapOnRails::Application.configure do
     config.print_bed_zero  = [ 0, 0 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 0, -200 ]
+    config.maintenance_position = [ 0, -200, 600 ]
 
   when "vp75-1.0.0"
 
@@ -56,7 +59,7 @@ RepRapOnRails::Application.configure do
     config.print_bed_zero  = [ 0, 0 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 0, -200 ]
+    config.maintenance_position = [ 0, -200, 600 ]
 
   end
 
