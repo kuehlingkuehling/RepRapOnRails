@@ -5,21 +5,20 @@
       <!-- header line -->
       <div class="col-md-12">
         <button type="button" class="pull-right btn btn-danger {{ calibrating && 'disabled' }} btn-lg navigation" ng-click="cancel()">
-          Cancel
+          Close
         </button>  
         <h3 class="wizard-title">
-          Calibrate Axes Backlash
+          Measure Axes Backlash
         </h3>
         <br/>&nbsp;
       </div>
 
       <!-- text contents -->
       <div class="col-md-12">
-        <p>One factor strongly affecting the dimensional accuracy of printed parts is mechanical axes backlash.
-           The printer uses internal algorithms to precisely compensate the effects of X- and Y-axis
-           backlash.</p>   
-        <p>This wizard provides a fully automatic measurement routine to calibrate the backlash compensation system.</p>
-        <p><b>Once started, the calibration cannot be interrupted. It may take several minutes to finish!</b></p>
+        <p>One factor strongly affecting the dimensional accuracy of printed parts is mechanical axes backlash.</p>   
+        <p>This wizard provides a fully automatic measurement routine to precisely determine the effective X- and Y-axis
+           backlash. These values can be valuable information for service or fault diagnosis.</p>
+        <p><b>Once started, the measurement cannot be interrupted. It may take several minutes to finish!</b></p>
         <br/>
       </div>
       <div class="col-md-12" ng-show="!config_loaded">
@@ -27,7 +26,7 @@
       </div>
       <div class="col-md-12">
         <button type="button" class="pull-right btn btn-primary {{ calibrating && 'disabled' }} btn-lg" ng-click="start_calibration()" ng-show="(config_loaded && !calibrating)">
-          Start Calibration
+          Start Measurement
         </button>
         <button type="button" class="pull-right btn btn-primary btn-lg" ng-show="error_message || done" ng-click="ok()">
           Quit
@@ -72,7 +71,7 @@
             <i class="fa fa-arrow-right" ng-show="(is_saving && !done)"></i>
             <i class="fa fa-check" ng-show="done"></i>
           </td>
-          <td>Updating backlash compensation...</td>
+          <td>Cleaning up...</td>
         </tr>
         <tr ng-show="done" class="success">
           <td class="text-center">

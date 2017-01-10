@@ -31,15 +31,11 @@ touchApp.controller('WizardCalibrateBacklashController', function($scope, Common
   }, true); 
   
   $scope.start_calibration = function() {
-    console.log("starting calibration");
+    console.log("starting measurements");
     $scope.calibrating = true;
     // set extruder 2 offset values to zero
     MyWebsocket.setEEPROM(331, $scope.eeprom[331].type, 0); // Ext2 X Offset
     MyWebsocket.setEEPROM(335, $scope.eeprom[335].type, 0); // Ext2 Y Offset  
-
-    // set backlash calibration to zero
-    MyWebsocket.setEEPROM(157, $scope.eeprom[157].type, $scope.backlash_x); // X Backlash
-    MyWebsocket.setEEPROM(161, $scope.eeprom[161].type, $scope.backlash_y); // Y Backlash              
 
     // start calibration sequence
     MyWebsocket.macro('home_all');    
@@ -74,10 +70,7 @@ touchApp.controller('WizardCalibrateBacklashController', function($scope, Common
   
   $scope.save = function() {
     $scope.is_saving = true;
-    // save measured backlash values to EEPROM
-    MyWebsocket.setEEPROM(157, $scope.eeprom[157].type, $scope.backlash_x); // X Backlash
-    MyWebsocket.setEEPROM(161, $scope.eeprom[161].type, $scope.backlash_y); // Y Backlash
-
+    
     // set extruder 2 offset values again in EEPROM
     MyWebsocket.setEEPROM(331, $scope.eeprom[331].type, $scope.extr2_x_offset); // Ext2 X Offset
     MyWebsocket.setEEPROM(335, $scope.eeprom[335].type, $scope.extr2_y_offset); // Ext2 Y Offset     
@@ -88,10 +81,7 @@ touchApp.controller('WizardCalibrateBacklashController', function($scope, Common
   
   $scope.reset = function() {
     if ($scope.config_loaded) {
-      // save measured backlash values to EEPROM
-      MyWebsocket.setEEPROM(157, $scope.eeprom[157].type, $scope.backlash_x_backup); // X Backlash
-      MyWebsocket.setEEPROM(161, $scope.eeprom[161].type, $scope.backlash_y_backup); // Y Backlash
-
+      
       // set extruder 2 offset values again in EEPROM
       MyWebsocket.setEEPROM(331, $scope.eeprom[331].type, $scope.extr2_x_offset); // Ext2 X Offset
       MyWebsocket.setEEPROM(335, $scope.eeprom[335].type, $scope.extr2_y_offset); // Ext2 Y Offset    
