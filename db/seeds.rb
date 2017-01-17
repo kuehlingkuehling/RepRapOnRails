@@ -7,12 +7,12 @@
 #   Mayor.create(:name => 'Emanuel', :city => cities.first)
 
 Filament.create(
-  :name => "K\u00fchling\u0026K\u00fchling ABS snow-white",
-  :extrusion_temp => 265
+  :name => "Polymaker PC-Max white",
+  :extrusion_temp => 280
 )
 
 PreheatingProfile.create(
-  :name => "Preheating for ABS",
-  :chamber_temp => 70,
+  :name => "Preheating for PC",
+  :chamber_temp => 40,
   :bed_temp => 100
 )
