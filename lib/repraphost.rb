@@ -22,7 +22,8 @@ class RepRapHost
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
                 :pausecb, :resumecb, :endcb, :onlinecb,
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
-                :psuoncb, :psuoffcb, :eepromcb, :fwcb, :autolevelfailcb, :maintenance_position
+                :psuoncb, :psuoffcb, :eepromcb, :fwcb, :autolevelfailcb, :doorcb,
+                :maintenance_position
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
               :current_params, :endstopstatus
   alias :online? :online
@@ -109,6 +110,7 @@ class RepRapHost
     @eepromcb = nil # on response lines to M205 (show eeprom values)
     @fwcb = nil # on response to M115 (capabilities string including firmware version)
     @autolevelfailcb = nil # on G32 autolevel errors
+    @doorcb = nil # on DoorSwitch open/close info from firmware
 
     # thread sync
     @printer_lock = Mutex.new
@@ -262,14 +264,13 @@ class RepRapHost
           self.send("M999\n")
         end
 
-        # trigger emergency stop if door is opened during print!
+        # trigger callback if door is opened
         if line.start_with?('DoorSwitch:open')
-          if @printing
-            emergency_stop_thread = Thread.new do
-                self.emergencystop
-            end
-          end
+          @doorcb.call(:open) if @doorcb
+        elsif line.start_with?('DoorSwitch:closed')
+          @doorcb.call(:closed) if @doorcb
         end
+
 
         # Temperature parsing and callback
         if line.start_with?('ok T:') or line.start_with?('T:')

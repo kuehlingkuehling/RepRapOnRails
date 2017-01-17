@@ -204,6 +204,19 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
         Settings.firmware_version = version
       end
 
+      # assign Door Switch status callback
+      printer.doorcb = Proc.new do |status|
+        if status == :open
+          log_queue.push({:level => 1, :line => "Door opened"})
+        elsif status == :closed
+          log_queue.push({:level => 1, :line => "Door closed"})
+        end
+        #
+        # TODO: what action?
+        #
+        # status is either :open or :closed
+      end
+
 
       # debugging in development environment
       if Rails.env.development?
