@@ -16,7 +16,7 @@ class BackendappController < ApplicationController
     @lines.each do |l|
       logfile += "[#{l.created_at.utc.to_s}] (#{l.level}) #{l.line}\n"
     end    
-    send_data logfile, :filename => "RepRapIndustrial_logfile.txt"
+    send_data logfile, :filename => "RepRapOnRails.log"
   end
   
   def upload
