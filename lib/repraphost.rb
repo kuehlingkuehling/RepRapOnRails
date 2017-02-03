@@ -194,7 +194,10 @@ class RepRapHost
   end
   
   def reset
-    self.abort_print if @printing
+    initiate_abort_thread = Thread.new do
+      self.abort_print if @printing
+    end    
+    
     @online = false
   
     # send M112 to initiate a firmware reboot
