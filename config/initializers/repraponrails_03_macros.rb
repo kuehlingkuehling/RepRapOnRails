@@ -24,7 +24,11 @@ MACROS = {
     "G91"],
   :absolute_positioning => [
     "G90"],
-  :psu_on => [],                  # deprecated - now implemented in ws_controller.rb
+  :psu_on => [
+    "M80",
+    "M42 P48 S255",  # lights on      
+    "G28",
+    "T0"],
   :psu_off => [
     "M104 S0 T0",    
     "M104 S0 T1",

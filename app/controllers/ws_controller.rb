@@ -88,14 +88,9 @@ class WsController < WebsocketRails::BaseController
 
   def psu_on
     if not @@printer.current_params[:psu_on]
-      @@printer.send("M80")
-      @@printer.send("M42 P48 S255")  # lights on      
-      @@printer.send("G28")
-      @@printer.send("T0")
-      # workaround for PID parameters not beeing loaded until first activation
-      # of an extruder
-      @@printer.send("T1")
-      @@printer.send("T0")
+      MACROS[:psu_on].each do |line|
+        @@printer.send(line)
+      end
     end
   end
   
