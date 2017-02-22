@@ -2,7 +2,7 @@ MACROS = {
   :cooldown => [
     "M104 S0 T0",
     "M104 S0 T1",
-    "M104 S1 T2",
+    "M104 S0 T2",
     "M140 S0"],
   :before_shutdown => [
     "M81"],
