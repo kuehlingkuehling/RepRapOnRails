@@ -38,7 +38,12 @@ M83                                  ; use relative distances for extrusion
 M104 S265 T1 ; set right extruder temperature
 G1 X105 Y-20 F12000                  ; move print head 5mm right
 M109 S265 T1 ; wait for right extruder target temperature to be reached
-G4 S15                                ; wait 10 seconds
+G4 S10                               ; wait 6x10=60 seconds
+G4 S10
+G4 S10
+G4 S10
+G4 S10
+G4 S10
 G1 F30 E7.00000                      ; prime extruder 7mm
 G1 F1440.000 E-1.5    ; retract extruder
 G1 Y-5 F12000                        ; move print head back over printbed edge
@@ -61,7 +66,12 @@ M83                                  ; use relative distances for extrusion
 M104 S265 T0 ; set left extruder temperature
 G1 X95 Y-20 F12000                   ; move print head 5mm left
 M109 S265 T0 ; wait for left extruder target temperature to be reached
-G4 S15                                ; wait 10 seconds
+G4 S10                               ; wait 6x10=60 seconds
+G4 S10
+G4 S10
+G4 S10
+G4 S10
+G4 S10
 G1 F30 E7.00000                      ; prime extruder 7mm
 G1 F1440.000 E-1.5    ; retract extruder
 G1 Y-5 F12000                        ; move print head back over printbed edge
