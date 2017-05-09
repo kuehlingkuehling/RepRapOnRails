@@ -11,10 +11,10 @@ class BackendappController < ApplicationController
   end
   
   def logfile
-    @lines = LogEntry.order("created_at DESC").limit(20000)
+    @lines = LogEntry.order("id DESC").limit(20000)
     logfile = ""
     @lines.each do |l|
-      logfile += "[#{l.created_at.utc.to_s}] (#{l.level}) #{l.line}\n"
+      logfile += "#{l.id}\t[#{l.created_at.utc.to_s}]\t(#{l.level})\t#{l.line}\n"
     end    
     timestamp = Time.now.strftime('%Y-%m-%d_%H-%M-%S')
     send_data logfile, :filename => "RepRapOnRails_#{timestamp}.log"
