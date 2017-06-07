@@ -25,8 +25,8 @@ MACROS = {
   :absolute_positioning => [
     "G90"],
   :psu_on => [
-    "M80",
-    "M42 P48 S255",  # lights on      
+    "M42 P48 S255",  # lights on
+    "M80",          
     "G28",
     "T0"],
   :psu_off => [
