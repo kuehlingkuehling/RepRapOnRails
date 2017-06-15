@@ -20,7 +20,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#d9534f"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.0.0-02"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.0.0-03"
 
     # is dual extruder?
     config.is_dual_extruder = false
