@@ -308,6 +308,11 @@ class RepRapHost
 
           @tempcb.call(@current_params[:current_temps], @current_params[:target_temps]) if @tempcb
         end
+
+        if line.start_with?('important:Extruder jam detected')
+          # unlock jam state with M513 (mark all extruders unjammed)
+          self.send("M513\n")
+        end
        
         # act on firmware initiated pause requests (like filament jam messages)
         if line.start_with?('RequestPause:')
