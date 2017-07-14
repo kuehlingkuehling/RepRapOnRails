@@ -828,7 +828,7 @@ class RepRapHost
   
   def abort_print
     # stops the print
-    if @printing or @paused
+    if (@printing or @paused) and not @aborted
       @aborted = true
       sleep 0.1 until not @printing
       @aborted = false
