@@ -812,7 +812,7 @@ class RepRapHost
       self.send("G92 E#{ @params_for_resume[:e_position] }")
       
       # move to last stored printing position
-      self.send("G1 F12000.0")
+      self.send("G1 F6000.0")
       self.send("M402")
 
       # restore feedrate last used

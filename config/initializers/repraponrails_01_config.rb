@@ -32,7 +32,7 @@ RepRapOnRails::Application.configure do
     config.print_bed_zero  = [ 0, 0 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 0, -200, 600 ]
+    config.maintenance_position = [ 0, -150, 600 ]
 
   when "vp75-1.0.0"
 
@@ -59,7 +59,7 @@ RepRapOnRails::Application.configure do
     config.print_bed_zero  = [ 0, 0 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 0, -200, 600 ]
+    config.maintenance_position = [ 0, -150, 600 ]
 
   when "vp75-1.1.0"
 
@@ -86,7 +86,7 @@ RepRapOnRails::Application.configure do
     config.print_bed_zero  = [ 0, 0 ]
 
     # print head maintenance position
-    config.maintenance_position = [ 0, -200, 600 ]
+    config.maintenance_position = [ 0, -150, 600 ]
 
   end
 
