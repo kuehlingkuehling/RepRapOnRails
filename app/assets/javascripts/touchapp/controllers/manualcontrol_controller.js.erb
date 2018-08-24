@@ -53,11 +53,15 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
 
  
   $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (( MyWebsocket.print.state == 1) || ( MyWebsocket.print.state == 3 )) {
-      $scope.disable_buttons = false;
+    if ( MyWebsocket.print.psu_on == false ) {
+      $scope.disable_buttons = true; 
     } else {
-      $scope.disable_buttons = true;      
-    }    
+      if (( MyWebsocket.print.state == 1) || ( MyWebsocket.print.state == 3 )) {
+        $scope.disable_buttons = false;
+      } else {
+        $scope.disable_buttons = true;      
+      }    
+    }
   }, true);  
 
   $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
