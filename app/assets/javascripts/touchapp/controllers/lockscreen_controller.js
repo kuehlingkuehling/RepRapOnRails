@@ -1,5 +1,5 @@
-touchApp.controller('LockscreenController', function($scope, MyWebsocket){
+touchApp.controller('LockscreenController', function($scope, Printer){
   console.log("Running LockscreenController");
   
-  $scope.lockscreen = MyWebsocket.lockscreen;
+  $scope.lockscreen = Printer.lockscreen;
 });

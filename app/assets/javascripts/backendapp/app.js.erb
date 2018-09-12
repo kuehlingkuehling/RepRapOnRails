@@ -1,8 +1,8 @@
 var backendApp = angular.module('backendApp', ['ngRoute', 'ngTouch', 'ui.bootstrap', 'angularFileUpload', 'sticky']);
 
-backendApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
-  var resolve_websocket = { data: function(MyWebsocket) {
-    return MyWebsocket.online;
+backendApp.config(['$routeProvider', function($routeProvider, Printer) {
+  var resolve_websocket = { data: function(Printer) {
+    return Printer.online;
   }}
   
   $routeProvider.

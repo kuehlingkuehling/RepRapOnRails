@@ -1,4 +1,4 @@
-touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal, MyWebsocket){
+touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal, Printer){
   console.log("Running ManualcontrolController");
   
   $scope.ext_name = null;
@@ -10,8 +10,8 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   $scope.extruder_preheated = false;
   $scope.extruder_target = 0;
 
-  $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(newValue){
-    $scope.filaments_loaded = MyWebsocket.filamentsLoaded;
+  $scope.$watch(function(){ return Printer.filamentsLoaded; }, function(newValue){
+    $scope.filaments_loaded = Printer.filamentsLoaded;
 
     if ( $scope.filaments_loaded.left ) {
       $scope.temp_left = $scope.filaments_loaded.left.extrusion_temp;
@@ -27,12 +27,12 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   }, true);
 
 
-  $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
-    $scope.temp = MyWebsocket.temp;
+  $scope.$watch(function(){ return Printer.temp; }, function(newValue){
+    $scope.temp = Printer.temp;
 
-    if ( ( $scope.ext_name == 'left_extruder') && MyWebsocket.temp.left_extruder) {
-      $scope.extruder_temp = MyWebsocket.temp.left_extruder.temp;
-      $scope.extruder_target = MyWebsocket.temp.left_extruder.target;
+    if ( ( $scope.ext_name == 'left_extruder') && Printer.temp.left_extruder) {
+      $scope.extruder_temp = Printer.temp.left_extruder.temp;
+      $scope.extruder_target = Printer.temp.left_extruder.target;
       if (($scope.extruder_temp > ($scope.extruder_target - $scope.deviation)) && ($scope.extruder_temp < ($scope.extruder_target + $scope.deviation))) {
         $scope.extruder_preheated = true;
       } else {
@@ -40,9 +40,9 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
       };
     };
 
-    if ( ( $scope.ext_name == 'right_extruder') && MyWebsocket.temp.right_extruder) {
-      $scope.extruder_temp = MyWebsocket.temp.right_extruder.temp;
-      $scope.extruder_target = MyWebsocket.temp.right_extruder.target;
+    if ( ( $scope.ext_name == 'right_extruder') && Printer.temp.right_extruder) {
+      $scope.extruder_temp = Printer.temp.right_extruder.temp;
+      $scope.extruder_target = Printer.temp.right_extruder.target;
       if (($scope.extruder_temp > ($scope.extruder_target - $scope.deviation)) && ($scope.extruder_temp < ($scope.extruder_target + $scope.deviation))) {
         $scope.extruder_preheated = true;
       } else {
@@ -52,11 +52,11 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   }, true); 
 
  
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if ( MyWebsocket.print.psu_on == false ) {
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    if ( Printer.print.psu_on == false ) {
       $scope.disable_buttons = true; 
     } else {
-      if (( MyWebsocket.print.state == 1) || ( MyWebsocket.print.state == 3 )) {
+      if (( Printer.print.state == 1) || ( Printer.print.state == 3 )) {
         $scope.disable_buttons = false;
       } else {
         $scope.disable_buttons = true;      
@@ -64,8 +64,8 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
     }
   }, true);  
 
-  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
-    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  $scope.$watch(function(){ return Printer.isDualExtruder; }, function(){
+    $scope.isDualExtruder = Printer.isDualExtruder;
     if (!$scope.isDualExtruder) {
       $scope.ext_name = 'left_extruder'
     } 
@@ -79,11 +79,11 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
 
   // relative positioning
   $scope.move = function( coord ){
-    MyWebsocket.move(coord);
+    Printer.move(coord);
   }; 
    
   $scope.macro = function( name ){
-    MyWebsocket.macro(name);    
+    Printer.macro(name);    
   };   
 
   $scope.dec = function( val ){
@@ -112,19 +112,19 @@ touchApp.controller('ManualcontrolController', function($scope, $timeout, $modal
   
   $scope.set = function(){
     if ( $scope.ext_name == 'left_extruder') {
-      MyWebsocket.set_temp([0, $scope.temp_left]);
+      Printer.set_temp([0, $scope.temp_left]);
     }
     if ( $scope.ext_name == 'right_extruder') {
-      MyWebsocket.set_temp([1, $scope.temp_right]);
+      Printer.set_temp([1, $scope.temp_right]);
     }
   }; 
 
   $scope.off = function(){
-    MyWebsocket.set_temp([$scope.getExtId(), 0]);
+    Printer.set_temp([$scope.getExtId(), 0]);
   };   
   
   $scope.extrude = function( length ){
-    MyWebsocket.extrude([$scope.getExtId(), length]);    
+    Printer.extrude([$scope.getExtId(), length]);    
   };     
 
 });

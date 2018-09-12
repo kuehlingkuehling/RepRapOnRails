@@ -1,7 +1,7 @@
-touchApp.controller('PausedController', function($scope, $location, $routeParams, MyWebsocket){
+touchApp.controller('PausedController', function($scope, $location, $routeParams, Printer){
   console.log("Running PausedController");
 
-  MyWebsocket.menuDisabled = false;
+  Printer.menuDisabled = false;
   
   $scope.message = $routeParams.message
   

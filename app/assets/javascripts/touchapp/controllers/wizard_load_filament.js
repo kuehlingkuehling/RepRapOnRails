@@ -1,12 +1,12 @@
-touchApp.controller('WizardLoadFilamentController', function($scope, $location, $timeout, MyWebsocket){
+touchApp.controller('WizardLoadFilamentController', function($scope, $location, $timeout, Printer){
   console.log("Running WizardLoadFilamentController");  
 
-  MyWebsocket.menuDisabled = true;
+  Printer.menuDisabled = true;
   $scope.step = 1;
   
   // initial commands
-  MyWebsocket.psu_on();
-  MyWebsocket.macro('maintenance_position');
+  Printer.psu_on();
+  Printer.macro('maintenance_position');
   
   $scope.step1 = function() {
     $scope.step = 1;
@@ -25,8 +25,8 @@ touchApp.controller('WizardLoadFilamentController', function($scope, $location, 
   }; 
   
   $scope.exit = function() {
-    MyWebsocket.macro('home_all');
-    MyWebsocket.menuDisabled = false;
+    Printer.macro('home_all');
+    Printer.menuDisabled = false;
     $location.path( "/setup" );
   };     
 

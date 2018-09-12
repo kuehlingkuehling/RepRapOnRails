@@ -1,4 +1,4 @@
-backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
+backendApp.factory('Printer', function($q, $timeout, $modal, $rootScope) {
   var Service = {};  
   Service.log = [];
   Service.print = {

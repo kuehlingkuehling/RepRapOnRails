@@ -1,8 +1,8 @@
 var touchApp = angular.module('touchApp', ['ngRoute', 'ngTouch', 'ui.bootstrap', 'sticky']);
 
-touchApp.config(['$routeProvider', function($routeProvider, MyWebsocket) {
-  var resolve_websocket = { data: function(MyWebsocket) {
-    return MyWebsocket.online;
+touchApp.config(['$routeProvider', function($routeProvider, Printer) {
+  var resolve_websocket = { data: function(Printer) {
+    return Printer.online;
   }}
   
   $routeProvider.

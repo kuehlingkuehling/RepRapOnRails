@@ -1,8 +1,8 @@
-backendApp.controller('FirststepsController', function($scope, MyWebsocket, CommonCode){
+backendApp.controller('FirststepsController', function($scope, Printer, CommonCode){
   console.log("Running FirststepsController");  
 
   $scope.model = 'n/a';
-  MyWebsocket.get('versions').then(function(data){
+  Printer.get('versions').then(function(data){
     $scope.model = data.model;
   });   
 });

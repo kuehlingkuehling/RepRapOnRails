@@ -1,7 +1,7 @@
-touchApp.controller('WizardUnloadFilamentController', function($scope, $location, $timeout, MyWebsocket){
+touchApp.controller('WizardUnloadFilamentController', function($scope, $location, $timeout, Printer){
   console.log("Running WizardUnloadFilamentController");  
 
-  MyWebsocket.menuDisabled = true;
+  Printer.menuDisabled = true;
   $scope.step = 1;
   $scope.deviation = 3; // +/- C deviation around target temp
   $scope.filament = null;
@@ -9,24 +9,24 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   $scope.extruder_preheated = false;
   $scope.extruder = null;
   
-  $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(newValue){
-    $scope.filaments_loaded = MyWebsocket.filamentsLoaded;
+  $scope.$watch(function(){ return Printer.filamentsLoaded; }, function(newValue){
+    $scope.filaments_loaded = Printer.filamentsLoaded;
   }, true);
 
-  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
-    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  $scope.$watch(function(){ return Printer.isDualExtruder; }, function(){
+    $scope.isDualExtruder = Printer.isDualExtruder;
     if (!$scope.isDualExtruder) {
       $scope.extruder = 'left_extruder';
     }
   },true);
 
-  $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
-    $scope.temp = MyWebsocket.temp;
+  $scope.$watch(function(){ return Printer.temp; }, function(newValue){
+    $scope.temp = Printer.temp;
   }, true);
 
-  $scope.$watch(function(){ return MyWebsocket.temp; }, function(newValue){
-    if ($scope.filament && ($scope.extruder != null) && MyWebsocket.temp[$scope.extruder]) {
-      $scope.extruder_temp = MyWebsocket.temp[$scope.extruder].temp;
+  $scope.$watch(function(){ return Printer.temp; }, function(newValue){
+    if ($scope.filament && ($scope.extruder != null) && Printer.temp[$scope.extruder]) {
+      $scope.extruder_temp = Printer.temp[$scope.extruder].temp;
       if (($scope.extruder_temp > ($scope.filament.extrusion_temp - $scope.deviation)) && ($scope.extruder_temp < ($scope.filament.extrusion_temp + $scope.deviation))) {
         $scope.extruder_preheated = true;
         if ($scope.step == 2) {
@@ -39,8 +39,8 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   }, true); 
   
   // initial commands
-  MyWebsocket.psu_on();
-  MyWebsocket.macro('maintenance_position');
+  Printer.psu_on();
+  Printer.macro('maintenance_position');
   
   $scope.step1 = function() {
     $scope.step = 1;
@@ -61,7 +61,7 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
         break;
     };
     // preheat extruder
-    MyWebsocket.set_temp([$scope.extruder_number, $scope.filament.extrusion_temp]);   
+    Printer.set_temp([$scope.extruder_number, $scope.filament.extrusion_temp]);   
   };
   
   $scope.step3 = function() {
@@ -77,8 +77,8 @@ touchApp.controller('WizardUnloadFilamentController', function($scope, $location
   };    
   
   $scope.exit = function() {
-    MyWebsocket.macro('wizard_unload_filament_exit');
-    MyWebsocket.menuDisabled = false;
+    Printer.macro('wizard_unload_filament_exit');
+    Printer.menuDisabled = false;
     $location.path( "/setup" );
   };        
 });

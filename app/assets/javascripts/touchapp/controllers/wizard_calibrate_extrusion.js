@@ -1,13 +1,13 @@
-touchApp.controller('WizardCalibrateExtrusionController', function($scope, CommonCode, $location, $timeout, MyWebsocket){
+touchApp.controller('WizardCalibrateExtrusionController', function($scope, CommonCode, $location, $timeout, Printer){
   console.log("Running WizardCalibrateExtrusionController");  
 
-  MyWebsocket.menuDisabled = true;
+  Printer.menuDisabled = true;
   
   $scope.measurement = 0.5;
   $scope.extrusion_width = 0.5;
 
-  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
-    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  $scope.$watch(function(){ return Printer.isDualExtruder; }, function(){
+    $scope.isDualExtruder = Printer.isDualExtruder;
   },true);
 
   $scope.calculate = function() {
@@ -28,13 +28,13 @@ touchApp.controller('WizardCalibrateExtrusionController', function($scope, Commo
   
   $scope.generate_printjob = function(ext) {
     // ext: 'left' or 'right'
-    MyWebsocket.calibrateExtrusionPrintjob(ext);
-    MyWebsocket.menuDisabled = false;    
+    Printer.calibrateExtrusionPrintjob(ext);
+    Printer.menuDisabled = false;    
     $location.path( "/queue" );    
   };
   
   $scope.exit = function() {
-    MyWebsocket.menuDisabled = false;
+    Printer.menuDisabled = false;
     $location.path( "/setup" );
   };   
 

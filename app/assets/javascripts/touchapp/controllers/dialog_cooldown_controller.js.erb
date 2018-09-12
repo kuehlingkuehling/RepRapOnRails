@@ -1,18 +1,18 @@
-touchApp.controller('DialogCooldownController', function($scope, $timeout, $modalInstance, CommonCode, MyWebsocket){
+touchApp.controller('DialogCooldownController', function($scope, $timeout, $modalInstance, CommonCode, Printer){
   console.log("Running DialogCooldownController");  
 
   $scope.seconds = <%= Rails.application.config.chamber_heater_cooldown_time %>;
   $scope.countdown = CommonCode.formatSeconds($scope.seconds);
   $scope.title = "Please wait";
   
-  MyWebsocket.macro("cooldown");
+  Printer.macro("cooldown");
   $scope.onTimeout = function(){
     $scope.seconds--;
     $scope.countdown = CommonCode.formatSeconds($scope.seconds);    
     if ($scope.seconds > 0) {
       mytimeout = $timeout($scope.onTimeout,1000);
     } else {
-      MyWebsocket.macro("psu_off");      
+      Printer.macro("psu_off");      
       $modalInstance.close();
     }
   };

@@ -1,4 +1,4 @@
-touchApp.controller('ConfigurationController', function($scope, $location, CommonCode, MyWebsocket){
+touchApp.controller('ConfigurationController', function($scope, $location, CommonCode, Printer){
   console.log("Running ConfigurationController");  
 
   // init pagination
@@ -12,29 +12,29 @@ touchApp.controller('ConfigurationController', function($scope, $location, Commo
   $scope.filaments = false;
   $scope.preheatingProfile = false;
 
-  $scope.$watch(function(){ return MyWebsocket.filamentPresets; }, function(){
-    $scope.filamentPresets = MyWebsocket.filamentPresets;
+  $scope.$watch(function(){ return Printer.filamentPresets; }, function(){
+    $scope.filamentPresets = Printer.filamentPresets;
   },true); 
   
-  $scope.$watch(function(){ return MyWebsocket.filamentsLoaded; }, function(){
-    $scope.filaments = MyWebsocket.filamentsLoaded;
+  $scope.$watch(function(){ return Printer.filamentsLoaded; }, function(){
+    $scope.filaments = Printer.filamentsLoaded;
   },true);
 
-  $scope.$watch(function(){ return MyWebsocket.preheatingProfiles; }, function(){
-    $scope.preheatingProfiles = MyWebsocket.preheatingProfiles;
+  $scope.$watch(function(){ return Printer.preheatingProfiles; }, function(){
+    $scope.preheatingProfiles = Printer.preheatingProfiles;
   },true); 
   
-  $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
-    $scope.preheatingProfile = MyWebsocket.preheatingProfile;
+  $scope.$watch(function(){ return Printer.preheatingProfile; }, function(){
+    $scope.preheatingProfile = Printer.preheatingProfile;
   },true);   
 
-  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
-    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  $scope.$watch(function(){ return Printer.isDualExtruder; }, function(){
+    $scope.isDualExtruder = Printer.isDualExtruder;
   },true);     
 
     
   $scope.setLeft = function(id) {
-    MyWebsocket.setFilaments({
+    Printer.setFilaments({
       left: id,
       right: ($scope.filaments.right ? $scope.filaments.right.id : null)
     });
@@ -42,7 +42,7 @@ touchApp.controller('ConfigurationController', function($scope, $location, Commo
   };
   
   $scope.setRight = function(id) {
-    MyWebsocket.setFilaments({
+    Printer.setFilaments({
       left: ($scope.filaments.left ? $scope.filaments.left.id : null),
       right: id
     });  
@@ -50,7 +50,7 @@ touchApp.controller('ConfigurationController', function($scope, $location, Commo
   }; 
 
   $scope.setChamberBed = function(id) {
-    MyWebsocket.setPreheatingProfile(id);  
+    Printer.setPreheatingProfile(id);  
     $scope.selectChamberBed = false;
   };   
   

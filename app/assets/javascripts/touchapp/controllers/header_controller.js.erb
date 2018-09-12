@@ -1,19 +1,19 @@
-touchApp.controller('HeaderController', function($scope, $location, $timeout, $modal, MyWebsocket){
+touchApp.controller('HeaderController', function($scope, $location, $timeout, $modal, Printer){
   console.log("Running HeaderController");
   
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    $scope.print = MyWebsocket.print;  
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    $scope.print = Printer.print;  
   }, true);  
   
-  $scope.$watch(function(){ return MyWebsocket.menuDisabled; }, function(newValue){
-    $scope.menuDisabled = MyWebsocket.menuDisabled;  
+  $scope.$watch(function(){ return Printer.menuDisabled; }, function(newValue){
+    $scope.menuDisabled = Printer.menuDisabled;  
   }, true);  
 
   $scope.progress = 0;
   $scope.time_remaining = '';
-  $scope.$watch(function(){ return MyWebsocket.progress; }, function(newValue){
-    $scope.progress = MyWebsocket.progress;  
-    $scope.time_remaining = MyWebsocket.time_remaining;  
+  $scope.$watch(function(){ return Printer.progress; }, function(newValue){
+    $scope.progress = Printer.progress;  
+    $scope.time_remaining = Printer.time_remaining;  
   }, true);  
    
   $scope.$on('$locationChangeSuccess', function(event) {
@@ -25,19 +25,19 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
   };
   
   $scope.emergencyStop = function(){
-    MyWebsocket.emergencystop();
+    Printer.emergencystop();
   };
   
   $scope.abortprint = function() {
-    MyWebsocket.abortprint();
+    Printer.abortprint();
   };  
   
   $scope.pauseprint = function() {
-    MyWebsocket.pauseprint();    
+    Printer.pauseprint();    
   };    
   
   $scope.resumeprint = function() {
-    MyWebsocket.resumeprint();
+    Printer.resumeprint();
     $scope.go("queue");
   };
 
@@ -50,17 +50,17 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
     });    
   };     
 
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 3 ) || ( MyWebsocket.print.state == 5 )) {
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    if (( Printer.print.state == 2) || ( Printer.print.state == 3 ) || ( Printer.print.state == 5 )) {
       $scope.printing = true;
     } else {
       $scope.printing = false;      
     }    
   }, true);    
   
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    $scope.print = MyWebsocket.print;
-    if (MyWebsocket.print.state == 1) {
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    $scope.print = Printer.print;
+    if (Printer.print.state == 1) {
       $scope.idle = true;
     } else {
       $scope.idle = false;      
@@ -68,7 +68,7 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
   }, true);   
 
   $scope.psu_on = function(){
-    MyWebsocket.psu_on();    
+    Printer.psu_on();    
   };   
   
   $scope.psu_off = function(state){
@@ -80,19 +80,19 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
     });       
   };
 
-  $scope.$watch(function(){ return MyWebsocket.preheatingProfile; }, function(){
-    $scope.preheatingProfile = MyWebsocket.preheatingProfile;
+  $scope.$watch(function(){ return Printer.preheatingProfile; }, function(){
+    $scope.preheatingProfile = Printer.preheatingProfile;
   },true);  
 
   $scope.preheat_on = function(){
-    MyWebsocket.preheat($scope.preheatingProfile.chamber_temp, $scope.preheatingProfile.bed_temp);    
+    Printer.preheat($scope.preheatingProfile.chamber_temp, $scope.preheatingProfile.bed_temp);    
   };  
 
   $scope.preheat_off = function(){
-    MyWebsocket.preheat(0,0);    
+    Printer.preheat(0,0);    
   };  
 
-  $scope.$watch(function(){ return MyWebsocket.temp; }, function(){
-    $scope.temp = MyWebsocket.temp;
+  $scope.$watch(function(){ return Printer.temp; }, function(){
+    $scope.temp = Printer.temp;
   },true);     
 });

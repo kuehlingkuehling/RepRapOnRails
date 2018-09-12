@@ -1,4 +1,4 @@
-backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCode, $timeout, $upload){
+backendApp.controller('SetupController', function($scope, Printer, CommonCode, $timeout, $upload){
   console.log("Running SetupController");  
 
   $scope.presets = [];
@@ -12,14 +12,14 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.editPreheating = {};
 
   $scope.eeprom = null;
-  MyWebsocket.reloadEEPROM();
-  $scope.$watch(function(){ return MyWebsocket.eeprom; }, function(newValue){
-    $scope.eeprom = MyWebsocket.eeprom;  
+  Printer.reloadEEPROM();
+  $scope.$watch(function(){ return Printer.eeprom; }, function(newValue){
+    $scope.eeprom = Printer.eeprom;  
   }, true); 
   $scope.edit_eeprom = {};
 
   $scope.hostname = ' ';
-  MyWebsocket.get('hostname').then(function(data){
+  Printer.get('hostname').then(function(data){
     $scope.hostname = data;
   });   
 
@@ -28,7 +28,7 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.model = 'n/a';
   $scope.hardware_revision = 'n/a';
   $scope.software_version = 'n/a';
-  MyWebsocket.get('versions').then(function(data){
+  Printer.get('versions').then(function(data){
     $scope.firmware_version_installed = data.firmware_version_installed;
     $scope.firmware_version_compatible = data.firmware_version_compatible;
     $scope.model = data.model;
@@ -41,8 +41,8 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   $scope.file = false;  
   $scope.error = '';
 
-  $scope.$watch(function(){ return MyWebsocket.filamentPresets; }, function(){
-    $scope.presets = MyWebsocket.filamentPresets;
+  $scope.$watch(function(){ return Printer.filamentPresets; }, function(){
+    $scope.presets = Printer.filamentPresets;
   },true);  
   
   $scope.toggleForm = function() {
@@ -57,12 +57,12 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   
   $scope.deletePreset = function(id) {
     if (confirm("Do you really want to remove this Profile?")) {
-      MyWebsocket.deletePreset(id);      
+      Printer.deletePreset(id);      
     }
   };
 
   $scope.createPreset = function() {
-    MyWebsocket.createPreset($scope.newPreset);
+    Printer.createPreset($scope.newPreset);
     $scope.toggleForm();
   };
   
@@ -71,7 +71,7 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   };
   
   $scope.updatePreset = function(index){
-    MyWebsocket.updatePreset($scope.presets[index]);
+    Printer.updatePreset($scope.presets[index]);
     $scope.edit[$scope.presets[index].id] = false;    
   };    
   
@@ -110,8 +110,8 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   };   
 
   // Preheating Profiles
-  $scope.$watch(function(){ return MyWebsocket.preheatingProfiles; }, function(){
-    $scope.preheatingProfiles = MyWebsocket.preheatingProfiles;
+  $scope.$watch(function(){ return Printer.preheatingProfiles; }, function(){
+    $scope.preheatingProfiles = Printer.preheatingProfiles;
   },true);  
 
   $scope.toggleFormPreheating = function() {
@@ -127,12 +127,12 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   
   $scope.deletePreheatingProfile = function(id) {
     if (confirm("Do you really want to remove this Profile?")) {
-      MyWebsocket.deletePreheatingProfile(id);
+      Printer.deletePreheatingProfile(id);
     }
   };
 
   $scope.createPreheatingProfile = function() {
-    MyWebsocket.createPreheatingProfile($scope.newPreheatingProfile);
+    Printer.createPreheatingProfile($scope.newPreheatingProfile);
     $scope.toggleFormPreheating();
   };
   
@@ -141,13 +141,13 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   };
   
   $scope.updatePreheatingProfile = function(index){
-    MyWebsocket.updatePreheatingProfile($scope.preheatingProfiles[index]);
+    Printer.updatePreheatingProfile($scope.preheatingProfiles[index]);
     $scope.editPreheating[$scope.preheatingProfiles[index].id] = false;    
   };
 
 
   $scope.reloadEEPROM = function(){
-    MyWebsocket.reloadEEPROM();
+    Printer.reloadEEPROM();
   };
 
   $scope.editEEPROM = function(pos){
@@ -155,7 +155,7 @@ backendApp.controller('SetupController', function($scope, MyWebsocket, CommonCod
   };
 
   $scope.updateEEPROM = function(pos){
-    MyWebsocket.setEEPROM(pos, $scope.eeprom[pos].type, $scope.eeprom[pos].val);
+    Printer.setEEPROM(pos, $scope.eeprom[pos].type, $scope.eeprom[pos].val);
     
     if ( $scope.eeprom[pos].type != 3) {
       $scope.eeprom[pos].val = Math.floor($scope.eeprom[pos].val);

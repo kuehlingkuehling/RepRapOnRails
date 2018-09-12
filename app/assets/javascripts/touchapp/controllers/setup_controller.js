@@ -1,10 +1,10 @@
-touchApp.controller('SetupController', function($scope, MyWebsocket,$interval){
+touchApp.controller('SetupController', function($scope, Printer,$interval){
   console.log("Running SetupController");  
 
-  MyWebsocket.menuDisabled = false;
+  Printer.menuDisabled = false;
   
   $scope.backendurl = ' ';
-  MyWebsocket.get('hostname').then(function(data){
+  Printer.get('hostname').then(function(data){
     $scope.backendurl = 'http://' + data + '/';
   });   
 
@@ -14,7 +14,7 @@ touchApp.controller('SetupController', function($scope, MyWebsocket,$interval){
   $scope.hardware_revision = 'n/a';
   $scope.software_version = 'n/a';
   $scope.ip_address = 'n/a';
-  MyWebsocket.get('versions').then(function(data){
+  Printer.get('versions').then(function(data){
     $scope.firmware_version_installed = data.firmware_version_installed;
     $scope.firmware_version_compatible = data.firmware_version_compatible;
     $scope.model = data.model;
@@ -24,22 +24,22 @@ touchApp.controller('SetupController', function($scope, MyWebsocket,$interval){
   });   
 
   // some wizards are only available on dual extruder setups  
-  $scope.$watch(function(){ return MyWebsocket.isDualExtruder; }, function(){
-    $scope.isDualExtruder = MyWebsocket.isDualExtruder;
+  $scope.$watch(function(){ return Printer.isDualExtruder; }, function(){
+    $scope.isDualExtruder = Printer.isDualExtruder;
   },true); 
 
   $scope.idle = false;
   $scope.paused = false;
   
   // some wizards are only available in specific print states
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (MyWebsocket.print.state == 1) {
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    if (Printer.print.state == 1) {
       $scope.idle = true;
     } else {
       $scope.idle = false;      
     };
     
-    if (MyWebsocket.print.state == 3) {
+    if (Printer.print.state == 3) {
       $scope.paused = true;
     } else {
       $scope.paused = false;

@@ -1,4 +1,4 @@
-touchApp.controller('LogController', function($scope, MyWebsocket, CommonCode){
+touchApp.controller('LogController', function($scope, Printer, CommonCode){
   console.log("Running LogController");
   
   $scope.gcode = '';
@@ -10,14 +10,14 @@ touchApp.controller('LogController', function($scope, MyWebsocket, CommonCode){
   //$scope.pagedLog = [];
 
   // process list to pages  
-  $scope.$watch(function(){ return MyWebsocket.log; }, function(newValue){
-    $scope.log_length = MyWebsocket.log.length;      
-    $scope.log = MyWebsocket.log;
-    //$scope.pagedLog = CommonCode.groupToPages(MyWebsocket.log, $scope.itemsPerPage);
+  $scope.$watch(function(){ return Printer.log; }, function(newValue){
+    $scope.log_length = Printer.log.length;      
+    $scope.log = Printer.log;
+    //$scope.pagedLog = CommonCode.groupToPages(Printer.log, $scope.itemsPerPage);
   }, true);
 
   $scope.send = function(){
-    MyWebsocket.sendgcode($scope.gcode);
+    Printer.sendgcode($scope.gcode);
     $scope.lastcommand = $scope.gcode;     
     $scope.gcode = '';
   }; 

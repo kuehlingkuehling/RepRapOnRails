@@ -1,13 +1,13 @@
-touchApp.controller('PrintCheckController', function($scope, $location, $routeParams, MyWebsocket){
+touchApp.controller('PrintCheckController', function($scope, $location, $routeParams, Printer){
   console.log("Running PrintCheckController");
   
   $scope.startprint = function() {
-    MyWebsocket.startprint($routeParams.printjobId);
+    Printer.startprint($routeParams.printjobId);
     $location.path( "/queue" );
   };
   
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (MyWebsocket.print.state == 1) {
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    if (Printer.print.state == 1) {
       $scope.idle = true;
     } else {
       $scope.idle = false;      

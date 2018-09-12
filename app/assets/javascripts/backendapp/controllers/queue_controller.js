@@ -1,4 +1,4 @@
-backendApp.controller('QueueController', function($scope, MyWebsocket, CommonCode, $upload){
+backendApp.controller('QueueController', function($scope, Printer, CommonCode, $upload){
   console.log("Running QueueController");  
 
   $scope.printjobs = [];
@@ -9,12 +9,12 @@ backendApp.controller('QueueController', function($scope, MyWebsocket, CommonCod
   $scope.error = 'No Error';
   $scope.edit = {};
 
-  $scope.$watch(function(){ return MyWebsocket.printjobs; }, function(){
-    $scope.printjobs = MyWebsocket.printjobs;
+  $scope.$watch(function(){ return Printer.printjobs; }, function(){
+    $scope.printjobs = Printer.printjobs;
   },true);  
   
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    $scope.now_printing_id = MyWebsocket.print.job_id;
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    $scope.now_printing_id = Printer.print.job_id;
   }, true);   
   
   $scope.onFileSelect = function($files) {
@@ -74,7 +74,7 @@ backendApp.controller('QueueController', function($scope, MyWebsocket, CommonCod
   
   $scope.removePrintjob = function(id) {
     if (confirm("Do you really want to remove this Printjob?")) {
-      MyWebsocket.removePrintjob(id)      
+      Printer.removePrintjob(id)      
     }
   };
   
@@ -83,7 +83,7 @@ backendApp.controller('QueueController', function($scope, MyWebsocket, CommonCod
   };
   
   $scope.updatePrintjob = function(index){
-    MyWebsocket.updatePrintjob($scope.printjobs[index]);
+    Printer.updatePrintjob($scope.printjobs[index]);
     $scope.edit[$scope.printjobs[index].id] = false;    
   };  
   

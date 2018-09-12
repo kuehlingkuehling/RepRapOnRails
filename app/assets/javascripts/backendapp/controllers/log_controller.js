@@ -1,9 +1,9 @@
-backendApp.controller('LogController', function($scope, MyWebsocket, CommonCode){
+backendApp.controller('LogController', function($scope, Printer, CommonCode){
   console.log("Running LogController");  
 
   // watch log for changes  
-  $scope.$watch(function(){ return MyWebsocket.log; }, function(newValue){
-    $scope.log = MyWebsocket.log;      
+  $scope.$watch(function(){ return Printer.log; }, function(newValue){
+    $scope.log = Printer.log;      
   }, true);   
 
 });

@@ -1,27 +1,27 @@
-touchApp.controller('QueueController', function($scope, $modal, MyWebsocket, CommonCode){
+touchApp.controller('QueueController', function($scope, $modal, Printer, CommonCode){
   console.log("Running QueueController");  
 
-  MyWebsocket.menuDisabled = false; 
+  Printer.menuDisabled = false; 
 
- $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    if (( MyWebsocket.print.state == 2) || ( MyWebsocket.print.state == 3 ) || ( MyWebsocket.print.state == 5 )) {
+ $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    if (( Printer.print.state == 2) || ( Printer.print.state == 3 ) || ( Printer.print.state == 5 )) {
       $scope.printing = true;
     } else {
       $scope.printing = false;      
     }    
   }, true);    
   
-  $scope.$watch(function(){ return MyWebsocket.print; }, function(newValue){
-    $scope.print = MyWebsocket.print;
-    if (MyWebsocket.print.state == 1) {
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
+    $scope.print = Printer.print;
+    if (Printer.print.state == 1) {
       $scope.idle = true;
     } else {
       $scope.idle = false;      
     }    
   }, true);    
 
-  $scope.$watch(function(){ return MyWebsocket.printjobs; }, function(){
-    $scope.printjobs = MyWebsocket.printjobs;
+  $scope.$watch(function(){ return Printer.printjobs; }, function(){
+    $scope.printjobs = Printer.printjobs;
   },true);  
 
 
