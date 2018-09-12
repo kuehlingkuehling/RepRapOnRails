@@ -6,7 +6,9 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope, $m
     job:'',
     elapsed_in_words:'',
     job_id:0,
-    psu_on:false
+    psu_on:false,
+    progress:0,
+    time_remaining:''
   };
   Service.printjobs = [];
   Service.filamentPresets = [];
@@ -146,8 +148,8 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope, $m
     $timeout(function(){
       Service.temp = message;
     });
-  });  
-  
+  });
+
   jobchannel = dispatcher.subscribe('printjobs');
   jobchannel.bind('reload', function(message){
     console.log('Queue updated, reloading!');
@@ -170,7 +172,14 @@ touchApp.factory('MyWebsocket', function($q, $location, $timeout, $rootScope, $m
     $timeout(function(){
       Service.print.state = message;
     });
-  });    
+  });   
+  printchannel.bind('progress', function(message){
+    console.log('New Progress update received: ' + message);
+    $timeout(function(){
+      Service.print.progress = message.percent;
+      Service.print.time_remaining = message.time_remaining;
+    });
+  });   
   printchannel.bind('job', function(message){
     console.log('New Printer Job Name String received: ' + message);
     $timeout(function(){

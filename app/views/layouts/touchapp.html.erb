@@ -45,11 +45,11 @@
         </h1>
         <div class="row">
           <div class="col-xs-7" style="white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;"><p><span ng-show="print.job.length">"{{ print.job }}"</span>&nbsp;</p></div>    
-          <div class="col-xs-5"><p class="pull-right">{{ time_remaining }}</p></div>
+          <div class="col-xs-5"><p class="pull-right">{{ print.time_remaining }}</p></div>
         </div>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%">
-            <span class="sr-only">{{ progress }}% complete</span>
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ print.progress }}%">
+            <span class="sr-only">{{ print.progress }}% complete</span>
           </div>
         </div>
 

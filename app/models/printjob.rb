@@ -14,44 +14,30 @@ class Printjob < ActiveRecord::Base
   end
 
   def calculate_print_time_estimate
-    calc_thread = Thread.new do
-      last_coord = nil
-      new_coord = [0, 0, 0]
-      feedrate = nil
-      print_duration = 0
       begin
+        time_total = 0
         file = File.open(self.gcodefile.current_path,'r')
         file.each_line do |line|
-          gcode = Gcode.new(line)
-          feedrate = gcode.f if gcode.f
-        
-          if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
-            new_coord[0] = gcode.x if gcode.x
-            new_coord[1] = gcode.y if gcode.y
-            new_coord[2] = gcode.z if gcode.z
+          if line.start_with?('M73')
+            begin
+              prog = line.match(/M73 P\d+\sR(?<remaining>\d+).*/)
+              time_total = prog[:remaining].to_i
+            rescue => e
+              puts "Error in M73-String RegEx"
+              puts e.inspect
+            end          
 
-            if last_coord
-              segment = Vector.elements([
-                new_coord[0] - last_coord[0],
-                new_coord[1] - last_coord[1],
-                new_coord[2] - last_coord[2]])
-           
-              segment_duration = segment.norm / (feedrate / 60)
-              print_duration += segment_duration
-            end
-            last_coord = new_coord.dup
+            break # only find first occurance of M73 statement to get total print duration
           end
-          Thread.pass
         end
         file.close
-        self.estimated_print_time = print_duration * 1.2
+
+        self.estimated_print_time = time_total
         self.save        
       rescue
         # do nothing - rescueing in case file is deleted before calculation finished
         #  (or non-text/ non-gcode file was uploaded for whatever reason)
       end
-    end
-    calc_thread.priority = -2
   end
 
 end

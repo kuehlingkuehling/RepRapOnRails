@@ -44,7 +44,6 @@ WebsocketRails::EventMap.describe do
 
   subscribe :sendgcode, :to => WsController, :with_method => :sendgcode  
   subscribe :emergencystop, :to => WsController, :with_method => :emergencystop
-  subscribe :progress, :to => WsController, :with_method => :progress
   subscribe :startprint, :to => WsController, :with_method => :startprint
   subscribe :abortprint, :to => WsController, :with_method => :abortprint  
   subscribe :pauseprint, :to => WsController, :with_method => :pauseprint  

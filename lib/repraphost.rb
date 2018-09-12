@@ -20,12 +20,12 @@ Thread.abort_on_exception = true
 class RepRapHost
   attr_accessor :verbose, :echoreadwrite, :temp_deviation, :temp_stabilize_time,
                 :tempcb, :recvcb, :sendcb, :errorcb, :startcb, 
-                :pausecb, :resumecb, :endcb, :onlinecb,
+                :pausecb, :resumecb, :endcb, :onlinecb, :progresscb,
                 :abortcb, :preheatcb, :preheatedcb, :emergencystopcb,
                 :psuoncb, :psuoffcb, :eepromcb, :fwcb, :autolevelfailcb, :doorcb,
                 :maintenance_position
   attr_reader :online, :printing, :paused, :lastresponse, :progress,
-              :current_params, :endstopstatus
+              :current_params, :endstopstatus, :time_remaining
   alias :online? :online
   alias :printing? :printing
   alias :paused? :paused
@@ -45,8 +45,8 @@ class RepRapHost
     @paused = false
     @online = false
     @progress = 0
+    @time_remaining = nil
     @timejobstarted = nil
-    @timeprintstarted = nil # after 30 lines preheating is usually over, so we assume print start here
     @lines = 0 # number of lines of the gcodefile that is printing
     @current_duration = 0 # calculated duration the print must have elapsed
     @print_duration = 0 # calculated duration the print will take
@@ -111,6 +111,7 @@ class RepRapHost
     @fwcb = nil # on response to M115 (capabilities string including firmware version)
     @autolevelfailcb = nil # on G32 autolevel errors
     @doorcb = nil # on DoorSwitch open/close info from firmware
+    @progresscb = nil
 
     # thread sync
     @printer_lock = Mutex.new
@@ -398,6 +399,22 @@ class RepRapHost
         
         return unless line.start_with?("M", "G", "T")
 
+        # catch M73 progress information. Issue the callback and do not
+        # send this to the firmware
+        # Progress parsing and callback
+        if line.start_with?('M73')
+          begin
+            prog = line.match(/M73 P(?<percent>\d+)\sR(?<remaining>\d+).*/)
+            @progress = prog[:percent].to_i
+            @time_remaining = prog[:remaining].to_i
+          rescue => e
+            puts "Error in Progress-String RegEx"
+            puts e.inspect
+          end          
+
+          @progresscb.call(@progress, @time_remaining) if @progresscb
+        end
+
         # catch M190/M109 and its parameters and substitute
         # with M140/M104 to avoid arduino locking up during preheating
         # (preheating is instead implemented in @preheat_thread)
@@ -586,53 +603,6 @@ class RepRapHost
     @progress = 0
     @duration_calculated = false
 
-    # calculate printjob duration in background thread
-    @print_duration = 0
-    @current_duration = 0
-
-    @calc_duration_thread = Thread.new do
-      last_coord = nil
-      new_coord = [0, 0, 0]
-      feedrate = nil
-      g1_count = 0
-      begin
-        file = File.open(@gcodefile.path,'r')# @gcodefile.dup
-        file.each_line do |line|
-          gcode = Gcode.new(line)
-          feedrate = gcode.f if gcode.f
-        
-          if gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
-            g1_count += 1
-            new_coord[0] = gcode.x if gcode.x
-            new_coord[1] = gcode.y if gcode.y
-            new_coord[2] = gcode.z if gcode.z
-
-            if last_coord and g1_count > @g1_to_skip_for_time_estimate
-              segment = Vector.elements([
-                new_coord[0] - last_coord[0],
-                new_coord[1] - last_coord[1],
-                new_coord[2] - last_coord[2]])
-           
-              segment_duration = segment.norm / (feedrate / 60)
-              @print_duration += segment_duration
-            end
-            last_coord = new_coord.dup
-            Thread.pass
-          end
-        end
-        file.close
-      rescue
-        return nil #do nothing - just rescueing in case file is deleted before calculation is finished
-      end
-      @duration_calculated = true
-    end
-
-    last_coord = nil
-    new_coord = [0, 0, 0]
-    feedrate = nil
-    @g1count = 0
-    
- 
     # the actual loop
     while line = @gcodefile.gets
 
@@ -648,45 +618,13 @@ class RepRapHost
       # then continue with next line from gcode file
       self.write(line) unless line.start_with?("M206")  # NEVER set M206 EEPROM values from within print job!
 
-      # calculate progress
-      gcode = Gcode.new(line)
-      feedrate = gcode.f if gcode.f
-      if gcode.valid and gcode.g?(1) and feedrate and ( gcode.x or gcode.y or gcode.z )
-        @g1count += 1
-        new_coord[0] = gcode.x if gcode.x
-        new_coord[1] = gcode.y if gcode.y
-        new_coord[2] = gcode.z if gcode.z
-
-        if last_coord and @g1count > @g1_to_skip_for_time_estimate
-          segment = Vector.elements([
-            new_coord[0] - last_coord[0],
-            new_coord[1] - last_coord[1],
-            new_coord[2] - last_coord[2]])
-       
-          segment_duration = segment.norm / (feedrate / 60)
-          @current_duration += segment_duration
-        end
-        last_coord = new_coord.dup
-      end
-
-      # get time of "real" print start - after first lines of preheating and priming etc
-      if @g1count == @g1_to_skip_for_time_estimate
-        @timeprintstarted = Time.now
-      end
-
-      # recalculate progress
-      if @duration_calculated and ( @print_duration > 0 )
-        @progress = ((@current_duration / @print_duration) * 100).to_i      
-      end
-
       if @preheating
         Thread.stop
       end      
 
       if @aborted
         @printing = false
-        @send_thread.run    
-        @calc_duration_thread.kill    
+        @send_thread.run            
         Thread.exit
       end
 
@@ -698,10 +636,9 @@ class RepRapHost
       
     end
     
-    @calc_duration_thread.kill
-    @duration_calculated = false
     @progress = 0
-    @timeprintstarted = nil
+    @time_remaining = nil
+    @progresscb.call(@progress, @time_remaining)
     @printing = false
     @gcodefile.close
     @gcodefile = nil
@@ -709,14 +646,6 @@ class RepRapHost
     puts "Print finished!" if @verbose
     @endcb.call(self.time_elapsed) if @endcb
     @send_thread.run
-  end
-  
-  def time_remaining
-    if @printing and @timeprintstarted and @duration_calculated and ( @current_duration > 0 )
-      ( Time.now - @timeprintstarted ) / @current_duration * ( @print_duration - @current_duration )
-    else
-      nil
-    end
   end
   
   def time_elapsed
@@ -839,7 +768,8 @@ class RepRapHost
       @endcb.call(self.time_elapsed) if @endcb 
       @progress = 0
       @timejobstarted = nil
-      @timeprintstarted = nil     
+      @time_remaining = nil
+      @progresscb.call(@progress, @time_remaining)   
 
       # home all axes
       self.send("G28")

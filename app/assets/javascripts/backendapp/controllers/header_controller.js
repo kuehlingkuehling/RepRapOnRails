@@ -12,15 +12,10 @@ backendApp.controller('HeaderController', function($scope, $modal, $location, $t
   };
   
   $scope.progress = 0;
-
-  // update progress every 3s
-  (function update_progress() {
-      MyWebsocket.get('progress').then(function(data){
-        $scope.progress = data.percent;
-        $scope.time_remaining = data.time_remaining;
-        //console.log("The received Progress is:" + data)
-        $timeout(update_progress, 3000);        
-      });  
-  })(); 
+  $scope.time_remaining = '';
+  $scope.$watch(function(){ return MyWebsocket.progress; }, function(newValue){
+    $scope.progress = MyWebsocket.progress;  
+    $scope.time_remaining = MyWebsocket.time_remaining;  
+  }, true); 
 
 });

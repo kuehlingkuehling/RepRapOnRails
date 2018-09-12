@@ -5,7 +5,9 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
     state:0,
     job:'',
     elapsed_in_words:'',
-    job_id:0
+    job_id:0,
+    progress:0,
+    time_remaining:''
   };
   Service.printjobs = [];
   Service.filamentPresets = [];
@@ -130,7 +132,14 @@ backendApp.factory('MyWebsocket', function($q, $timeout, $modal, $rootScope) {
     $timeout(function(){
       Service.print.state = message;
     });
-  });    
+  }); 
+  printchannel.bind('progress', function(message){
+    console.log('New Progress update received: ' + message);
+    $timeout(function(){
+      Service.print.progress = message.percent;
+      Service.print.time_remaining = message.time_remaining;
+    });
+  });     
   printchannel.bind('job', function(message){
     console.log('New Printer Job Name String received: ' + message);
     $timeout(function(){

@@ -217,21 +217,6 @@ class WsController < WebsocketRails::BaseController
     @@printer.emergencystop
   end
   
-  def progress
-    if @@printer.printing?
-      if @@printer.time_remaining
-        remaining = UsefulGlobalMethods.timespan_in_words( @@printer.time_remaining ) + " left"
-      else
-        remaining = "(calculating print time)"
-      end
-    else
-      remaining = ""
-    end
-    progress = { :percent => @@printer.progress,
-                 :time_remaining => remaining }
-    trigger_success progress
-  end
-  
   def startprint
     if @@printer.online? and not @@printer.printing?     
       job = Printjob.find(message)

@@ -158,6 +158,18 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
         WebsocketRails[:temp].trigger(:new, message)
       end  
 
+      printer.progresscb = Proc.new do |progress, remaining|
+        if remaining
+          remaining = UsefulGlobalMethods.timespan_in_words( remaining ) + " left"
+        else
+          remaining = ""
+        end
+        
+        progress = { :percent => progress,
+                     :time_remaining => remaining }
+        WebsocketRails[:print].trigger(:progress, progress)
+      end
+
       # assign autolevel failure callback                      
       printer.autolevelfailcb = Proc.new do
         WebsocketRails[:print].trigger(:state, printer.status)  # abort

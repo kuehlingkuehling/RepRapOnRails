@@ -10,7 +10,7 @@ class PrintjobController < WebsocketRails::BaseController
     Printjob.connection.clear_query_cache
     all = Printjob.all.to_a.map {|p| 
       result = p.attributes
-      result["estimated_print_time_in_words"] = result["estimated_print_time"] ? UsefulGlobalMethods.timespan_in_words(result["estimated_print_time"] ) : "processing..."
+      result["estimated_print_time_in_words"] = result["estimated_print_time"] ? UsefulGlobalMethods.timespan_in_words(result["estimated_print_time"] ) : "n/a"
       result["created_at_in_words"] = ActionController::Base.helpers.time_ago_in_words( p.created_at ) + " ago"
       result
     }
