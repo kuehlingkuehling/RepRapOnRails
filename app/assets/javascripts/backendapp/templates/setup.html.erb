@@ -21,8 +21,8 @@
     </div> 
 </div>
 
-<p ng-show="!presets.length">No Profiles stored so far.</p>
-<table class="table table-striped clearfix" ng-show="presets.length">
+<p ng-show="!printer.filamentPresets.length">No Profiles stored so far.</p>
+<table class="table table-striped clearfix" ng-show="printer.filamentPresets.length">
   <thead>
     <tr>
       <th>Name</th>
@@ -31,17 +31,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="p in presets">
+    <tr ng-repeat="p in printer.filamentPresets">
       <td>
         <p ng-show="edit[p.id]">
-          <input type="text" ng-model="presets[$index].name" ng-enter="updatePreset($index)"><br/>
+          <input type="text" ng-model="printer.filamentPresets[$index].name" ng-enter="updatePreset($index)"><br/>
         </p>
         <p ng-show="!edit[p.id]">{{ p.name }}</p>
         <p ng-show="!edit[p.id]" class="text-muted">{{ p.note }}</p>
       </td>
       <td>
         <p ng-show="edit[p.id]">
-          <input type="text" ng-model="presets[$index].extrusion_temp" ng-enter="updatePreset($index)">                
+          <input type="text" ng-model="printer.filamentPresets[$index].extrusion_temp" ng-enter="updatePreset($index)">                
         </p>        
         <span ng-show="!edit[p.id]">{{ p.extrusion_temp }}°C</span></td>
       <td>
@@ -85,8 +85,8 @@
     </div> 
 </div>
 
-<p ng-show="!preheatingProfiles.length">No Profiles stored so far.</p>
-<table class="table table-striped clearfix" ng-show="preheatingProfiles.length">
+<p ng-show="!printer.preheatingProfiles.length">No Profiles stored so far.</p>
+<table class="table table-striped clearfix" ng-show="printer.preheatingProfiles.length">
   <thead>
     <tr>
       <th>Name</th>
@@ -96,23 +96,23 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="p in preheatingProfiles">
+    <tr ng-repeat="p in printer.preheatingProfiles">
       <td>
         <p ng-show="editPreheating[p.id]">
-          <input type="text" ng-model="preheatingProfiles[$index].name" ng-enter="updatePreheatingProfile($index)"><br/>
+          <input type="text" ng-model="printer.preheatingProfiles[$index].name" ng-enter="updatePreheatingProfile($index)"><br/>
         </p>
         <p ng-show="!editPreheating[p.id]">{{ p.name }}</p>
         <p ng-show="!editPreheating[p.id]" class="text-muted">{{ p.note }}</p>
       </td>
       <td>
         <p ng-show="editPreheating[p.id]">
-          <input type="text" ng-model="preheatingProfiles[$index].chamber_temp" ng-enter="updatePreheatingProfile($index)">                
+          <input type="text" ng-model="printer.preheatingProfiles[$index].chamber_temp" ng-enter="updatePreheatingProfile($index)">                
         </p>        
         <span ng-show="!editPreheating[p.id]">{{ p.chamber_temp }}°C</span>
       </td>
       <td>
         <p ng-show="editPreheating[p.id]">
-          <input type="text" ng-model="preheatingProfiles[$index].bed_temp" ng-enter="updatePreheatingProfile($index)">                
+          <input type="text" ng-model="printer.preheatingProfiles[$index].bed_temp" ng-enter="updatePreheatingProfile($index)">                
         </p>        
         <span ng-show="!editPreheating[p.id]">{{ p.bed_temp }}°C</span>
       </td>
@@ -131,7 +131,7 @@
 
 <h4>System Information</h4>  
 
-<table class="table table-striped clearfix" ng-show="presets.length">
+<table class="table table-striped clearfix">
   <tbody>
     <tr>
       <td>Hostname</td>
@@ -194,13 +194,13 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="e in eeprom | toArray">
+    <tr ng-repeat="e in printer.eeprom | toArray">
       <td>
         <p>{{ e.name }}</p>
       </td>
       <td>
         <p ng-show="edit_eeprom[e.$key]">
-          <input type="text" ng-model="eeprom[e.$key].val" ng-enter="updateEEPROM(e.$key)">                
+          <input type="text" ng-model="printer.eeprom[e.$key].val" ng-enter="updateEEPROM(e.$key)">                
         </p>        
         <span ng-show="!edit_eeprom[e.$key]">{{ e.val }}</span>
       </td>

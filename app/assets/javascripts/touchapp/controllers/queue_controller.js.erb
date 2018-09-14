@@ -3,7 +3,7 @@ touchApp.controller('QueueController', function($scope, $modal, Printer, CommonC
 
   Printer.menuDisabled = false; 
 
- $scope.$watch(function(){ return Printer.print; }, function(newValue){
+  $scope.$watch(function(){ return Printer.print; }, function(newValue){
     if (( Printer.print.state == 2) || ( Printer.print.state == 3 ) || ( Printer.print.state == 5 )) {
       $scope.printing = true;
     } else {
@@ -12,7 +12,6 @@ touchApp.controller('QueueController', function($scope, $modal, Printer, CommonC
   }, true);    
   
   $scope.$watch(function(){ return Printer.print; }, function(newValue){
-    $scope.print = Printer.print;
     if (Printer.print.state == 1) {
       $scope.idle = true;
     } else {
@@ -24,9 +23,4 @@ touchApp.controller('QueueController', function($scope, $modal, Printer, CommonC
     $scope.printjobs = Printer.printjobs;
   },true);  
 
-
-
-
-  
-     
 });

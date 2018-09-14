@@ -11,11 +11,9 @@ backendApp.controller('SetupController', function($scope, Printer, CommonCode, $
   $scope.isCollapsedPreheating = true;  
   $scope.editPreheating = {};
 
-  $scope.eeprom = null;
+  $scope.printer = Printer;
   Printer.reloadEEPROM();
-  $scope.$watch(function(){ return Printer.eeprom; }, function(newValue){
-    $scope.eeprom = Printer.eeprom;  
-  }, true); 
+
   $scope.edit_eeprom = {};
 
   $scope.hostname = ' ';
@@ -40,10 +38,6 @@ backendApp.controller('SetupController', function($scope, Printer, CommonCode, $
   $scope.uploadProgress = 0;
   $scope.file = false;  
   $scope.error = '';
-
-  $scope.$watch(function(){ return Printer.filamentPresets; }, function(){
-    $scope.presets = Printer.filamentPresets;
-  },true);  
   
   $scope.toggleForm = function() {
     $scope.resetForm();    
@@ -71,8 +65,8 @@ backendApp.controller('SetupController', function($scope, Printer, CommonCode, $
   };
   
   $scope.updatePreset = function(index){
-    Printer.updatePreset($scope.presets[index]);
-    $scope.edit[$scope.presets[index].id] = false;    
+    Printer.updatePreset(Printer.filamentPresets[index]);
+    $scope.edit[Printer.filamentPresets[index].id] = false;    
   };    
   
   $scope.onFileSelect = function($files) {
@@ -109,11 +103,6 @@ backendApp.controller('SetupController', function($scope, Printer, CommonCode, $
     });
   };   
 
-  // Preheating Profiles
-  $scope.$watch(function(){ return Printer.preheatingProfiles; }, function(){
-    $scope.preheatingProfiles = Printer.preheatingProfiles;
-  },true);  
-
   $scope.toggleFormPreheating = function() {
     $scope.resetFormPreheating();    
     $scope.isCollapsedPreheating = !$scope.isCollapsedPreheating;
@@ -141,8 +130,8 @@ backendApp.controller('SetupController', function($scope, Printer, CommonCode, $
   };
   
   $scope.updatePreheatingProfile = function(index){
-    Printer.updatePreheatingProfile($scope.preheatingProfiles[index]);
-    $scope.editPreheating[$scope.preheatingProfiles[index].id] = false;    
+    Printer.updatePreheatingProfile(Printer.preheatingProfiles[index]);
+    $scope.editPreheating[Printer.preheatingProfiles[index].id] = false;    
   };
 
 
@@ -155,10 +144,10 @@ backendApp.controller('SetupController', function($scope, Printer, CommonCode, $
   };
 
   $scope.updateEEPROM = function(pos){
-    Printer.setEEPROM(pos, $scope.eeprom[pos].type, $scope.eeprom[pos].val);
+    Printer.setEEPROM(pos, Printer.eeprom[pos].type, Printer.eeprom[pos].val);
     
-    if ( $scope.eeprom[pos].type != 3) {
-      $scope.eeprom[pos].val = Math.floor($scope.eeprom[pos].val);
+    if ( Printer.eeprom[pos].type != 3) {
+      Printer.eeprom[pos].val = Math.floor(Printer.eeprom[pos].val);
     };
     $scope.edit_eeprom[pos] = false;    
   };

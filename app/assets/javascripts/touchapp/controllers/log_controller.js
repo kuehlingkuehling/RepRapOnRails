@@ -3,18 +3,8 @@ touchApp.controller('LogController', function($scope, Printer, CommonCode){
   
   $scope.gcode = '';
   $scope.lastcommand = '';  
-  
-  // init pagination
-  //$scope.itemsPerPage = 13;
-  //$scope.currentPage = 1;
-  //$scope.pagedLog = [];
 
-  // process list to pages  
-  $scope.$watch(function(){ return Printer.log; }, function(newValue){
-    $scope.log_length = Printer.log.length;      
-    $scope.log = Printer.log;
-    //$scope.pagedLog = CommonCode.groupToPages(Printer.log, $scope.itemsPerPage);
-  }, true);
+  $scope.printer = Printer;
 
   $scope.send = function(){
     Printer.sendgcode($scope.gcode);

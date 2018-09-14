@@ -1,21 +1,8 @@
 touchApp.controller('HeaderController', function($scope, $location, $timeout, $modal, Printer){
   console.log("Running HeaderController");
-  
-  $scope.$watch(function(){ return Printer.print; }, function(newValue){
-    $scope.print = Printer.print;  
-  }, true);  
-  
-  $scope.$watch(function(){ return Printer.menuDisabled; }, function(newValue){
-    $scope.menuDisabled = Printer.menuDisabled;  
-  }, true);  
 
-  $scope.progress = 0;
-  $scope.time_remaining = '';
-  $scope.$watch(function(){ return Printer.progress; }, function(newValue){
-    $scope.progress = Printer.progress;  
-    $scope.time_remaining = Printer.time_remaining;  
-  }, true);  
-   
+  $scope.printer = Printer;
+
   $scope.$on('$locationChangeSuccess', function(event) {
     $scope.path = $location.path();
     $scope.tab = $scope.path.substr(1, $scope.path.length);
@@ -56,10 +43,7 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
     } else {
       $scope.printing = false;      
     }    
-  }, true);    
-  
-  $scope.$watch(function(){ return Printer.print; }, function(newValue){
-    $scope.print = Printer.print;
+ 
     if (Printer.print.state == 1) {
       $scope.idle = true;
     } else {
@@ -80,19 +64,12 @@ touchApp.controller('HeaderController', function($scope, $location, $timeout, $m
     });       
   };
 
-  $scope.$watch(function(){ return Printer.preheatingProfile; }, function(){
-    $scope.preheatingProfile = Printer.preheatingProfile;
-  },true);  
-
   $scope.preheat_on = function(){
-    Printer.preheat($scope.preheatingProfile.chamber_temp, $scope.preheatingProfile.bed_temp);    
+    Printer.preheat(Printer.preheatingProfile.chamber_temp, Printer.preheatingProfile.bed_temp);    
   };  
 
   $scope.preheat_off = function(){
     Printer.preheat(0,0);    
   };  
 
-  $scope.$watch(function(){ return Printer.temp; }, function(){
-    $scope.temp = Printer.temp;
-  },true);     
 });

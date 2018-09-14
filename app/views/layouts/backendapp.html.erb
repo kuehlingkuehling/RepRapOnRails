@@ -44,7 +44,7 @@
 
         <div class="jumbotron header-background">
           <h1 class="text-left">
-            <span ng-switch on="print.state">
+            <span ng-switch on="printer.print.state">
               <span ng-switch-when="0">Initializing...</span>
               <span ng-switch-when="1">Idle</span>
               <span ng-switch-when="2">Printing</span>
@@ -54,12 +54,12 @@
             </span>            
           </h1>
           <div class="row">
-            <div class="col-md-7"><p><span ng-show="print.job.length">"{{ print.job }}"</span>&nbsp;</p></div>    
-            <div class="col-md-5"><p class="pull-right">{{ print.time_remaining }}</p></div>
+            <div class="col-md-7"><p><span ng-show="printer.print.job.length">"{{ printer.print.job }}"</span>&nbsp;</p></div>    
+            <div class="col-md-5"><p class="pull-right">{{ printer.print.time_remaining }}</p></div>
           </div>
           <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="{{ print.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ print.progress }}%">
-              <span class="sr-only">{{ progress }}% complete</span>
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ printer.print.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ printer.print.progress }}%">
+              <span class="sr-only">{{ printer.print.progress }}% complete</span>
             </div>
           </div>        
         </div>

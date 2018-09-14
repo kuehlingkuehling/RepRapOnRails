@@ -2,12 +2,12 @@
 
   <!-- Left Extruder -->
   <div class="col-xs-8"> 
-    <h4><span ng-if="isDualExtruder">Left </span>Extruder Filament Profile</h4>
-    <p ng-show="filaments.left">
-      <b>{{ filaments.left.name }}</b><br/>
-      {{ filaments.left.extrusion_temp }}°C Extrusion Temperature
+    <h4><span ng-if="printer.isDualExtruder">Left </span>Extruder Filament Profile</h4>
+    <p ng-show="printer.filamentsLoaded.left">
+      <b>{{ printer.filamentsLoaded.left.name }}</b><br/>
+      {{ printer.filamentsLoaded.left.extrusion_temp }}°C Extrusion Temperature
     </p>
-    <p ng-show="!filaments.left" class="text-muted">
+    <p ng-show="!printer.filamentsLoaded.left" class="text-muted">
       No material loaded.
     </p>
   </div>
@@ -32,20 +32,20 @@
   
 
 <!-- Right Extruder -->
-  <div class="col-xs-8" ng-if="isDualExtruder"> 
+  <div class="col-xs-8" ng-if="printer.isDualExtruder"> 
     <h4>Right Extruder Filament Profile</h4>
-    <p ng-show="filaments.right">
-      <b>{{ filaments.right.name }}</b><br/>
-      {{ filaments.right.extrusion_temp }}°C Extrusion Temperature
+    <p ng-show="printer.filamentsLoaded.right">
+      <b>{{ printer.filamentsLoaded.right.name }}</b><br/>
+      {{ printer.filamentsLoaded.right.extrusion_temp }}°C Extrusion Temperature
     </p>
-    <p ng-show="!filaments.right" class="text-muted">
+    <p ng-show="!printer.filamentsLoaded.right" class="text-muted">
       No profile selected.
     </p>
   </div>
 
   
   <!-- right extruder buttons -->
-  <div class="col-xs-4" ng-show="isDualExtruder">
+  <div class="col-xs-4" ng-show="printer.isDualExtruder">
     <p>
       <button class="btn btn-primary btn-lg" ng-click="selectRight = true">
         Select
@@ -64,12 +64,12 @@
   <!-- Chamber/Bed -->
   <div class="col-xs-8"> 
     <h4>Chamber/Bed Preheating Profile</h4>
-    <p ng-show="preheatingProfile">
-      <b>{{ preheatingProfile.name }}</b><br/>
-      {{ preheatingProfile.chamber_temp }}°C Chamber Temperature<br>
-      {{ preheatingProfile.bed_temp }}°C Bed Temperature
+    <p ng-show="printer.preheatingProfile">
+      <b>{{ printer.preheatingProfile.name }}</b><br/>
+      {{ printer.preheatingProfile.chamber_temp }}°C Chamber Temperature<br>
+      {{ printer.preheatingProfile.bed_temp }}°C Bed Temperature
     </p>
-    <p ng-show="!preheatingProfile" class="text-muted">
+    <p ng-show="!printer.preheatingProfile" class="text-muted">
       No profile selected.
     </p>
   </div>
@@ -93,9 +93,9 @@
     <button class="pull-right btn btn-danger btn-lg" ng-click="selectLeft = false">
       Cancel
     </button>
-    <h4>Select <span ng-if="isDualExtruder">Left </span>Extruder Filament Profile</h4>
-    <p ng-show="!filamentPresets.length">No Filament Profiles configured.</p>
-    <table class="table table-striped" ng-show="filamentPresets.length">
+    <h4>Select <span ng-if="printer.isDualExtruder">Left </span>Extruder Filament Profile</h4>
+    <p ng-show="!printer.filamentPresets.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="printer.filamentPresets.length">
       <thead>
         <tr>     
           <th style="width:45%;">Filament Profile</th>
@@ -104,7 +104,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="f in filamentPresets">
+        <tr ng-repeat="f in printer.filamentPresets">
           <td>{{ f.name }}</td>
           <td>{{ f.extrusion_temp }}°C</td>
           <td>
@@ -120,14 +120,14 @@
   </div>
 </div>
 
-<div class="row" ng-show="selectRight" ng-show="isDualExtruder">
+<div class="row" ng-show="selectRight" ng-show="printer.isDualExtruder">
   <div class="col-xs-12">
     <button class="pull-right btn btn-danger btn-lg" ng-click="selectRight = false">
       Cancel
     </button> 
     <h4>Select Right Extruder Filament Profile</h4>
-    <p ng-show="!filamentPresets.length">No Filament Profiles configured.</p>
-    <table class="table table-striped" ng-show="filamentPresets.length">
+    <p ng-show="!printer.filamentPresets.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="printer.filamentPresets.length">
       <thead>
         <tr>     
           <th style="width:45%;">Filament Profile</th>
@@ -136,7 +136,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="f in filamentPresets">
+        <tr ng-repeat="f in printer.filamentPresets">
           <td>{{ f.name }}</td>
           <td>{{ f.extrusion_temp }}°C</td>
           <td>
@@ -158,8 +158,8 @@
       Cancel
     </button>
     <h4>Select Chamber/Bed Preheating Profile</h4>
-    <p ng-show="!preheatingProfiles.length">No Filament Profiles configured.</p>
-    <table class="table table-striped" ng-show="preheatingProfiles.length">
+    <p ng-show="!printer.preheatingProfiles.length">No Filament Profiles configured.</p>
+    <table class="table table-striped" ng-show="printer.preheatingProfiles.length">
       <thead>
         <tr>     
           <th style="width:45%;">Preheating Profile</th>
@@ -168,7 +168,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="f in preheatingProfiles">
+        <tr ng-repeat="f in printer.preheatingProfiles">
           <td>{{ f.name }}</td>
           <td>
             Chamber: {{ f.chamber_temp }}°C<br/>

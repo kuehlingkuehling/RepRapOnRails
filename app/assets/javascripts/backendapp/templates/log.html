@@ -1,10 +1,10 @@
-<h3 ng-show="log.length == 0">No messages recorded yet.</h3>
-<p ng-show="log.length">
+<h3 ng-show="printer.log.length == 0">No messages recorded yet.</h3>
+<p ng-show="printer.log.length">
 <p class="pull-right">
   <a href="/logfile" target="_blank" class="btn btn-primary">Download log file</a>
 </p>
 <small>
-  <span ng-repeat="message in log">
+  <span ng-repeat="message in printer.log">
   <span class="log-timestamp">
     [{{ message.created_at | date:'yyyy-MM-dd HH:mm:ss' }} UTC]               
   </span> 

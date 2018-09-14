@@ -30,8 +30,8 @@
     </div> 
 </div>
 
-<p ng-show="!printjobs.length">No printjobs in queue.</p>
-<table class="table table-striped clearfix" ng-show="printjobs.length">
+<p ng-show="!printer.printjobs.length">No printjobs in queue.</p>
+<table class="table table-striped clearfix" ng-show="printer.printjobs.length">
   <thead>
     <tr>
       <th>&nbsp;</th>      
@@ -41,12 +41,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="p in printjobs">
+    <tr ng-repeat="p in printer.printjobs">
       <td>{{ $index + 1 }}</td>
       <td>
         <p ng-show="edit[p.id]">
-          <input type="text" ng-model="printjobs[$index].name" ng-enter="updatePrintjob($index)"><br/>
-          <input type="text" ng-model="printjobs[$index].note" ng-enter="updatePrintjob($index)">        
+          <input type="text" ng-model="printer.printjobs[$index].name" ng-enter="updatePrintjob($index)"><br/>
+          <input type="text" ng-model="printer.printjobs[$index].note" ng-enter="updatePrintjob($index)">        
         </p>
         <p ng-show="!edit[p.id]">{{ p.name }}</p>
         <p ng-show="!edit[p.id]" class="text-muted">{{ p.note }}</p>
@@ -58,7 +58,7 @@
             <button class="btn btn-primary"  ng-show="!edit[p.id]" ng-click="editPrintjob(p.id)">edit</button>
             <button class="btn btn-default"  ng-show="edit[p.id]" ng-click="updatePrintjob($index)">update</button>          
             <button class="btn btn-default"  ng-show="edit[p.id]" ng-click="edit[p.id] = false">cancel</button>          
-            <button class="btn btn-primary {{ now_printing_id == p.id && 'disabled' }}" ng-click="removePrintjob(p.id)">remove</button>        
+            <button class="btn btn-primary {{ printer.print.job_id == p.id && 'disabled' }}" ng-click="removePrintjob(p.id)">remove</button>        
           </nobr>
         </p>
       </td>                  

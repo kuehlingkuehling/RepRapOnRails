@@ -2,7 +2,7 @@ touchApp.controller('SetupController', function($scope, Printer,$interval){
   console.log("Running SetupController");  
 
   Printer.menuDisabled = false;
-  
+
   $scope.backendurl = ' ';
   Printer.get('hostname').then(function(data){
     $scope.backendurl = 'http://' + data + '/';
@@ -23,30 +23,10 @@ touchApp.controller('SetupController', function($scope, Printer,$interval){
     $scope.ip_address = data.ip_address;
   });   
 
-  // some wizards are only available on dual extruder setups  
-  $scope.$watch(function(){ return Printer.isDualExtruder; }, function(){
-    $scope.isDualExtruder = Printer.isDualExtruder;
-  },true); 
-
   $scope.idle = false;
   $scope.paused = false;
-  
-  // some wizards are only available in specific print states
-  $scope.$watch(function(){ return Printer.print; }, function(newValue){
-    if (Printer.print.state == 1) {
-      $scope.idle = true;
-    } else {
-      $scope.idle = false;      
-    };
-    
-    if (Printer.print.state == 3) {
-      $scope.paused = true;
-    } else {
-      $scope.paused = false;
-    };
-  }, true);   
 
-  // show system clock in Footer
+  // show system clock
   $scope.clock = Date.now();$interval(function () { $scope.clock = Date.now(); }, 1000);
   
 });

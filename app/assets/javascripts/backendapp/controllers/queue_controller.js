@@ -9,13 +9,7 @@ backendApp.controller('QueueController', function($scope, Printer, CommonCode, $
   $scope.error = 'No Error';
   $scope.edit = {};
 
-  $scope.$watch(function(){ return Printer.printjobs; }, function(){
-    $scope.printjobs = Printer.printjobs;
-  },true);  
-  
-  $scope.$watch(function(){ return Printer.print; }, function(newValue){
-    $scope.now_printing_id = Printer.print.job_id;
-  }, true);   
+  $scope.printer = Printer;
   
   $scope.onFileSelect = function($files) {
     //$files: an array of files selected, each file has name, size, and type.
@@ -83,8 +77,8 @@ backendApp.controller('QueueController', function($scope, Printer, CommonCode, $
   };
   
   $scope.updatePrintjob = function(index){
-    Printer.updatePrintjob($scope.printjobs[index]);
-    $scope.edit[$scope.printjobs[index].id] = false;    
+    Printer.updatePrintjob(Printer.printjobs[index]);
+    $scope.edit[Printer.printjobs[index].id] = false;    
   };  
   
 });

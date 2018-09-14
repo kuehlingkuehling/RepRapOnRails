@@ -143,8 +143,8 @@
   <div class="col-xs-12 text-center">
     <h4>Extruder Control</h4>
     <span>
-      <span ng-show="isDualExtruder">select:</span>&nbsp;<br/>
-      <div class="btn-group text-center" ng-show="isDualExtruder">
+      <span ng-show="printer.isDualExtruder">select:</span>&nbsp;<br/>
+      <div class="btn-group text-center" ng-show="printer.isDualExtruder">
         <button type="button" ng-model="ext_name" class="btn btn-primary btn-lg {{ disable_buttons && 'disabled' }}" btn-radio="'left_extruder'">Left</button>
         <button type="button" ng-model="ext_name" class="btn btn-primary btn-lg {{ disable_buttons && 'disabled' }}" btn-radio="'right_extruder'">Right</button>
       </div>

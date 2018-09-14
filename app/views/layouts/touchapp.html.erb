@@ -27,14 +27,14 @@
         <h1>     
            
           <span class="pull-right">
-            <button type="button" class="btn btn-default btn-lg {{ (( print.state == 2 ) || (print.state == 3) || (print.state == 5)) && 'disabled' }}"  ng-click="shutdown()" style="margin-top:-40px;margin-left:30px;height:80px;width:80px;">
+            <button type="button" class="btn btn-default btn-lg {{ (( printer.print.state == 2 ) || (printer.print.state == 3) || (printer.print.state == 5)) && 'disabled' }}"  ng-click="shutdown()" style="margin-top:-40px;margin-left:30px;height:80px;width:80px;">
               <i class="fa fa-power-off fa-2x"></i>
             </button>      
           </span>        
           <span class="pull-right">
             <button type="button" class="btn btn-warning btn-lg"  ng-click="emergencyStop()" style="margin-top:-40px;height:80px;width:160px;font-weight: bold;color:white">EMERGENCY<br/>STOP</button>      
           </span>              
-          <span ng-switch on="print.state">
+          <span ng-switch on="printer.print.state">
             <span ng-switch-when="0">Initializing...</span>
             <span ng-switch-when="1">Idle</span>
             <span ng-switch-when="2">Printing</span>
@@ -44,32 +44,32 @@
           </span>
         </h1>
         <div class="row">
-          <div class="col-xs-7" style="white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;"><p><span ng-show="print.job.length">"{{ print.job }}"</span>&nbsp;</p></div>    
-          <div class="col-xs-5"><p class="pull-right">{{ print.time_remaining }}</p></div>
+          <div class="col-xs-7" style="white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;"><p><span ng-show="printer.print.job.length">"{{ printer.print.job }}"</span>&nbsp;</p></div>    
+          <div class="col-xs-5"><p class="pull-right">{{ printer.print.time_remaining }}</p></div>
         </div>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ print.progress }}%">
-            <span class="sr-only">{{ print.progress }}% complete</span>
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{ printer.print.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ printer.print.progress }}%">
+            <span class="sr-only">{{ printer.print.progress }}% complete</span>
           </div>
         </div>
 
         <div class="pull-right">
-          <button type="button" class="btn btn-warning btn-lg" ng-show="( print.state == 2 ) || ( print.state == 5 )" ng-click="pauseprint()">Pause Print</button>                
-          <button type="button" class="btn btn-warning btn-lg" ng-show="print.state == 3" ng-click="resumeprint()">Resume Print</button>                          
-          <button type="button" class="btn btn-danger btn-lg" ng-show="( print.state == 2 ) || ( print.state == 3 ) || ( print.state == 5 )" ng-click="abortprint()">Abort Print</button>      
+          <button type="button" class="btn btn-warning btn-lg" ng-show="( printer.print.state == 2 ) || ( printer.print.state == 5 )" ng-click="pauseprint()">Pause Print</button>                
+          <button type="button" class="btn btn-warning btn-lg" ng-show="printer.print.state == 3" ng-click="resumeprint()">Resume Print</button>                          
+          <button type="button" class="btn btn-danger btn-lg" ng-show="( printer.print.state == 2 ) || ( printer.print.state == 3 ) || ( printer.print.state == 5 )" ng-click="abortprint()">Abort Print</button>      
         </div>
 
         <div>
-            <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_on()" ng-show="!print.psu_on">
+            <button type="button" class="btn btn-primary btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_on()" ng-show="!printer.print.psu_on">
               Build Chamber ON
             </button>   
-            <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_off()" ng-show="print.psu_on">
+            <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="psu_off()" ng-show="printer.print.psu_on">
               Build Chamber OFF
             </button> 
-            <button type="button" class="btn btn-primary btn-lg navigation {{ ( printing || !preheatingProfile || !print.psu_on ) && 'disabled' }}" ng-click="preheat_on()" ng-show="( temp.chamber.target == 0 ) && ( temp.bed.target == 0 )">
+            <button type="button" class="btn btn-primary btn-lg navigation {{ ( printing || !printer.preheatingProfile || !printer.print.psu_on ) && 'disabled' }}" ng-click="preheat_on()" ng-show="( printer.temp.chamber.target == 0 ) && ( printer.temp.bed.target == 0 )">
               Preheat ON
             </button> 
-            <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="preheat_off()" ng-show="!(( temp.chamber.target == 0 ) && ( temp.bed.target == 0 ))">
+            <button type="button" class="btn btn-default btn-lg navigation {{ printing && 'disabled' }}" ng-click="preheat_off()" ng-show="!(( printer.temp.chamber.target == 0 ) && ( printer.temp.bed.target == 0 ))">
               Preheat OFF
             </button>
         </div>        
@@ -78,19 +78,19 @@
       <!-- Menu
       ================================================== -->    
       <div class="container-fluid" id="menu" style="padding-left:15px; padding-top: 15px;padding-bottom: 15px;">      
-          <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'queue' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('queue')">
+          <button type="button" class="btn {{ printer.menuDisabled && 'disabled' }} {{tab == 'queue' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('queue')">
             Print
           </button>
-          <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'configuration' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('configuration')">
+          <button type="button" class="btn {{ printer.menuDisabled && 'disabled' }} {{tab == 'configuration' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('configuration')">
             Configuration
           </button>  
-          <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'setup' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('setup')">
+          <button type="button" class="btn {{ printer.menuDisabled && 'disabled' }} {{tab == 'setup' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('setup')">
             Setup
           </button>          
-          <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'manualcontrol' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('manualcontrol')">
+          <button type="button" class="btn {{ printer.menuDisabled && 'disabled' }} {{tab == 'manualcontrol' && 'btn-default' || 'btn-primary'}} btn-lg navigation" ng-click="go('manualcontrol')">
             Expert Control
           </button> 
-          <button type="button" class="btn {{ menuDisabled && 'disabled' }} {{tab == 'log' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('log')">
+          <button type="button" class="btn {{ printer.menuDisabled && 'disabled' }} {{tab == 'log' && 'btn-default' || 'btn-primary'}} btn-lg navigation"  ng-click="go('log')">
             Log
           </button>   
         </div>    
@@ -112,31 +112,31 @@
         <ul class="nav navbar-nav">
           <li>
             <p class="navbar-text">
-              <b><span ng-if="isDualExtruder">Left </span>Extruder:</b> <span class="{{ ( temp.left_extruder.target > 0 ) && 'text-danger' }}">{{ temp.left_extruder.temp | number:2 }} / {{ temp.left_extruder.target | number:0 }}</span>
+              <b><span ng-if="printer.isDualExtruder">Left </span>Extruder:</b> <span class="{{ ( printer.temp.left_extruder.target > 0 ) && 'text-danger' }}">{{ printer.temp.left_extruder.temp | number:2 }} / {{ printer.temp.left_extruder.target | number:0 }}</span>
               <br/>
-              <small ng-show="filaments.left">{{ filaments.left.name | limitTo:40 }}</small>
-              <small ng-show="!filaments.left" class="text-muted">No material loaded</small>
+              <small ng-show="printer.filamentsLoaded.left">{{ printer.filamentsLoaded.left.name | limitTo:40 }}</small>
+              <small ng-show="!printer.filamentsLoaded.left" class="text-muted">No material loaded</small>
             </p>
           </li>
-          <li ng-if="isDualExtruder">
+          <li ng-if="printer.isDualExtruder">
             <p class="navbar-text">
-              <b>Right Extruder:</b> <span class="{{ ( temp.right_extruder.target > 0 ) && 'text-danger' }}">{{ temp.right_extruder.temp | number:2 }} / {{ temp.right_extruder.target | number:0 }}</span>
+              <b>Right Extruder:</b> <span class="{{ ( printer.temp.right_extruder.target > 0 ) && 'text-danger' }}">{{ printer.temp.right_extruder.temp | number:2 }} / {{ printer.temp.right_extruder.target | number:0 }}</span>
               <br/>
-              <small ng-show="filaments.right">{{ filaments.right.name | limitTo:40 }}</small>
-              <small ng-show="!filaments.right" class="text-muted">No material loaded</small>
-            </p>
-          </li>
-          <li>
-            <p class="navbar-text">
-              <b>Chamber:</b> <span class="{{ ( temp.chamber.target > 0 ) && 'text-danger' }}">{{ temp.chamber.temp | number:2 }} / {{ temp.chamber.target | number:0 }}</span>
-              <br/>
-              <small ng-show="preheatingProfile">{{ preheatingProfile.name | limitTo:40 }}</small>
-              <small ng-show="!preheatingProfile" class="text-muted">No Preheating Profile selected</small>
+              <small ng-show="printer.filamentsLoaded.right">{{ printer.filamentsLoaded.right.name | limitTo:40 }}</small>
+              <small ng-show="!printer.filamentsLoaded.right" class="text-muted">No material loaded</small>
             </p>
           </li>
           <li>
             <p class="navbar-text">
-              <b>Bed:</b> <span class="{{ ( temp.bed.target > 0 ) && 'text-danger' }}">{{ temp.bed.temp | number:2 }} / {{ temp.bed.target | number:0 }}</span>
+              <b>Chamber:</b> <span class="{{ ( printer.temp.chamber.target > 0 ) && 'text-danger' }}">{{ printer.temp.chamber.temp | number:2 }} / {{ printer.temp.chamber.target | number:0 }}</span>
+              <br/>
+              <small ng-show="printer.preheatingProfile">{{ printer.preheatingProfile.name | limitTo:40 }}</small>
+              <small ng-show="!printer.preheatingProfile" class="text-muted">No Preheating Profile selected</small>
+            </p>
+          </li>
+          <li>
+            <p class="navbar-text">
+              <b>Bed:</b> <span class="{{ ( printer.temp.bed.target > 0 ) && 'text-danger' }}">{{ printer.temp.bed.temp | number:2 }} / {{ printer.temp.bed.target | number:0 }}</span>
               <br/>
             </p>
           </li>          

@@ -55,56 +55,6 @@ touchApp.config(['$routeProvider', function($routeProvider, Printer) {
       controller: 'LogController',
       resolve: resolve_websocket
     }).    
-    when('/wizard_leveling', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_leveling.html") %>',
-      controller: 'WizardLevelingController',
-      resolve: resolve_websocket
-    }).        
-    when('/wizard_select_filament', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_select_filament.html") %>',
-      controller: 'WizardSelectFilamentController',
-      resolve: resolve_websocket
-    }).        
-    when('/wizard_unload_filament', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_unload_filament.html") %>',
-      controller: 'WizardUnloadFilamentController',
-      resolve: resolve_websocket
-    }).         
-    when('/wizard_load_filament', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_load_filament.html") %>',
-      controller: 'WizardLoadFilamentController',
-      resolve: resolve_websocket
-    }).             
-    when('/wizard_priming', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_priming.html") %>',
-      controller: 'WizardPrimingController',
-      resolve: resolve_websocket
-    }). 
-    when('/wizard_calibrate_extrusion', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_calibrate_extrusion.html") %>',
-      controller: 'WizardCalibrateExtrusionController',
-      resolve: resolve_websocket
-    }).  
-    when('/wizard_calibrate_offset', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_calibrate_offset.html") %>',
-      controller: 'WizardCalibrateOffsetController',
-      resolve: resolve_websocket
-    }).      
-    when('/wizard_regular_maintenance', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_regular_maintenance.html") %>',
-      controller: 'WizardRegularMaintenanceController',
-      resolve: resolve_websocket
-    }).  
-    when('/wizard_nozzle_change', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_nozzle_change.html") %>',
-      controller: 'WizardNozzleChangeController',
-      resolve: resolve_websocket
-    }).  
-    when('/wizard_calibrate_backlash', {
-      templateUrl: '<%= asset_path("touchapp/templates/wizard_calibrate_backlash.html") %>',
-      controller: 'WizardCalibrateBacklashController',
-      resolve: resolve_websocket
-    }).      
     otherwise({
       redirectTo: '/queue'
     });
