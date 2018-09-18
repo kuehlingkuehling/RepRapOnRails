@@ -26,7 +26,7 @@ class BackendappController < ApplicationController
     if @printjob.save
       render json: @printjob, status: :created, location: @printjob
     else
-      render json: @printjob.errors.full_messages, status: :unprocessable_entity       
+      render json: @printjob.errors.full_messages, status: :unprocessable_entity
     end
   end
   
