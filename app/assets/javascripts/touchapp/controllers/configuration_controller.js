@@ -1,13 +1,6 @@
 touchApp.controller('ConfigurationController', function($scope, $location, CommonCode, Printer){
   console.log("Running ConfigurationController");  
 
-  // init pagination
-  $scope.itemsPerPage = 3;
-  $scope.currentPageLeft = 1;
-  $scope.currentPageRight = 1;  
-  $scope.numFilaments = 0;
-  $scope.numProfiles = 0;  
-
   $scope.printer = Printer;
     
   $scope.setLeft = function(id) {
