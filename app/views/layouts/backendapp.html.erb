@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="backendApp">
   <head>
-    <title>K&uuml;hling&amp;K&uuml;hling HT500</title>
+    <title>K&uuml;hling&amp;K&uuml;hling <%= Rails.application.config.model %></title>
     <meta name="description" content="RepRapOnRails">
     <%= stylesheet_link_tag "application", :media => "all" %>
     <%= stylesheet_link_tag "backendapp", :media => "all" %>    
@@ -39,7 +39,7 @@
             <li ng-class="{ active: (tab == '/setup') }"><a href="#setup" ng-click="go('setup')">Setup</a></li>
             <li ng-class="{ active: (tab == '/log') }"><a href="#log" ng-click="go('log')">Log</a></li>            
           </ul>
-          <h3 class="text-muted">K&uuml;hling&amp;K&uuml;hling HT500</h3>
+          <h3 class="text-muted">K&uuml;hling&amp;K&uuml;hling <%= Rails.application.config.model %></h3>
         </div>
 
         <div class="jumbotron header-background">
@@ -75,7 +75,7 @@
 
       <div class="footer">
         <p class="text-center">
-          Developed by <a href="http://kuehlingkuehling.de">Jonas Kühling & Simon Kühling GbR</a>
+          Developed by <a href="http://kuehlingkuehling.de">Kühling&Kühling GmbH</a>
           <br />This software is licensed under the <a rel="license" href="http://www.gnu.org/licenses/gpl-3.0">GNU General Public License v3</a>.</p>
       </div>
 

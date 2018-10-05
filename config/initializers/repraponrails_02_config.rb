@@ -3,9 +3,11 @@ RepRapOnRails::Application.configure do
 
   case config.hardware_revision_number
   when "v2.0.0"
-
-      # hardware revision
-    config.hardware_revision = "HT500.3 v2.0.0"
+    # model
+    config.model = "HT500.3"
+    
+    # hardware revision
+    config.hardware_revision = "v2.0.0"
 
     # compatible Arduino Firmware version
     config.arduino_firmware_version = "Repetier Firmware v0.92-ht500-2.0.0-01"
