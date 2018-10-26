@@ -19,43 +19,45 @@ touchApp.controller('WizardCalibrateOffsetController', function($scope, CommonCo
     }
   }, true); 
   
-  $scope.calibration_delta = 0.1; // in mm
-  
-  $scope.line_x = 0;
-  $scope.line_y = 0;  
-  
-
-  $scope.generate_printjob = function() {
-    MyWebsocket.calibrateOffsetPrintjob();
-    MyWebsocket.menuDisabled = false;    
-    $location.path( "/queue" );    
-  };
+  $scope.nominal= 20;
+  $scope.x1= 10;
+  $scope.x2= 30;
+  $scope.y1= 10;
+  $scope.y2= 30;
   
   $scope.save = function() {
-    $steps_x = Math.round( $scope.x_offset - ( $scope.line_x * $scope.calibration_delta * $scope.x_steps_per_mm ));
-    $steps_y = Math.round( $scope.y_offset - ( $scope.line_y * $scope.calibration_delta * $scope.y_steps_per_mm ));
-    //$steps_x = Math.round(( $scope.x_offset + ( $scope.line_x * $scope.calibration_delta )) * $scope.x_steps_per_mm );
-    //$steps_y = Math.round(( $scope.y_offset + ( $scope.line_y * $scope.calibration_delta )) * $scope.y_steps_per_mm );        
+    deviation_x = (($scope.x2 + $scope.x1) * 0.5) - $scope.nominal;
+    deviation_y = (($scope.y2 + $scope.y1) * 0.5) - $scope.nominal;
+
+    $steps_x = Math.round( $scope.x_offset - ( deviation_x * $scope.x_steps_per_mm ));
+    $steps_y = Math.round( $scope.y_offset - ( deviation_y * $scope.y_steps_per_mm ));
+
     MyWebsocket.setEEPROM(331, $scope.eeprom[331].type, $steps_x); // Ext2 X Offset in steps
     MyWebsocket.setEEPROM(335, $scope.eeprom[335].type, $steps_y); // Ext2 X Offset in steps
     $scope.exit();
   };  
   
-  $scope.dec_x = function() {
-    $scope.line_x -= 1;
+
+  $scope.adjust_nominal = function(val) {
+    $scope.nominal += val;
   };
-  
-  $scope.dec_y = function() {
-    $scope.line_y -= 1;    
+
+  $scope.adjust_x1 = function(val) {
+    $scope.x1 += val;
   };
-  
-  $scope.inc_x = function() {
-    $scope.line_x += 1;    
+
+  $scope.adjust_x2 = function(val) {
+    $scope.x2 += val;
   };
-  
-  $scope.inc_y = function() {
-    $scope.line_y += 1;    
+
+  $scope.adjust_y1 = function(val) {
+    $scope.y1 += val;
   };
+
+  $scope.adjust_y2 = function(val) {
+    $scope.y2 += val;
+  };
+
 
   $scope.exit = function() {
     MyWebsocket.menuDisabled = false;

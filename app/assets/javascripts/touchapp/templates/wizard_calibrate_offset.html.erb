@@ -1,58 +1,124 @@
+<!-- header line -->
 <div class="row">
-  <div class="col-md-7">
+  <div class="col-md-12">
+    <button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
+      Cancel
+    </button>  
+    <h3 class="wizard-title">
+      Set Extruder Offset
+    </h3>
+    <br/>&nbsp;
+  </div>
+</div>    
+
+<!-- contents -->
+<div class="row">
+
+  <div class="col-md-4">
     <div class="row">
-
-      <!-- header line -->
+      <!-- introduction text -->
       <div class="col-md-12">
-        <button type="button" class="pull-right btn btn-danger btn-lg navigation" ng-click="exit()">
-          Cancel
-        </button>  
-        <h3 class="wizard-title">
-          Calibrate Extruder Offset
-        </h3>
-        <br/>&nbsp;
+        <p>To precisely calibrate the offset between the two extruder nozzles, a calibration object has to
+          be printed and precisely measured.</p>
+        <p>Refer to the <b>user's manual</b> for detailed instructions. After printing, adjust the following
+          values according to your measurements and save your calibration:<br/>
+          &nbsp;</p>
       </div>
 
-      <!-- text contents -->
-      <div class="col-md-12">
-        <p>To precisely calibrate the offset between the two extruder nozzles, a calibration print is
-          created to measure the mechanical deviation:</p>      
-        <button type="button" class="btn btn-default btn-lg" ng-click="generate_printjob()">
-          Add Calibration Printjob to Queue
-        </button>
-        <p><br/>After printing visually select the line number for X and Y where both single line
-          extrusions (bottom layer and top layer) vertically align with each other.</p>
-      </div>
-      <div class="col-md-12" ng-show="!config_loaded">
-        <p><br/><b>Loading current calibration...</b></p>
-      </div>
-      <div class="col-md-6" ng-show="config_loaded">
-        <h4 class="text-center">
-          X:
-          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="dec_x()">-</button>                    
-          &nbsp;<b>{{ line_x }}</b>&nbsp;
-          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="inc_x()">+</button>
-        </h4>
-        <h4 class="text-center">
-          Y:
-          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="dec_y()">-</button>                    
-          &nbsp;<b>{{ line_y }}</b>&nbsp;
-          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="inc_y()">+</button>
-        </h4>    
-      </div>
-      <div class="col-md-6" ng-show="config_loaded">
+      <div class="col-md-12" ng-show="config_loaded">
         <button type="button" class="pull-right btn btn-primary btn-lg navigation" ng-click="save()">
           Save Calibration
         </button>     
       </div>
-
     </div>
   </div>
 
-  <!-- image -->
-  <div class="col-md-5">
-    <!-- picture: calibration pattern -->
-    <img src="<%= asset_path("touchapp/images/wizard_calibrate_offset_pattern.jpg") %>" class="img-responsive wizard-image">    
+  <!-- config not yet loaded -->
+  <div class="col-md-8" ng-show="!config_loaded">
+    <div class="row">
+      <div class="col-md-12">
+        <p><br/><b>Loading current calibration...</b></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- config is loaded -->
+  <div class="col-md-8" ng-show="config_loaded"> 
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-5">
+        <h4>
+          Nominal Dimension (mm):
+        </h4>
+      </div>
+      <div class="col-md-7">
+        <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_nominal(-0.1)">-0.1</button>
+        <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_nominal(-0.01)">-0.01</button>
+        &nbsp;<b>{{ nominal | number:2 }}</b>&nbsp;
+        <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_nominal(0.01)">+0.01</button>
+        <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_nominal(0.1)">+0.1</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-5">
+        <h4>
+          Measurement <b>X1</b> (mm):
+        </h4>
+      </div>
+      <div class="col-md-7">
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x1(-0.1)">-0.1</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x1(-0.01)">-0.01</button>
+          &nbsp;<b>{{ x1 | number:2 }}</b>&nbsp;
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x1(0.01)">+0.01</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x1(0.1)">+0.1</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-5">
+        <h4>
+          Measurement <b>X2</b> (mm):
+        </h4>
+      </div>
+      <div class="col-md-7">
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x2(-0.1)">-0.1</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x2(-0.01)">-0.01</button>
+          &nbsp;<b>{{ x2 | number:2 }}</b>&nbsp;
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x2(0.01)">+0.01</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_x2(0.1)">+0.1</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-5">
+        <h4>
+          Measurement <b>Y1</b> (mm):
+        </h4>
+      </div>
+      <div class="col-md-7">
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y1(-0.1)">-0.1</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y1(-0.01)">-0.01</button>
+          &nbsp;<b>{{ y1 | number:2 }}</b>&nbsp;
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y1(0.01)">+0.01</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y1(0.1)">+0.1</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-5">
+        <h4>
+          Measurement <b>Y2</b> (mm):
+        </h4>
+      </div>
+      <div class="col-md-7">
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y2(-0.1)">-0.1</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y2(-0.01)">-0.01</button>
+          &nbsp;<b>{{ y2 | number:2 }}</b>&nbsp;
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y2(0.01)">+0.01</button>
+          <button type="button" class="btn btn-primary btn-lg keypad" ng-click="adjust_y2(0.1)">+0.1</button>
+      </div>
+    </div>
+
   </div> 
 
 </div>
