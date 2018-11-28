@@ -1,8 +1,7 @@
 module UsefulGlobalMethods
-  def self.timespan_in_words (seconds)
-    if seconds
-      mm, ss = seconds.divmod(60)
-      hh, mm = mm.divmod(60)
+  def self.timespan_in_words (minutes)
+    if minutes
+      hh, mm = minutes.divmod(60)
       dd, hh = hh.divmod(24)
       units = Array.new
       
