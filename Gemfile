@@ -43,16 +43,16 @@ gem 'jquery-ui-rails'
 
 gem 'serialport'
 gem 'thin'
-gem 'websocket-rails'
+gem 'websocket-rails', '0.6.2'
 gem "rails-settings-cached", "0.3.1"
-gem 'carrierwave'
-gem 'angularjs-rails'#, :git => 'git://github.com/hiravgandhi/angularjs-rails.git'
+gem 'carrierwave', '0.9.0'
+gem 'angularjs-rails', '1.2.22' #, :git => 'git://github.com/hiravgandhi/angularjs-rails.git'
 #gem 'bootstrap-sass-rails'
 gem 'bootstrap-sass', '~> 3.0.3.0'
-gem 'font-awesome-sass'
+gem 'font-awesome-sass', '4.0.2'
 gem 'protected_attributes' # use deprecated attr_accessible parameters
 
 gem 'yaml_db', :git => 'git://github.com/jetthoughts/yaml_db.git'
 gem 'delayed_job_active_record'
 
-
+gem "activerecord", "4.0.2"
