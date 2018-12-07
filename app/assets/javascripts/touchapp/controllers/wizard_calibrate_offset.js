@@ -29,8 +29,8 @@ touchApp.controller('WizardCalibrateOffsetController', function($scope, CommonCo
     deviation_x = (($scope.x2 + $scope.x1) * 0.5) - $scope.nominal;
     deviation_y = (($scope.y2 + $scope.y1) * 0.5) - $scope.nominal;
 
-    $steps_x = Math.round( $scope.x_offset - ( deviation_x * $scope.x_steps_per_mm ));
-    $steps_y = Math.round( $scope.y_offset - ( deviation_y * $scope.y_steps_per_mm ));
+    $steps_x = Math.round( $scope.x_offset + ( deviation_x * $scope.x_steps_per_mm ));
+    $steps_y = Math.round( $scope.y_offset + ( deviation_y * $scope.y_steps_per_mm ));
 
     MyWebsocket.setEEPROM(331, $scope.eeprom[331].type, $steps_x); // Ext2 X Offset in steps
     MyWebsocket.setEEPROM(335, $scope.eeprom[335].type, $steps_y); // Ext2 X Offset in steps
