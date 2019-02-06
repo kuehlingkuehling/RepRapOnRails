@@ -23,8 +23,8 @@ class Printjob < ActiveRecord::Base
               prog = line.match(/M73 P\d+\sR(?<remaining>\d+).*/)
               time_total = prog[:remaining].to_i
             rescue => e
-              puts "Error in M73-String RegEx"
-              puts e.inspect
+              Rails.logger.error "Error in M73-String RegEx"
+              Rails.logger.error e.inspect
             end          
 
             break # only find first occurance of M73 statement to get total print duration

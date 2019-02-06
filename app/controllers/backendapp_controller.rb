@@ -4,7 +4,7 @@ class BackendappController < ApplicationController
   def index
     if lockscreen_params.has_key? :togglelock
       WebsocketRails[:lockscreen].trigger(:toggle, true)
-      puts "TOGGLING LOCK SCREEN!"
+      Rails.logger.debug "TOGGLING LOCK SCREEN!"
     end
     
     render :layout => 'backendapp'

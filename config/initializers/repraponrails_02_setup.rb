@@ -106,7 +106,7 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
         WebsocketRails[:print].trigger(:job, { :name => printjob[:title], :job_id => printjob[:id] })
         log_queue.push({:level => 1, :line => "Printjob started: \"#{printjob[:title]}\""})
       end
-                        
+                     
       # assign pause callback                      
       printer.pausecb = Proc.new do |message|
         WebsocketRails[:print].trigger(:state, printer.status) # paused
@@ -259,7 +259,8 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
       printer.send("M115")
     end
   rescue => error
-    puts 'Could not connect to RepRap Controller: ' + error.message
+    Rails.logger.error 'Could not connect to RepRap Controller!'
+    Rails.logger.error ([error.message]+error.backtrace).join($/)
     LogEntry.create(level: 3, line: 'ERROR: Could not connect to RepRap Controller: ' + error.message)
     printer.close unless printer.nil? or not printer.online?
   end

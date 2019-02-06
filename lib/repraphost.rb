@@ -130,7 +130,7 @@ class RepRapHost
     @port = port unless port.nil?
     @baud = baud unless baud.nil?
     
-    puts "Connecting to RepRap Controller (#{@port})" if @verbose
+    Rails.logger.info "Connecting to RepRap Controller (#{@port})" if @verbose
     @errorcb.call("Could not connect to RepRap Controller - no port defined!") if @errorcb and @port.nil?
     @errorcb.call("Could not connect to RepRap Controller - no baudrate defined!") if @errorcb and @baud.nil?    
     unless @port.nil? or @baud.nil?
@@ -168,14 +168,14 @@ class RepRapHost
         @send_thread = Thread.new { self.send_loop }
         @temp_thread = Thread.new { self.temp_loop }
       rescue Errno::ENOENT => e
-        puts "Could not open file (Invalid Port?)"
+        Rails.logger.error "Could not open file (Invalid Port?)"
 #        @errorcb.call("Could not open file (Invalid Port?)") if @errorcb
       rescue IOError => e
-        puts "Could not write to file"
+        Rails.logger.error "Could not write to file"
 #        @errorcb.call("Could not write to file") if @errorcb
       rescue => e
-        puts "Other Error:"
-        puts e
+        Rails.logger.error "Other Error:"
+        Rails.logger.error e
 #        @errorcb.call(e.to_s) if @errorcb
       end
     end
@@ -202,12 +202,12 @@ class RepRapHost
     @online = false
   
     # send M112 to initiate a firmware reboot
-    puts 'resetting firmware' if @verbose
+    Rails.logger.info 'resetting firmware' if @verbose
 #    begin
 #      @printer.write("M112\n") if @printer
 #    rescue => e
-#      puts "failed to reset firmware:"
-#      puts e
+#      Rails.logger.error "failed to reset firmware:"
+#      Rails.logger.error e
 #    end
 
     # Toggle KILL pin on Repetier Firmware via shared GPIO (gpio32 <--> pin 40)
@@ -247,7 +247,7 @@ class RepRapHost
         end
 
         unless (line.length == 0) or line.start_with?('wait') or (@printing and line.start_with?('ok'))
-          puts "<<< " + line if @verbose and @echoreadwrite
+          Rails.logger.debug "<<< " + line if @verbose and @echoreadwrite
           @lastresponse = line
           
           unless line.start_with?('Resend') or line.start_with?('ok') or line.start_with?('ok T:') or line.start_with?('T:')
@@ -303,8 +303,8 @@ class RepRapHost
               :B => b_temps[:target].to_i
             }
           rescue => e
-            puts "Error in Temp-String RegEx"
-            puts e.inspect
+            Rails.logger.error "Error in Temp-String RegEx"
+            Rails.logger.error e.inspect
           end          
 
           @tempcb.call(@current_params[:current_temps], @current_params[:target_temps]) if @tempcb
@@ -360,19 +360,19 @@ class RepRapHost
           end
         end
       rescue EOFError => e
-        puts "DEBUG: EOF from serialport readline"
+        Rails.logger.error "DEBUG: EOF from serialport readline"
         # do nothing - sometimes serialport sends EOF when done sending stuff
-        puts e.inspect
+        Rails.logger.error e.inspect
         @errorcb.call("EOF from serialport readline") if @errorcb
         return nil
       rescue ArgumentError => e
-        puts "While reading from Printer: ArgumentError"
+        Rails.logger.error "While reading from Printer: ArgumentError"
         # do nothing - sometimes serialport sends EOF when done sending stuff
-        puts e.inspect
+        Rails.logger.error e.inspect
         @errorcb.call(e.to_s) if @errorcb        
       rescue => e
-        puts "Can't read from printer (disconnected?)."
-        puts e.inspect
+        Rails.logger.error "Can't read from printer (disconnected?)."
+        Rails.logger.error e.inspect
         @errorcb.call("Can't read from printer (disconnected?).") if @errorcb
         @errorcb.call(e.to_s) if @errorcb
         return nil
@@ -408,8 +408,8 @@ class RepRapHost
             @progress = prog[:percent].to_i
             @time_remaining = prog[:remaining].to_i
           rescue => e
-            puts "Error in Progress-String RegEx"
-            puts e.inspect
+            Rails.logger.error "Error in Progress-String RegEx"
+            Rails.logger.error e.inspect
           end          
 
           @progresscb.call(@progress, @time_remaining) if @progresscb
@@ -489,7 +489,7 @@ class RepRapHost
         end
 
         unless line.start_with?("M105")
-          puts ">>> " + line if @verbose and @echoreadwrite
+          Rails.logger.debug ">>> " + line if @verbose and @echoreadwrite
           @sendcb.call(line) if @sendcb and execsendcb
         end
         
@@ -643,7 +643,7 @@ class RepRapHost
     @gcodefile.close
     @gcodefile = nil
     @lines = 0
-    puts "Print finished!" if @verbose
+    Rails.logger.debug "Print finished!" if @verbose
     @endcb.call(self.time_elapsed) if @endcb
     @send_thread.run
   end
@@ -675,8 +675,8 @@ class RepRapHost
         @print_thread = Thread.new { self.print_loop }
         @startcb.call if @startcb
       rescue => e
-        puts "Error while starting print of file " + (gcodefilename ? gcodefilename : "NO FILE SUPPLIED")
-        puts e
+        Rails.logger.error "Error while starting print of file " + (gcodefilename ? gcodefilename : "NO FILE SUPPLIED")
+        Rails.logger.error e
         @errorcb.call("Error opening GCODE file " + (gcodefilename ? gcodefilename : "NO FILE SUPPLIED")) if @errorcb
         @errorcb.call(e.to_s) if @errorcb
       end      

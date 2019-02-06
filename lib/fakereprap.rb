@@ -17,13 +17,13 @@ class FakeRepRap
     @new_coord = [ 0, 0, 0 ]
     @feedrate = nil
  
-    puts " "
-    puts "    *********** WARNING *************"
-    puts "    ***                           ***"
-    puts "    ***  Fake RepRap initialized  ***"
-    puts "    ***                           ***"
-    puts "    *********************************"
-    puts " "
+    Rails.logger.debug " "
+    Rails.logger.debug "    *********** WARNING *************"
+    Rails.logger.debug "    ***                           ***"
+    Rails.logger.debug "    ***  Fake RepRap initialized  ***"
+    Rails.logger.debug "    ***                           ***"
+    Rails.logger.debug "    *********************************"
+    Rails.logger.debug " "
 
     @start_thread = Thread.new{
       sleep 1 
