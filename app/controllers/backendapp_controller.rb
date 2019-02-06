@@ -11,13 +11,27 @@ class BackendappController < ApplicationController
   end
   
   def logfile
+    require 'zip'
+
+    # generate RepRapOnRails logfile
     @lines = LogEntry.order("id DESC").limit(20000)
     logfile = ""
     @lines.each do |l|
       logfile += "#{l.id}\t[#{l.created_at.utc.to_s}]\t(#{l.level})\t#{l.line}\n"
     end    
     timestamp = Time.now.strftime('%Y-%m-%d_%H-%M-%S')
-    send_data logfile, :filename => "RepRapOnRails_#{timestamp}.log"
+
+    # gather RepRapOnRails and production.log files into zip file in memory
+    production_log = Rails.root.join('log', 'production.log')
+    file_stream = Zip::OutputStream.write_buffer do |zip|
+      zip.put_next_entry "RepRapOnRails_#{timestamp}.log"
+      zip.print logfile
+      zip.put_next_entry "rails_production_#{timestamp}.log"
+      zip.print IO.read(production_log)
+    end
+    file_stream.rewind
+
+    send_data file_stream.read, :filename => "RepRapOnRails_logfiles_#{timestamp}.zip"
   end
   
   def upload

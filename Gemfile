@@ -56,3 +56,5 @@ gem 'yaml_db', :git => 'git://github.com/jetthoughts/yaml_db.git'
 gem 'delayed_job_active_record'
 
 gem "activerecord", "4.0.2"
+
+gem 'rubyzip', '>= 1.0.0'
