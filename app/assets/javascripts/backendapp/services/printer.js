@@ -12,6 +12,7 @@ backendApp.factory('Printer', function($q, $timeout, $modal, $rootScope) {
   Service.printjobs = [];
   Service.filamentPresets = [];
   Service.preheatingProfiles = [];
+  Service.preheatingProfile = 0;
   Service.isDualExtruder = false;
   Service.eeprom = {};
   var deferred = $q.defer();  
@@ -44,10 +45,20 @@ backendApp.factory('Printer', function($q, $timeout, $modal, $rootScope) {
     });         
     Service.get('filament.all').then(function(data){
       Service.filamentPresets = data;
-    });      
+    });    
+    Service.get('filament.get_loaded').then(function(data){
+      $timeout(function(){
+        Service.filamentsLoaded = data;
+      });
+    });  
     Service.get('preheating_profile.all').then(function(data){
       Service.preheatingProfiles = data;
     });  
+    Service.get('preheating_profile.get_selected').then(function(data){
+      $timeout(function(){
+        Service.preheatingProfile = data;
+      });
+    }); 
   };  
     
   // bind to disconnect event - show "please reload page" modal
@@ -107,12 +118,12 @@ backendApp.factory('Printer', function($q, $timeout, $modal, $rootScope) {
     });
   });
 
-  Service.temp = {list:[]};
+  Service.temp = {};
   tempchannel = dispatcher.subscribe('temp');
   tempchannel.bind('new', function(message){
     console.log('New Temp String received: ' + message);
     $timeout(function(){
-      Service.temp.list = message;
+      Service.temp = message;
     });
   });  
   
@@ -180,6 +191,14 @@ backendApp.factory('Printer', function($q, $timeout, $modal, $rootScope) {
       }); 
     });
   });     
+  filamentchannel.bind('reload_loaded', function(message){
+    console.log('Loaded Filaments changed, reloading!');
+    $timeout(function(){
+      Service.get('filament.get_loaded').then(function(data){
+        Service.filamentsLoaded = data;
+      }); 
+    });
+  });
   
   
   Service.createPreset = function(preset) {
@@ -200,12 +219,18 @@ backendApp.factory('Printer', function($q, $timeout, $modal, $rootScope) {
     console.log('Preheating Profiles updated, reloading!');
     $timeout(function(){
       Service.get('preheating_profile.all').then(function(data){
-        Service.preheatingProfiles = data;
-console.log("PREHEATING PROFILES RECEIVED:");
-console.log(data);        
+        Service.preheatingProfiles = data;   
       }); 
     });
   });     
+  preheatingchannel.bind('reload_selected', function(message){
+    console.log('Loaded Preheating Profile changed, reloading!');
+    $timeout(function(){
+      Service.get('preheating_profile.get_selected').then(function(data){
+        Service.preheatingProfile = data;
+      }); 
+    });
+  });   
   
   
   Service.createPreheatingProfile = function(preset) {

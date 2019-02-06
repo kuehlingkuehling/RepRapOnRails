@@ -32,6 +32,7 @@
 
     <div class="container">
       <div ng-controller="HeaderController">
+
         <div class="header">
           <ul class="nav nav-pills pull-right">
             <li ng-class="{ active: (tab == '/firststeps') }"><a href="#firststeps" ng-click="go('firststeps')">First Steps</a></li>
@@ -61,9 +62,54 @@
             <div class="progress-bar" role="progressbar" aria-valuenow="{{ printer.print.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ printer.print.progress }}%">
               <span class="sr-only">{{ printer.print.progress }}% complete</span>
             </div>
-          </div>        
+          </div>
         </div>
+
+    <!-- Temperature Status (Bottom)
+    ================================================== -->    
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+      <div class="navbar-collapse collapse">    
+        <ul class="nav navbar-nav">
+          <li>
+            <p class="navbar-text">
+              <b><span ng-if="printer.isDualExtruder">Left </span>Extruder:</b> <span class="{{ ( printer.temp.left_extruder.target > 0 ) && 'text-danger' }}">{{ printer.temp.left_extruder.temp | number:2 }} / {{ printer.temp.left_extruder.target | number:0 }}</span>
+              <br/>
+              <small ng-show="printer.filamentsLoaded.left">{{ printer.filamentsLoaded.left.name | limitTo:40 }}</small>
+              <small ng-show="!printer.filamentsLoaded.left" class="text-muted">No material loaded</small>
+            </p>
+          </li>
+          <li ng-if="printer.isDualExtruder">
+            <p class="navbar-text">
+              <b>Right Extruder:</b> <span class="{{ ( printer.temp.right_extruder.target > 0 ) && 'text-danger' }}">{{ printer.temp.right_extruder.temp | number:2 }} / {{ printer.temp.right_extruder.target | number:0 }}</span>
+              <br/>
+              <small ng-show="printer.filamentsLoaded.right">{{ printer.filamentsLoaded.right.name | limitTo:40 }}</small>
+              <small ng-show="!printer.filamentsLoaded.right" class="text-muted">No material loaded</small>
+            </p>
+          </li>
+          <li>
+            <p class="navbar-text">
+              <b>Chamber:</b> <span class="{{ ( printer.temp.chamber.target > 0 ) && 'text-danger' }}">{{ printer.temp.chamber.temp | number:2 }} / {{ printer.temp.chamber.target | number:0 }}</span>
+              <br/>
+              <small ng-show="printer.preheatingProfile">{{ printer.preheatingProfile.name | limitTo:40 }}</small>
+              <small ng-show="!printer.preheatingProfile" class="text-muted">No Preheating Profile selected</small>
+            </p>
+          </li>
+          <li>
+            <p class="navbar-text">
+              <b>Bed:</b> <span class="{{ ( printer.temp.bed.target > 0 ) && 'text-danger' }}">{{ printer.temp.bed.temp | number:2 }} / {{ printer.temp.bed.target | number:0 }}</span>
+              <br/>
+            </p>
+          </li>          
+          <li><p class="navbar-text ">
+            <span class="text-muted">Current / Target °C</span><br/>
+            <small class="text-muted">Profile</small></p>
+          </li>          
+        </ul>
       </div>
+    </nav>          
+
+      </div>
+
 
       <div class="row marketing">
         <!--  Content
@@ -71,7 +117,7 @@
         <div class="container" id="content">      
           <ng-view></ng-view>
         </div>
-      </div>
+      </div>    
 
       <div class="footer">
         <p class="text-center">
