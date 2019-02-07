@@ -413,6 +413,7 @@ class RepRapHost
           end          
 
           @progresscb.call(@progress, @time_remaining) if @progresscb
+          return
         end
 
         # catch M190/M109 and its parameters and substitute
