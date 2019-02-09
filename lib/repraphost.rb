@@ -651,7 +651,7 @@ class RepRapHost
   
   def time_elapsed
     if @timejobstarted
-      ( Time.now - @timejobstarted )
+      (( Time.now - @timejobstarted ) / 60 )
     else
       nil
     end
