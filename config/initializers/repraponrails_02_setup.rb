@@ -76,6 +76,19 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
   printer = ApplicationController.printer
   printjob = ApplicationController.printjob
 
+  # set up a dedicated temperatures log file to write a set of temp readings every minute
+  templogger = ApplicationController.temp_logger
+  templog_thread = Thread.new do
+    loop do
+      temps = { "extruder" =>        printer.current_params[:current_temps][:T0],
+                "bed" =>             printer.current_params[:current_temps][:B],
+                "chamber" =>         printer.current_params[:current_temps][:T2],
+                "headcontrolunit" => printer.current_params[:current_temps][:T1] }
+      templogger.info temps.to_json
+      sleep 60
+    end
+  end
+
   Settings.filament_left = nil if not Settings.all.has_key?("filament_left")
   Settings.filament_right = nil if not Settings.all.has_key?("filament_right")
   Settings.preheating_profile = nil if not Settings.all.has_key?("preheating_profile")

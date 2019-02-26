@@ -23,11 +23,14 @@ class BackendappController < ApplicationController
 
     # gather RepRapOnRails and production.log files into zip file in memory
     production_log = Rails.root.join('log', 'production.log')
+    temperatures_log = Rails.root.join('log', 'temperatures.log')
     file_stream = Zip::OutputStream.write_buffer do |zip|
       zip.put_next_entry "RepRapOnRails_#{timestamp}.log"
       zip.print logfile
       zip.put_next_entry "rails_production_#{timestamp}.log"
       zip.print IO.read(production_log)
+      zip.put_next_entry "temperatures_#{timestamp}.log"
+      zip.print IO.read(temperatures_log)
     end
     file_stream.rewind
 
