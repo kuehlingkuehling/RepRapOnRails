@@ -80,12 +80,15 @@ unless File.basename($0) == "rake"  # do not initiate reprap during rake tasks
   templogger = ApplicationController.temp_logger
   templog_thread = Thread.new do
     loop do
-      temps = { "extruder" =>        printer.current_params[:current_temps][:T0],
-                "bed" =>             printer.current_params[:current_temps][:B],
-                "chamber" =>         printer.current_params[:current_temps][:T2],
+      temps = { "extruder" =>        { "current" => printer.current_params[:current_temps][:T0],
+                                       "target"  => printer.current_params[:target_temps][:T0]},
+                "bed" =>             { "current" => printer.current_params[:current_temps][:B],
+                                       "target"  => printer.current_params[:target_temps][:B]},
+                "chamber" =>         { "current" => printer.current_params[:current_temps][:T2],
+                                       "target"  => printer.current_params[:target_temps][:T2]},
                 "headcontrolunit" => printer.current_params[:current_temps][:T1] }
       templogger.info temps.to_json
-      sleep 60
+      sleep 5
     end
   end
 
