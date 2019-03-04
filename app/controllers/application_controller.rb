@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
 
   # Our global, application-wide, persistent log array
   # (continously saved to db by separate thread to avoid db concurrency issues)
-  @@log_queue = Array.new
+  @@log_queue = Queue.new
 
   # A dedicated logger for a history of temperature readings 
   @@temp_logger = Logger.new("#{Rails.root}/log/temperatures.log")

@@ -41,7 +41,7 @@ log_thread = Thread.new do
       l = log_queue.shift
       LogEntry.create(level: l[:level], line: l[:line])
     else
-      sleep 0.01
+      sleep 0.1
     end
   end
 end
