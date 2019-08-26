@@ -266,6 +266,11 @@ class RepRapHost
 
           # unlock fatal state with M999
           self.send("M999\n")
+          # make sure motors are activated again and home axes
+          self.send("M80\n")
+          self.send("M99 X0 Y0 Z0 S0\n")
+          self.send("G4 P2000\n")
+          self.send("G28\n")
         end
 
         # trigger callback if door is opened
