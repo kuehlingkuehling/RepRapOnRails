@@ -104,10 +104,8 @@ class RepRapHost
     @eepromcb = nil # on response lines to M205 (show eeprom values)
     @fwcb = nil # on response to M115 (capabilities string including firmware version)
 
-    # thread sync
-    @printer_lock = Mutex.new
-    @ok_lock = Mutex.new    
-    @ok = ConditionVariable.new
+    # thread sync and helpers
+    @ok_queue = Queue.new
     @stop_send_thread = false
   
     unless port.nil? or baud.nil?
@@ -201,9 +199,7 @@ class RepRapHost
   
         if line.start_with?('ok') or line.start_with?('wait')
           # signal waiting thread that 'ok' was received              
-          @ok_lock.synchronize {                  
-            @ok.signal
-          }              
+          @ok_queue.push :ok
         end
 
         unless (line.length == 0) or line.start_with?('wait') or (@printing and line.start_with?('ok'))
@@ -421,9 +417,7 @@ class RepRapHost
         end
     
         # wait for read_loop thread to signal that 'ok' was received    
-        @ok_lock.synchronize {        
-          @ok.wait(@ok_lock)
-        }
+        @ok_queue.pop
 
         # start @preheat_thread for M109/M190
         if preheat               
