@@ -14,6 +14,7 @@ HARDWARE_REVISION
 
 # do not publish uploaded gcode files
 /gcodefiles/*
+!/gcodefiles/.gitkeep
 
 # bundler state
 /.bundle
