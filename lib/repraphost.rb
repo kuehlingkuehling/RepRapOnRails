@@ -208,7 +208,7 @@ class RepRapHost
   
         if line.start_with?('ok') or line.start_with?('wait')
           # signal waiting thread that 'ok' was received              
-          @ok_queue.push :ok
+          @ok_queue.push :ok if @ok_queue.empty?
         end
 
         unless (line.length == 0) or line.start_with?('wait') or (@printing and line.start_with?('ok'))
