@@ -48,7 +48,7 @@ gem "rails-settings-cached", "0.3.1"
 gem 'carrierwave', '0.9.0'
 gem 'angularjs-rails', '1.2.22' #, :git => 'git://github.com/hiravgandhi/angularjs-rails.git'
 #gem 'bootstrap-sass-rails'
-gem 'bootstrap-sass', '~> 3.0.3.0'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'font-awesome-sass', '4.0.2'
 gem 'protected_attributes' # use deprecated attr_accessible parameters
 
