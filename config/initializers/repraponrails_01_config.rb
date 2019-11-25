@@ -20,7 +20,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#d9534f"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.0.0-05"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.0.0-06"
 
     # is dual extruder?
     config.is_dual_extruder = false
@@ -47,7 +47,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#7FFF00"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.0.0-05"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.0.0-06"
 
     # is dual extruder?
     config.is_dual_extruder = false
@@ -74,7 +74,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#7FFF00"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.1.0-03"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.1.0-04"
 
     # is dual extruder?
     config.is_dual_extruder = false
@@ -101,7 +101,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#7FFF00"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.1.1-02"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.1.1-03"
 
     # is dual extruder?
     config.is_dual_extruder = false
@@ -128,7 +128,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#7FFF00"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.1.2-01"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.1.2-02"
 
     # is dual extruder?
     config.is_dual_extruder = false
@@ -155,7 +155,7 @@ RepRapOnRails::Application.configure do
     config.brand_color = "#7FFF00"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.2.0-01"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-vp75-1.2.0-02"
 
     # is dual extruder?
     config.is_dual_extruder = false
