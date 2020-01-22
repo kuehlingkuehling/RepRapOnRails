@@ -66,7 +66,7 @@ RepRapOnRails::Application.configure do
     config.hardware_revision = "v2.0.2"
 
     # compatible Arduino Firmware version
-    config.arduino_firmware_version = "Repetier Firmware v0.92-ht500-2.0.2-01"
+    config.arduino_firmware_version = "Repetier Firmware v0.92-ht500-2.0.2-02"
 
     # is dual extruder?
     config.is_dual_extruder = true
