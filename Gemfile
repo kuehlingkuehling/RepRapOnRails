@@ -45,7 +45,7 @@ gem 'serialport'
 gem 'thin'
 gem 'websocket-rails', '0.6.2'
 gem "rails-settings-cached", "0.3.1"
-gem 'carrierwave', '0.9.0'
+gem 'carrierwave', '1.3.2'
 gem 'angularjs-rails', '1.2.22' #, :git => 'git://github.com/hiravgandhi/angularjs-rails.git'
 #gem 'bootstrap-sass-rails'
 gem 'bootstrap-sass', '~> 3.0.3.0'
